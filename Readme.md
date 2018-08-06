@@ -1,7 +1,7 @@
 # Личный проект «Пиксель хантер» [![Build status][travis-image]][travis-url]
 
 * Студент: [Максим Дмитриев](https://up.htmlacademy.ru/ecmascript/6/user/43745).
-* Наставник: `Неизвестно`.
+* Наставник: [Виталий Яковенко](https://htmlacademy.ru/profile/id376639).
 
 ---
 
