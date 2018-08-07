@@ -1,7 +1,7 @@
 'use strict';
-
-const mainElement = document.querySelector(`#main`);
-const body = document.querySelector(`body`);
+/** =========================================
+ * обьявление констант
+ */
 const ARROW_LEFT_KEY_CODE = 37;
 const ARROW_RIGHT_KEY_CODE = 39;
 const ARROW_BTNS_INNER_HTML = `
@@ -22,13 +22,18 @@ const ARROW_BTNS_INNER_HTML = `
 <button class="arrows__btn"><-</button>
 <button class="arrows__btn">-></button>
 `;
+/** =========================================
+ * обьявление переменных
+ */
+const mainElement = document.querySelector(`#main`);
+const body = document.querySelector(`body`);
 let current = 0;
 /** =========================================
  * обьявление фукнции
  */
 /**
  * вставка данных из template
- * @param {DOM} element
+ * @param {Node} element
  */
 const selectSlide = (element) => {
   mainElement.innerHTML = ``;
@@ -80,13 +85,13 @@ select(0);
  */
 document.addEventListener(`keydown`, onKeyHandler);
 
-const ARROW_BTNS = document.createElement(`div`);
-ARROW_BTNS.classList.add(`arrows__wrap`);
-ARROW_BTNS.innerHTML = ARROW_BTNS_INNER_HTML;
-body.appendChild(ARROW_BTNS);
+const arrowBtnsWrap = document.createElement(`div`);
+arrowBtnsWrap.classList.add(`arrows__wrap`);
+arrowBtnsWrap.innerHTML = ARROW_BTNS_INNER_HTML;
+body.appendChild(arrowBtnsWrap);
 
-const ARROW_BTN_LEFT = ARROW_BTNS.querySelectorAll(`button`)[0];
-const ARROW_BTN_RIGHT = ARROW_BTNS.querySelectorAll(`button`)[1];
+const arrowBtnLeft = arrowBtnsWrap.querySelectorAll(`button`)[0];
+const arrowBtnRight = arrowBtnsWrap.querySelectorAll(`button`)[1];
 
-ARROW_BTN_LEFT.addEventListener(`click`, prevSlider);
-ARROW_BTN_RIGHT.addEventListener(`click`, nextSlider);
+arrowBtnLeft.addEventListener(`click`, prevSlider);
+arrowBtnRight.addEventListener(`click`, nextSlider);
