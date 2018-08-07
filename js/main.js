@@ -58,15 +58,16 @@ const prevSlider = () => {
 };
 /**
  * переключение слайдов через клавиши клавиатуры (стрелки: влево и вправо)
+ * @param {Event} evt
  */
 const onKeyHandler = (evt) => {
   switch (evt.keyCode) {
     case ARROW_LEFT_KEY_CODE:
       prevSlider();
-    break;
+      break;
     case ARROW_RIGHT_KEY_CODE:
       nextSlider();
-    break;
+      break;
   }
 };
 /** =========================================
