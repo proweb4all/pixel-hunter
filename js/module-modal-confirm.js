@@ -31,7 +31,7 @@ const ESC_CODE = 27;
 */
 const clickCloseHandler = () => {
   mainElement.removeChild(mainElement.lastChild);
-  document.removeEventListener('keydown', escCloseHandler);
+  document.removeEventListener(`keydown`, escCloseHandler);
 };
 
 const clickCancelHandler = clickCloseHandler;
@@ -51,6 +51,7 @@ const confirmHandler = (evt) => {
 };
 /** =========================================
 * экспорт
+* @return {Function} element
 */
 export default () => {
   const element = renderTemplate(MODAL_CONFIRM);
@@ -66,5 +67,4 @@ export default () => {
   document.addEventListener(`keydown`, escCloseHandler);
 
   return element;
-}
-
+};

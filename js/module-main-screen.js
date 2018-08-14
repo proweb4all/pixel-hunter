@@ -35,6 +35,7 @@ const clickBtnHandler = () => {
 };
 /** =========================================
 * экспорт
+* @return {Function} element
 */
 export default () => {
   const element = renderTemplate(MAIN_SCREEN);
@@ -45,4 +46,4 @@ export default () => {
   btnIntroAsterisk.addEventListener(`click`, clickBtnHandler);
 
   return element;
-}
+};

@@ -43,8 +43,14 @@ const RULES_SCREEN = `
 * @param {Event} evt
 */
 const changeNameHandler = (evt) => {
-  let btnRulesForm = document.querySelector(`.rules__button`);
-  evt.target.value ? btnRulesForm.disabled = false : btnRulesForm.disabled = true;
+  const targetValue = evt.target.value;
+  const btnRulesForm = document.querySelector(`.rules__button`);
+
+  if (targetValue) {
+    btnRulesForm.disabled = false;
+  } else {
+    btnRulesForm.disabled = true;
+  }
 };
 /** изменение sreen при отправке формы
 * @param {Event} evt
@@ -56,6 +62,7 @@ const submitFormHandler = (evt) => {
 };
 /** =========================================
 * экспорт
+* @return {Function} element
 */
 export default () => {
   const element = renderTemplate(RULES_SCREEN);
@@ -70,4 +77,4 @@ export default () => {
   setEventForBtnBack(element);
 
   return element;
-}
+};

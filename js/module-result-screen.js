@@ -121,6 +121,7 @@ const STATS_SCREEN = `
 `;
 /** =========================================
  * экспорт
+ * @return {Function} element
  */
 export default () => {
   const element = renderTemplate(STATS_SCREEN);
@@ -130,5 +131,4 @@ export default () => {
   setEventForBtnBack(element);
 
   return element;
-}
-
+};

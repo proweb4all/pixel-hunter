@@ -84,6 +84,7 @@ const changeFormHandler = (evt) => {
 };
 /** =========================================
  * экспорт
+ * @return {Function} element
  */
 export default () => {
   const element = renderTemplate(GAME_ONE_SCREEN);
@@ -96,4 +97,4 @@ export default () => {
   setEventForBtnBack(element);
 
   return element;
-}
+};

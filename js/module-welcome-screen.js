@@ -39,6 +39,7 @@ const clickBtnHandler = () => {
 };
 /** =========================================
 * экспорт
+* @return {Function} element
 */
 export default () => {
   const element = renderTemplate(WELCOM_SCREEN);
@@ -49,4 +50,4 @@ export default () => {
   btnGreetingContinue.addEventListener(`click`, clickBtnHandler);
 
   return element;
-}
+};

@@ -58,14 +58,15 @@ const GAME_TWO_SCREEN = `
  * обьявление фукнции
  */
 /** при выборе ответа в форме, переключение экрана
- * @param {Event} evt
+ *
  */
-const changeFormHandler = (evt) => {
+const changeFormHandler = () => {
   changeScreen(gameThree);
 };
 /** =========================================
- * экспорт
- */
+* экспорт
+* @return {Function} element
+*/
 export default () => {
   const element = renderTemplate(GAME_TWO_SCREEN);
   /** =========================================
@@ -77,4 +78,4 @@ export default () => {
   setEventForBtnBack(element);
 
   return element;
-}
+};

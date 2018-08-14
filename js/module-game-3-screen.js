@@ -75,6 +75,7 @@ const clickFormHandler = (evt) => {
 };
 /** =========================================
  * экспорт
+ * @return {Function} element
  */
 export default () => {
   const element = renderTemplate(GAME_THREE_SCREEN);
@@ -87,4 +88,4 @@ export default () => {
   setEventForBtnBack(element);
 
   return element;
-}
+};
