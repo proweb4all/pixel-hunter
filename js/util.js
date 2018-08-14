@@ -10,13 +10,15 @@ const mainElement = document.querySelector(`#main`);
  */
 /**
  * рендеринг template
- * @param {String} template
- * @return {Node} wrapperTemplate
+ * @param {String} strHtml
+ * @return {Node} cloneFragment
  */
-const renderTemplate = (template) => {
-  const wrapperTemplate = document.createElement(`div`);
-  wrapperTemplate.innerHTML = template.trim();
-  return wrapperTemplate;
+const renderTemplate = (strHtml) => {
+  // const wrapperTemplate = document.createElement(`div`);
+  const wrapperTemplate = document.createElement(`template`);
+  wrapperTemplate.innerHTML = strHtml;
+  let cloneFragment = wrapperTemplate.content.cloneNode(true);
+  return cloneFragment;
 };
 /**
  * вставка данных из template
@@ -24,6 +26,7 @@ const renderTemplate = (template) => {
  */
 const changeScreen = (element) => {
   mainElement.innerHTML = ``;
+  console.log('add', element);
   mainElement.appendChild(element);
 };
 /**
