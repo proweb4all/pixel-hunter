@@ -2,42 +2,37 @@
   'use strict';
 
   /** =========================================
-   * обьявление констант
-   */
-  /** =========================================
-   * обьявление переменных
-   */
+  * обьявление переменных
+  */
   const mainElement = document.querySelector(`#main`);
   /** =========================================
-   * обьявление фукнции
-   */
+  * обьявление фукнции
+  */
   /**
-   * рендеринг template
-   * @param {String} strHtml
-   * @return {Node} cloneFragment
-   */
+  * рендеринг template
+  * @param {String} strHtml
+  * @return {Node} fragment
+  */
   const renderTemplate = (strHtml) => {
-    // const wrapperTemplate = document.createElement(`div`);
     const wrapperTemplate = document.createElement(`template`);
-    wrapperTemplate.innerHTML = strHtml;
-    let cloneFragment = wrapperTemplate.content.cloneNode(true);
-    return cloneFragment;
+    wrapperTemplate.innerHTML = strHtml.trim();
+    let fragment = wrapperTemplate.content;
+    return fragment;
   };
   /**
-   * вставка данных из template
-   * @param {Node} element
-   */
-  const changeScreen = (element) => {
+  * вставка данных из template
+  * @param {Function} func
+  */
+  const changeScreen = (func) => {
     mainElement.innerHTML = ``;
-    // console.log(`add`, element);
-    mainElement.appendChild(element);
+    mainElement.appendChild(func());
   };
   /**
-   * вставка данных из template "модального окна"
-   * @param {Node} element
-   */
-  const addModal = (element) => {
-    mainElement.appendChild(element);
+  * вставка данных из template "модального окна"
+  * @param {Function} func
+  */
+  const addModal = (func) => {
+    mainElement.appendChild(func());
   };
 
   /** =========================================
@@ -46,7 +41,7 @@
   /** =========================================
    * обьявление констант
    */
-  const modalConfirm = `
+  const MODAL_CONFIRM = `
   <section class="modal">
     <form class="modal__inner">
       <button class="modal__close" type="button">
@@ -61,46 +56,53 @@
     </form>
   </section>
 `;
+  const ESC_CODE = 27;
   /** =========================================
-   * обьявление переменных
-   */
-  let modalBtnClose;
-  let modalBtnOk;
-  let modalBtnCancel;
-  /** =========================================
-   * обьявление фукнции
-   */
+  * обьявление фукнции
+  */
   /**
-   * удаление "модального окна"
-   *
-   */
+  * удаление "модального окна"
+  *
+  */
   const clickCloseHandler = () => {
     mainElement.removeChild(mainElement.lastChild);
+    document.removeEventListener(`keydown`, escCloseHandler);
   };
 
   const clickCancelHandler = clickCloseHandler;
+
+  const escCloseHandler = function (evt) {
+    if (evt.keyCode === ESC_CODE) {
+      clickCloseHandler();
+    }
+  };
   /**
-   * смена screen после подтверждения
-   * @param {Event} evt
-   */
+  * смена screen после подтверждения
+  * @param {Event} evt
+  */
   const confirmHandler = (evt) => {
     evt.preventDefault();
-    changeScreen(element$6);
+    changeScreen(welcome);
   };
   /** =========================================
-   * работа с данными
-   */
-  const element = renderTemplate(modalConfirm);
-  /** =========================================
-   * работа с DOM
-   */
-  modalBtnClose = element.querySelector(`.modal__close`);
-  modalBtnOk = element.querySelectorAll(`.modal__btn`)[0];
-  modalBtnCancel = element.querySelectorAll(`.modal__btn`)[1];
+  * экспорт
+  * @return {Function} element
+  */
+  var modalConfirm = () => {
+    const element = renderTemplate(MODAL_CONFIRM);
+    /** =========================================
+    * работа с DOM
+    */
+    const modalBtnClose = element.querySelector(`.modal__close`);
+    modalBtnClose.addEventListener(`click`, clickCloseHandler);
+    const modalBtnOk = element.querySelectorAll(`.modal__btn`)[0];
+    modalBtnOk.addEventListener(`click`, confirmHandler);
+    const modalBtnCancel = element.querySelectorAll(`.modal__btn`)[1];
+    modalBtnCancel.addEventListener(`click`, clickCancelHandler);
+    document.addEventListener(`keydown`, escCloseHandler);
 
-  modalBtnClose.addEventListener(`click`, clickCloseHandler);
-  modalBtnCancel.addEventListener(`click`, clickCancelHandler);
-  modalBtnOk.addEventListener(`click`, confirmHandler);
+    return element;
+  };
 
   /** =========================================
    * импорт модулей
@@ -112,7 +114,7 @@
    *
    */
   const clickHandler = () => {
-    addModal(element);
+    addModal(modalConfirm);
   };
   /** поиск кнопки назад на экране и установление события
    * @param {Node} searchElemenInWrap
@@ -128,7 +130,7 @@
   /** =========================================
    * обьявление констант
    */
-  const stats = `
+  const STATS_SCREEN = `
   <header class="header">
     <button class="back">
       <span class="visually-hidden">Вернуться к началу</span>
@@ -242,19 +244,18 @@
   </section>
 `;
   /** =========================================
-   * обьявление переменных
+   * экспорт
+   * @return {Function} element
    */
-  /** =========================================
-   * обьявление фукнции
-   */
-  /** =========================================
-   * работа с данными
-   */
-  const element$1 = renderTemplate(stats);
-  /** =========================================
-   * работа с DOM
-   */
-  setEventForBtnBack(element$1);
+  var resultScreen = () => {
+    const element = renderTemplate(STATS_SCREEN);
+    /** =========================================
+    * работа с DOM
+    */
+    setEventForBtnBack(element);
+
+    return element;
+  };
 
   /** =========================================
    * импорт модулей
@@ -262,7 +263,7 @@
   /** =========================================
    * обьявление констант
    */
-  const gameThree = `
+  const GAME_THREE_SCREEN = `
   <header class="header">
     <button class="back">
       <span class="visually-hidden">Вернуться к началу</span>
@@ -322,23 +323,28 @@
 
     while (target !== form) {
       if (target.tagName === `IMG`) {
-        changeScreen(element$1);
+        changeScreen(resultScreen);
         return;
       }
       target = target.parentElement;
     }
   };
   /** =========================================
-   * работа с данными
+   * экспорт
+   * @return {Function} element
    */
-  const element$2 = renderTemplate(gameThree);
-  /** =========================================
-   * работа с DOM
-   */
-  form = element$2.querySelector(`.game__content`);
+  var gameThree = () => {
+    const element = renderTemplate(GAME_THREE_SCREEN);
+    /** =========================================
+    * работа с DOM
+    */
+    form = element.querySelector(`.game__content`);
+    form.addEventListener(`click`, clickFormHandler);
 
-  setEventForBtnBack(element$2);
-  form.addEventListener(`click`, clickFormHandler);
+    setEventForBtnBack(element);
+
+    return element;
+  };
 
   /** =========================================
    * импорт модулей
@@ -346,7 +352,7 @@
   /** =========================================
    * обьявление констант
    */
-  const gameTwo = `
+  const GAME_TWO_SCREEN = `
   <header class="header">
     <button class="back">
       <span class="visually-hidden">Вернуться к началу</span>
@@ -394,37 +400,30 @@
   </section>
 `;
   /** =========================================
-   * обьявление переменных
-   */
-  let form$1;
-  /** =========================================
    * обьявление фукнции
    */
   /** при выборе ответа в форме, переключение экрана
-   * @param {Event} evt
+   *
    */
-  const changeFormHandler = (evt) => {
-    let array = Array.from(evt.currentTarget.elements)
-                .map((item) => item.checked)
-                .filter(function (item) {
-                  return item ? true : false;
-                });
-
-    if (array[0]) {
-      changeScreen(element$2);
-    }
+  const changeFormHandler = () => {
+    changeScreen(gameThree);
   };
   /** =========================================
-   * работа с данными
-   */
-  const element$3 = renderTemplate(gameTwo);
-  /** =========================================
-   * работа с DOM
-   */
-  form$1 = element$3.querySelector(`.game__content`);
+  * экспорт
+  * @return {Function} element
+  */
+  var gameTwo = () => {
+    const element = renderTemplate(GAME_TWO_SCREEN);
+    /** =========================================
+    * работа с DOM
+    */
+    const form = element.querySelector(`.game__content`);
+    form.addEventListener(`change`, changeFormHandler);
 
-  setEventForBtnBack(element$3);
-  form$1.addEventListener(`change`, changeFormHandler);
+    setEventForBtnBack(element);
+
+    return element;
+  };
 
   /** =========================================
    * импорт модулей
@@ -432,7 +431,7 @@
   /** =========================================
    * обьявление констант
    */
-  const gameOne = `
+  const GAME_ONE_SCREEN = `
   <header class="header">
     <button class="back">
       <span class="visually-hidden">Вернуться к началу</span>
@@ -491,10 +490,6 @@
   </section>
 `;
   /** =========================================
-   * обьявление переменных
-   */
-  let form$2;
-  /** =========================================
    * обьявление фукнции
    */
   /** при выборе 2 ответов в форме, переключение экрана
@@ -508,20 +503,25 @@
                 });
 
     if (array.length === 2) {
-      changeScreen(element$3);
+      changeScreen(gameTwo);
     }
   };
   /** =========================================
-   * работа с данными
+   * экспорт
+   * @return {Function} element
    */
-  const element$4 = renderTemplate(gameOne);
-  /** =========================================
-   * работа с DOM
-   */
-  form$2 = element$4.querySelector(`.game__content`);
+  var gameOne = () => {
+    const element = renderTemplate(GAME_ONE_SCREEN);
+    /** =========================================
+    * работа с DOM
+    */
+    const form = element.querySelector(`.game__content`);
+    form.addEventListener(`change`, changeFormHandler$1);
 
-  setEventForBtnBack(element$4);
-  form$2.addEventListener(`change`, changeFormHandler$1);
+    setEventForBtnBack(element);
+
+    return element;
+  };
 
   /** =========================================
    * импорт модулей
@@ -529,7 +529,7 @@
   /** =========================================
    * обьявление констант
    */
-  const rulesScreen = `
+  const RULES_SCREEN = `
   <header class="header">
     <button class="back">
       <span class="visually-hidden">Вернуться к началу</span>
@@ -559,20 +559,16 @@
   </section>
 `;
   /** =========================================
-  * обьявление переменных
-  */
-  let rulesForm;
-  let btnRulesForm;
-  let name;
-  /** =========================================
   * обьявление фукнции
   */
   /** функция управляет состоянием disabled кнопки формы btnRulesForm в зависимости от значения инпута в форме
   * @param {Event} evt
   */
   const changeNameHandler = (evt) => {
-    let value = evt.target.value;
-    if (value) {
+    const targetValue = evt.target.value;
+    const btnRulesForm = document.querySelector(`.rules__button`);
+
+    if (targetValue) {
       btnRulesForm.disabled = false;
     } else {
       btnRulesForm.disabled = true;
@@ -584,22 +580,26 @@
   const submitFormHandler = (evt) => {
     evt.preventDefault();
 
-    changeScreen(element$4);
+    changeScreen(gameOne);
   };
   /** =========================================
-  * работа с данными
+  * экспорт
+  * @return {Function} element
   */
-  const element$5 = renderTemplate(rulesScreen);
-  /** =========================================
-  * работа с DOM
-  */
-  name = element$5.querySelector(`.rules__input`);
-  btnRulesForm = element$5.querySelector(`.rules__button`);
-  rulesForm = element$5.querySelector(`.rules__form`);
+  var rulesScreen = () => {
+    const element = renderTemplate(RULES_SCREEN);
+    /** =========================================
+    * работа с DOM
+    */
+    const name = element.querySelector(`.rules__input`);
+    name.addEventListener(`input`, changeNameHandler);
+    const rulesForm = element.querySelector(`.rules__form`);
+    rulesForm.addEventListener(`submit`, submitFormHandler);
 
-  setEventForBtnBack(element$5);
-  name.addEventListener(`input`, changeNameHandler);
-  rulesForm.addEventListener(`submit`, submitFormHandler);
+    setEventForBtnBack(element);
+
+    return element;
+  };
 
   /** =========================================
    * импорт модулей
@@ -607,7 +607,7 @@
   /** =========================================
    * обьявление констант
    */
-  const welcomeScreen = `
+  const WELCOM_SCREEN = `
   <section class="greeting central--blur">
     <img class="greeting__logo" src="img/logo_ph-big.svg" width="201" height="89" alt="Pixel Hunter">
     <div class="greeting__asterisk asterisk"><span class="visually-hidden">Я просто красивая звёздочка</span>*</div>
@@ -630,27 +630,28 @@
   </section>
 `;
   /** =========================================
-  * обьявление переменных
-  */
-  let btnGreetingContinue;
-  /** =========================================
   * обьявление фукнции
   */
   /** изменение sreen при клике
   *
   */
   const clickBtnHandler = () => {
-    changeScreen(element$5);
+    changeScreen(rulesScreen);
   };
   /** =========================================
-  * работа с данными
+  * экспорт
+  * @return {Function} element
   */
-  const element$6 = renderTemplate(welcomeScreen);
-  /** =========================================
-  * работа с DOM
-  */
-  btnGreetingContinue = element$6.querySelector(`.greeting__continue`);
-  btnGreetingContinue.addEventListener(`click`, clickBtnHandler);
+  var welcome = () => {
+    const element = renderTemplate(WELCOM_SCREEN);
+    /** =========================================
+    * работа с DOM
+    */
+    const btnGreetingContinue = element.querySelector(`.greeting__continue`);
+    btnGreetingContinue.addEventListener(`click`, clickBtnHandler);
+
+    return element;
+  };
 
   /** =========================================
    * импорт модулей
@@ -658,19 +659,14 @@
   /** =========================================
    * обьявление констант
    */
-  const mainScreen = `
+  const MAIN_SCREEN = `
   <section class="intro">
     <button class="intro__asterisk asterisk" type="button"><span class="visually-hidden">Продолжить</span>*</button>
     <p class="intro__motto"><sup>*</sup> Это не фото. Это рисунок маслом нидерландского художника-фотореалиста Tjalf Sparnaay.</p>
   </section>
 `;
-  const timeChangeScreen = 500;
-  const timeChangeCssOpacity = 1000;
-  /** =========================================
-   * обьявление переменных
-   */
-  let btnIntroAsterisk;
-  let content;
+  const TIME_CHANGE_SCREEN = 500;
+  const TIME_CHANGE_CSS_OPACITY = 1000;
   /** =========================================
   * обьявление фукнции
   */
@@ -678,27 +674,32 @@
   *
   */
   const clickBtnHandler$1 = () => {
+    const content = document.querySelector(`.central__content`);
     content.style.transition = `opacity 0.5s linear`;
     content.style.opacity = 0;
 
     setTimeout(() => {
-      changeScreen(element$6);
-    }, timeChangeScreen);
+      changeScreen(welcome);
+    }, TIME_CHANGE_SCREEN);
 
     setTimeout(() => {
       content.style.opacity = 1;
-    }, timeChangeCssOpacity);
+    }, TIME_CHANGE_CSS_OPACITY);
   };
   /** =========================================
-   * работа с данными
-   */
-  const element$7 = renderTemplate(mainScreen);
-  /** =========================================
-   * работа с DOM
-   */
-  btnIntroAsterisk = element$7.querySelector(`.intro__asterisk`);
-  content = document.querySelector(`.central__content`);
-  btnIntroAsterisk.addEventListener(`click`, clickBtnHandler$1);
+  * экспорт
+  * @return {Function} element
+  */
+  var mainScreen = () => {
+    const element = renderTemplate(MAIN_SCREEN);
+    /** =========================================
+    * работа с DOM
+    */
+    const btnIntroAsterisk = element.querySelector(`.intro__asterisk`);
+    btnIntroAsterisk.addEventListener(`click`, clickBtnHandler$1);
+
+    return element;
+  };
 
   /** =========================================
    * импорт модулей
@@ -706,7 +707,7 @@
   /** =========================================
    * работа с DOM
    */
-  changeScreen(element$7);
+  changeScreen(mainScreen);
 
 }());
 
