@@ -7,7 +7,7 @@ import {setEventForBtnBack} from './module-back-btn.js';
 /** =========================================
  * обьявление констант
  */
-const gameThree = `
+const GAME_THREE_SCREEN = `
   <header class="header">
     <button class="back">
       <span class="visually-hidden">Вернуться к началу</span>
@@ -74,17 +74,17 @@ const clickFormHandler = (evt) => {
   }
 };
 /** =========================================
- * работа с данными
- */
-const element = renderTemplate(gameThree);
-/** =========================================
- * работа с DOM
- */
-form = element.querySelector(`.game__content`);
-
-setEventForBtnBack(element);
-form.addEventListener(`click`, clickFormHandler);
-/** =========================================
  * экспорт
  */
-export default element;
+export default () => {
+  const element = renderTemplate(GAME_THREE_SCREEN);
+  /** =========================================
+  * работа с DOM
+  */
+  form = element.querySelector(`.game__content`);
+  form.addEventListener(`click`, clickFormHandler);
+
+  setEventForBtnBack(element);
+
+  return element;
+}

@@ -6,7 +6,7 @@ import {setEventForBtnBack} from './module-back-btn.js';
 /** =========================================
  * обьявление констант
  */
-const stats = `
+const STATS_SCREEN = `
   <header class="header">
     <button class="back">
       <span class="visually-hidden">Вернуться к началу</span>
@@ -120,20 +120,15 @@ const stats = `
   </section>
 `;
 /** =========================================
- * обьявление переменных
- */
-/** =========================================
- * обьявление фукнции
- */
-/** =========================================
- * работа с данными
- */
-const element = renderTemplate(stats);
-/** =========================================
- * работа с DOM
- */
-setEventForBtnBack(element);
-/** =========================================
  * экспорт
  */
-export default element;
+export default () => {
+  const element = renderTemplate(STATS_SCREEN);
+  /** =========================================
+  * работа с DOM
+  */
+  setEventForBtnBack(element);
+
+  return element;
+}
+

@@ -1,48 +1,37 @@
 /** =========================================
- * обьявление констант
- */
-/** =========================================
- * обьявление переменных
- */
+* обьявление переменных
+*/
 const mainElement = document.querySelector(`#main`);
 /** =========================================
- * обьявление фукнции
- */
+* обьявление фукнции
+*/
 /**
- * рендеринг template
- * @param {String} strHtml
- * @return {Node} cloneFragment
- */
+* рендеринг template
+* @param {String} strHtml
+* @return {Node} fragment
+*/
 const renderTemplate = (strHtml) => {
-  // const wrapperTemplate = document.createElement(`div`);
   const wrapperTemplate = document.createElement(`template`);
-  wrapperTemplate.innerHTML = strHtml;
-  let cloneFragment = wrapperTemplate.content.cloneNode(true);
-  return cloneFragment;
+  wrapperTemplate.innerHTML = strHtml.trim();
+  let fragment = wrapperTemplate.content;
+  return fragment;
 };
 /**
- * вставка данных из template
- * @param {Node} element
- */
-const changeScreen = (element) => {
+* вставка данных из template
+* @param {Function} func
+*/
+const changeScreen = (func) => {
   mainElement.innerHTML = ``;
-  // console.log(`add`, element);
-  mainElement.appendChild(element);
+  mainElement.appendChild(func());
 };
 /**
- * вставка данных из template "модального окна"
- * @param {Node} element
- */
-const addModal = (element) => {
-  mainElement.appendChild(element);
+* вставка данных из template "модального окна"
+* @param {Function} func
+*/
+const addModal = (func) => {
+  mainElement.appendChild(func());
 };
 /** =========================================
- * работа с данными
- */
-/** =========================================
- * работа с DOM
- */
-/** =========================================
- * экспорт
- */
+* экспорт
+*/
 export {changeScreen, renderTemplate, addModal, mainElement};

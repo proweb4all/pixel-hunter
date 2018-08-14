@@ -7,7 +7,7 @@ import {setEventForBtnBack} from './module-back-btn.js';
 /** =========================================
  * обьявление констант
  */
-const rulesScreen = `
+const RULES_SCREEN = `
   <header class="header">
     <button class="back">
       <span class="visually-hidden">Вернуться к началу</span>
@@ -37,24 +37,14 @@ const rulesScreen = `
   </section>
 `;
 /** =========================================
-* обьявление переменных
-*/
-let rulesForm;
-let btnRulesForm;
-let name;
-/** =========================================
 * обьявление фукнции
 */
 /** функция управляет состоянием disabled кнопки формы btnRulesForm в зависимости от значения инпута в форме
 * @param {Event} evt
 */
 const changeNameHandler = (evt) => {
-  let value = evt.target.value;
-  if (value) {
-    btnRulesForm.disabled = false;
-  } else {
-    btnRulesForm.disabled = true;
-  }
+  let btnRulesForm = document.querySelector(`.rules__button`);
+  evt.target.value ? btnRulesForm.disabled = false : btnRulesForm.disabled = true;
 };
 /** изменение sreen при отправке формы
 * @param {Event} evt
@@ -65,20 +55,19 @@ const submitFormHandler = (evt) => {
   changeScreen(gameOne);
 };
 /** =========================================
-* работа с данными
-*/
-const element = renderTemplate(rulesScreen);
-/** =========================================
-* работа с DOM
-*/
-name = element.querySelector(`.rules__input`);
-btnRulesForm = element.querySelector(`.rules__button`);
-rulesForm = element.querySelector(`.rules__form`);
-
-setEventForBtnBack(element);
-name.addEventListener(`input`, changeNameHandler);
-rulesForm.addEventListener(`submit`, submitFormHandler);
-/** =========================================
 * экспорт
 */
-export default element;
+export default () => {
+  const element = renderTemplate(RULES_SCREEN);
+  /** =========================================
+  * работа с DOM
+  */
+  const name = element.querySelector(`.rules__input`);
+  name.addEventListener(`input`, changeNameHandler);
+  const rulesForm = element.querySelector(`.rules__form`);
+  rulesForm.addEventListener(`submit`, submitFormHandler);
+
+  setEventForBtnBack(element);
+
+  return element;
+}

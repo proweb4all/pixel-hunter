@@ -6,19 +6,14 @@ import welcomeScreen from './module-welcome-screen.js';
 /** =========================================
  * обьявление констант
  */
-const mainScreen = `
+const MAIN_SCREEN = `
   <section class="intro">
     <button class="intro__asterisk asterisk" type="button"><span class="visually-hidden">Продолжить</span>*</button>
     <p class="intro__motto"><sup>*</sup> Это не фото. Это рисунок маслом нидерландского художника-фотореалиста Tjalf Sparnaay.</p>
   </section>
 `;
-const timeChangeScreen = 500;
-const timeChangeCssOpacity = 1000;
-/** =========================================
- * обьявление переменных
- */
-let btnIntroAsterisk;
-let content;
+const TIME_CHANGE_SCREEN = 500;
+const TIME_CHANGE_CSS_OPACITY = 1000;
 /** =========================================
 * обьявление фукнции
 */
@@ -26,28 +21,28 @@ let content;
 *
 */
 const clickBtnHandler = () => {
+  const content = document.querySelector(`.central__content`);
   content.style.transition = `opacity 0.5s linear`;
   content.style.opacity = 0;
 
   setTimeout(() => {
     changeScreen(welcomeScreen);
-  }, timeChangeScreen);
+  }, TIME_CHANGE_SCREEN);
 
   setTimeout(() => {
     content.style.opacity = 1;
-  }, timeChangeCssOpacity);
+  }, TIME_CHANGE_CSS_OPACITY);
 };
 /** =========================================
- * работа с данными
- */
-const element = renderTemplate(mainScreen);
-/** =========================================
- * работа с DOM
- */
-btnIntroAsterisk = element.querySelector(`.intro__asterisk`);
-content = document.querySelector(`.central__content`);
-btnIntroAsterisk.addEventListener(`click`, clickBtnHandler);
-/** =========================================
- * экспорт
- */
-export default element;
+* экспорт
+*/
+export default () => {
+  const element = renderTemplate(MAIN_SCREEN);
+  /** =========================================
+  * работа с DOM
+  */
+  const btnIntroAsterisk = element.querySelector(`.intro__asterisk`);
+  btnIntroAsterisk.addEventListener(`click`, clickBtnHandler);
+
+  return element;
+}

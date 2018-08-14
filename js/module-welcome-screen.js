@@ -6,7 +6,7 @@ import rulesScreen from './module-rules-screen.js';
 /** =========================================
  * обьявление констант
  */
-const welcomeScreen = `
+const WELCOM_SCREEN = `
   <section class="greeting central--blur">
     <img class="greeting__logo" src="img/logo_ph-big.svg" width="201" height="89" alt="Pixel Hunter">
     <div class="greeting__asterisk asterisk"><span class="visually-hidden">Я просто красивая звёздочка</span>*</div>
@@ -29,10 +29,6 @@ const welcomeScreen = `
   </section>
 `;
 /** =========================================
-* обьявление переменных
-*/
-let btnGreetingContinue;
-/** =========================================
 * обьявление фукнции
 */
 /** изменение sreen при клике
@@ -42,15 +38,15 @@ const clickBtnHandler = () => {
   changeScreen(rulesScreen);
 };
 /** =========================================
-* работа с данными
-*/
-const element = renderTemplate(welcomeScreen);
-/** =========================================
-* работа с DOM
-*/
-btnGreetingContinue = element.querySelector(`.greeting__continue`);
-btnGreetingContinue.addEventListener(`click`, clickBtnHandler);
-/** =========================================
 * экспорт
 */
-export default element;
+export default () => {
+  const element = renderTemplate(WELCOM_SCREEN);
+  /** =========================================
+  * работа с DOM
+  */
+  const btnGreetingContinue = element.querySelector(`.greeting__continue`);
+  btnGreetingContinue.addEventListener(`click`, clickBtnHandler);
+
+  return element;
+}

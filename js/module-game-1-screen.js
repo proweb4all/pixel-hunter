@@ -7,7 +7,7 @@ import {setEventForBtnBack} from './module-back-btn.js';
 /** =========================================
  * обьявление констант
  */
-const gameOne = `
+const GAME_ONE_SCREEN = `
   <header class="header">
     <button class="back">
       <span class="visually-hidden">Вернуться к началу</span>
@@ -66,10 +66,6 @@ const gameOne = `
   </section>
 `;
 /** =========================================
- * обьявление переменных
- */
-let form;
-/** =========================================
  * обьявление фукнции
  */
 /** при выборе 2 ответов в форме, переключение экрана
@@ -87,17 +83,17 @@ const changeFormHandler = (evt) => {
   }
 };
 /** =========================================
- * работа с данными
- */
-const element = renderTemplate(gameOne);
-/** =========================================
- * работа с DOM
- */
-form = element.querySelector(`.game__content`);
-
-setEventForBtnBack(element);
-form.addEventListener(`change`, changeFormHandler);
-/** =========================================
  * экспорт
  */
-export default element;
+export default () => {
+  const element = renderTemplate(GAME_ONE_SCREEN);
+  /** =========================================
+  * работа с DOM
+  */
+  const form = element.querySelector(`.game__content`);
+  form.addEventListener(`change`, changeFormHandler);
+
+  setEventForBtnBack(element);
+
+  return element;
+}
