@@ -26,7 +26,7 @@ const renderTemplate = (strHtml) => {
  */
 const changeScreen = (element) => {
   mainElement.innerHTML = ``;
-  console.log('add', element);
+  // console.log(`add`, element);
   mainElement.appendChild(element);
 };
 /**
