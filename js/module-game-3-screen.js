@@ -70,23 +70,19 @@ const clickFormHandler = () => {
  */
 export default () => {
   /**
-   *  обьявление переменных
-   */
-  let imgs;
-  /**
    *  работа с данными
    */
   const element = renderTemplate(GAME_THREE_SCREEN);
+  /**
+   *  обьявление переменных
+   */
+  const imgs = element.querySelectorAll(`.game__content img`);
   /** =========================================
   * работа с DOM
   */
-  imgs = element.querySelectorAll(`.game__content img`);
-  for (const key in imgs) {
-    if (imgs.hasOwnProperty(key)) {
-      const elem = imgs[key];
-      elem.addEventListener(`click`, clickFormHandler);
-    }
-  }
+  imgs.forEach((item) => {
+    item.addEventListener(`click`, clickFormHandler);
+  });
 
   setEventForBtnBack(element);
 

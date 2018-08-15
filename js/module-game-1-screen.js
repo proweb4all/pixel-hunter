@@ -88,17 +88,16 @@ const changeFormHandler = (evt) => {
  */
 export default () => {
   /**
-   *  обьявление переменных
-   */
-  let form;
-  /**
    *  работа с данными
    */
   const element = renderTemplate(GAME_ONE_SCREEN);
+  /**
+   *  обьявление переменных
+   */
+  const form = element.querySelector(`.game__content`);
   /** =========================================
   * работа с DOM
   */
-  form = element.querySelector(`.game__content`);
   form.addEventListener(`change`, changeFormHandler);
 
   setEventForBtnBack(element);

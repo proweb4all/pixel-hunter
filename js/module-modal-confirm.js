@@ -55,23 +55,20 @@ const confirmHandler = (evt) => {
 */
 export default () => {
   /**
-   *  обьявление переменных
-   */
-  let modalBtnClose;
-  let modalBtnOk;
-  let modalBtnCancel;
-  /**
    *  работа с данными
    */
   const element = renderTemplate(MODAL_CONFIRM);
+  /**
+   *  обьявление переменных
+   */
+  const modalBtnClose = element.querySelector(`.modal__close`);
+  const modalBtnOk = element.querySelectorAll(`.modal__btn`)[0];
+  const modalBtnCancel = element.querySelectorAll(`.modal__btn`)[1];
   /** =========================================
   * работа с DOM
   */
-  modalBtnClose = element.querySelector(`.modal__close`);
   modalBtnClose.addEventListener(`click`, clickCloseHandler);
-  modalBtnOk = element.querySelectorAll(`.modal__btn`)[0];
   modalBtnOk.addEventListener(`click`, confirmHandler);
-  modalBtnCancel = element.querySelectorAll(`.modal__btn`)[1];
   modalBtnCancel.addEventListener(`click`, clickCancelHandler);
   document.addEventListener(`keydown`, escCloseHandler);
 

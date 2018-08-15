@@ -43,17 +43,16 @@ const clickBtnHandler = () => {
 */
 export default () => {
   /**
-   *  обьявление переменных
-   */
-  let btnGreetingContinue;
-  /**
    *  работа с данными
    */
   const element = renderTemplate(WELCOME_SCREEN);
+  /**
+   *  обьявление переменных
+   */
+  const btnGreetingContinue = element.querySelector(`.greeting__continue`);
   /** =========================================
    * работа с DOM
    */
-  btnGreetingContinue = element.querySelector(`.greeting__continue`);
   btnGreetingContinue.addEventListener(`click`, clickBtnHandler);
 
   return element;

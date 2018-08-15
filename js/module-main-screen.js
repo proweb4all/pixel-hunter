@@ -27,17 +27,16 @@ const clickBtnHandler = () => {
 */
 export default () => {
   /**
-   *  обьявление переменных
-   */
-  let btnIntroAsterisk;
-  /**
    *  работа с данными
    */
   const element = renderTemplate(MAIN_SCREEN);
+  /**
+   *  обьявление переменных
+   */
+  const btnIntroAsterisk = element.querySelector(`.intro__asterisk`);
   /** =========================================
   * работа с DOM
   */
-  btnIntroAsterisk = element.querySelector(`.intro__asterisk`);
   btnIntroAsterisk.addEventListener(`click`, clickBtnHandler);
 
   return element;

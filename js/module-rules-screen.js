@@ -36,24 +36,16 @@ const RULES_SCREEN = `
     </form>
   </section>
 `;
-/**
- * обьявление переменных
- */
-let btnRulesForm;
 /** =========================================
 * обьявление фукнции
 */
 /** функция управляет состоянием disabled кнопки формы btnRulesForm в зависимости от значения инпута в форме
 * @param {Event} evt
+* @param {HTMLElement} btnForm
 */
-const changeNameHandler = (evt) => {
+const changeNameHandler = (evt, btnForm) => {
   const targetValue = evt.target.value;
-
-  if (targetValue) {
-    btnRulesForm.disabled = !targetValue;
-  } else {
-    btnRulesForm.disabled = !targetValue;
-  }
+  btnForm.disabled = !targetValue;
 };
 /** изменение sreen при отправке формы
 * @param {Event} evt
@@ -69,22 +61,22 @@ const submitFormHandler = (evt) => {
 */
 export default () => {
   /**
-   *  обьявление переменных
-   */
-  let name;
-  let rulesForm;
-  /**
    *  работа с данными
    */
   const element = renderTemplate(RULES_SCREEN);
+  /**
+   *  обьявление переменных
+   */
+  const name = element.querySelector(`.rules__input`);
+  const rulesForm = element.querySelector(`.rules__form`);
+  const btnRulesForm = element.querySelector(`.rules__button`);
   /** =========================================
    * работа с DOM
    */
-  name = element.querySelector(`.rules__input`);
-  name.addEventListener(`input`, changeNameHandler);
-  rulesForm = element.querySelector(`.rules__form`);
+  name.addEventListener(`input`, (evt) => {
+    changeNameHandler(evt, btnRulesForm);
+  });
   rulesForm.addEventListener(`submit`, submitFormHandler);
-  btnRulesForm = element.querySelector(`.rules__button`);
 
   setEventForBtnBack(element);
 
