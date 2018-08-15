@@ -121,9 +121,12 @@ const STATS_SCREEN = `
 `;
 /** =========================================
  * экспорт
- * @return {Function} element
+ * @return {HTMLElement} element
  */
 export default () => {
+  /**
+   *  работа с данными
+   */
   const element = renderTemplate(STATS_SCREEN);
   /** =========================================
   * работа с DOM

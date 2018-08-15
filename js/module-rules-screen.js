@@ -36,6 +36,10 @@ const RULES_SCREEN = `
     </form>
   </section>
 `;
+/**
+ * обьявление переменных
+ */
+let btnRulesForm;
 /** =========================================
 * обьявление фукнции
 */
@@ -44,12 +48,11 @@ const RULES_SCREEN = `
 */
 const changeNameHandler = (evt) => {
   const targetValue = evt.target.value;
-  const btnRulesForm = document.querySelector(`.rules__button`);
 
   if (targetValue) {
-    btnRulesForm.disabled = false;
+    btnRulesForm.disabled = !targetValue;
   } else {
-    btnRulesForm.disabled = true;
+    btnRulesForm.disabled = !targetValue;
   }
 };
 /** изменение sreen при отправке формы
@@ -58,21 +61,30 @@ const changeNameHandler = (evt) => {
 const submitFormHandler = (evt) => {
   evt.preventDefault();
 
-  changeScreen(gameOne);
+  changeScreen(gameOne());
 };
 /** =========================================
 * экспорт
-* @return {Function} element
+* @return {HTMLElement} element
 */
 export default () => {
+  /**
+   *  обьявление переменных
+   */
+  let name;
+  let rulesForm;
+  /**
+   *  работа с данными
+   */
   const element = renderTemplate(RULES_SCREEN);
   /** =========================================
-  * работа с DOM
-  */
-  const name = element.querySelector(`.rules__input`);
+   * работа с DOM
+   */
+  name = element.querySelector(`.rules__input`);
   name.addEventListener(`input`, changeNameHandler);
-  const rulesForm = element.querySelector(`.rules__form`);
+  rulesForm = element.querySelector(`.rules__form`);
   rulesForm.addEventListener(`submit`, submitFormHandler);
+  btnRulesForm = element.querySelector(`.rules__button`);
 
   setEventForBtnBack(element);
 

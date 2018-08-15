@@ -12,8 +12,6 @@ const MAIN_SCREEN = `
     <p class="intro__motto"><sup>*</sup> Это не фото. Это рисунок маслом нидерландского художника-фотореалиста Tjalf Sparnaay.</p>
   </section>
 `;
-const TIME_CHANGE_SCREEN = 500;
-const TIME_CHANGE_CSS_OPACITY = 1000;
 /** =========================================
 * обьявление фукнции
 */
@@ -21,28 +19,25 @@ const TIME_CHANGE_CSS_OPACITY = 1000;
 *
 */
 const clickBtnHandler = () => {
-  const content = document.querySelector(`.central__content`);
-  content.style.transition = `opacity 0.5s linear`;
-  content.style.opacity = 0;
-
-  setTimeout(() => {
-    changeScreen(welcomeScreen);
-  }, TIME_CHANGE_SCREEN);
-
-  setTimeout(() => {
-    content.style.opacity = 1;
-  }, TIME_CHANGE_CSS_OPACITY);
+  changeScreen(welcomeScreen());
 };
 /** =========================================
 * экспорт
-* @return {Function} element
+* @return {HTMLElement} element
 */
 export default () => {
+  /**
+   *  обьявление переменных
+   */
+  let btnIntroAsterisk;
+  /**
+   *  работа с данными
+   */
   const element = renderTemplate(MAIN_SCREEN);
   /** =========================================
   * работа с DOM
   */
-  const btnIntroAsterisk = element.querySelector(`.intro__asterisk`);
+  btnIntroAsterisk = element.querySelector(`.intro__asterisk`);
   btnIntroAsterisk.addEventListener(`click`, clickBtnHandler);
 
   return element;

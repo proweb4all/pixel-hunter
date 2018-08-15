@@ -8,28 +8,27 @@ const mainElement = document.querySelector(`#main`);
 /**
 * рендеринг template
 * @param {String} strHtml
-* @return {Node} fragment
+* @return {HTMLElement} fragment
 */
 const renderTemplate = (strHtml) => {
   const wrapperTemplate = document.createElement(`template`);
   wrapperTemplate.innerHTML = strHtml.trim();
-  let fragment = wrapperTemplate.content;
-  return fragment;
+  return wrapperTemplate.content;
 };
 /**
 * вставка данных из template
-* @param {Function} func
+* @param {HTMLElement} element
 */
-const changeScreen = (func) => {
+const changeScreen = (element) => {
   mainElement.innerHTML = ``;
-  mainElement.appendChild(func());
+  mainElement.appendChild(element);
 };
 /**
 * вставка данных из template "модального окна"
-* @param {Function} func
+* @param {HTMLElement} element
 */
-const addModal = (func) => {
-  mainElement.appendChild(func());
+const addModal = (element) => {
+  mainElement.appendChild(element);
 };
 /** =========================================
 * экспорт

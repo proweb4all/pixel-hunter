@@ -75,23 +75,30 @@ const changeFormHandler = (evt) => {
   let array = Array.from(evt.currentTarget.elements)
               .map((item) => item.checked)
               .filter(function (item) {
-                return item ? true : false;
+                return !!item;
               });
 
   if (array.length === 2) {
-    changeScreen(gameTwo);
+    changeScreen(gameTwo());
   }
 };
 /** =========================================
  * экспорт
- * @return {Function} element
+ * @return {HTMLElement} element
  */
 export default () => {
+  /**
+   *  обьявление переменных
+   */
+  let form;
+  /**
+   *  работа с данными
+   */
   const element = renderTemplate(GAME_ONE_SCREEN);
   /** =========================================
   * работа с DOM
   */
-  const form = element.querySelector(`.game__content`);
+  form = element.querySelector(`.game__content`);
   form.addEventListener(`change`, changeFormHandler);
 
   setEventForBtnBack(element);

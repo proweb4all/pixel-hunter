@@ -61,18 +61,25 @@ const GAME_TWO_SCREEN = `
  *
  */
 const changeFormHandler = () => {
-  changeScreen(gameThree);
+  changeScreen(gameThree());
 };
 /** =========================================
 * экспорт
-* @return {Function} element
+* @return {HTMLElement} element
 */
 export default () => {
+  /**
+   *  обьявление переменных
+   */
+  let form;
+  /**
+   *  работа с данными
+   */
   const element = renderTemplate(GAME_TWO_SCREEN);
   /** =========================================
   * работа с DOM
   */
-  const form = element.querySelector(`.game__content`);
+  form = element.querySelector(`.game__content`);
   form.addEventListener(`change`, changeFormHandler);
 
   setEventForBtnBack(element);

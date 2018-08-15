@@ -55,35 +55,38 @@ const GAME_THREE_SCREEN = `
 /** =========================================
  * обьявление переменных
  */
-let form;
 /** =========================================
  * обьявление фукнции
  */
 /** при выборе ответа в форме, переключение экрана
- * @param {Event} evt
+ *
  */
-const clickFormHandler = (evt) => {
-  let target = evt.target;
-
-  while (target !== form) {
-    if (target.tagName === `IMG`) {
-      changeScreen(resultScreen);
-      return;
-    }
-    target = target.parentElement;
-  }
+const clickFormHandler = () => {
+  changeScreen(resultScreen());
 };
 /** =========================================
  * экспорт
- * @return {Function} element
+ * @return {HTMLElement} element
  */
 export default () => {
+  /**
+   *  обьявление переменных
+   */
+  let imgs;
+  /**
+   *  работа с данными
+   */
   const element = renderTemplate(GAME_THREE_SCREEN);
   /** =========================================
   * работа с DOM
   */
-  form = element.querySelector(`.game__content`);
-  form.addEventListener(`click`, clickFormHandler);
+  imgs = element.querySelectorAll(`.game__content img`);
+  for (const key in imgs) {
+    if (imgs.hasOwnProperty(key)) {
+      const elem = imgs[key];
+      elem.addEventListener(`click`, clickFormHandler);
+    }
+  }
 
   setEventForBtnBack(element);
 
