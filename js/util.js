@@ -31,6 +31,9 @@ const addModal = (element) => {
   mainElement.appendChild(element);
 };
 /** =========================================
+* работа с данными
+*/
+/** =========================================
 * экспорт
 */
 export {changeScreen, renderTemplate, addModal, mainElement};

@@ -2,6 +2,7 @@
  * импорт модулей
  */
 import {changeScreen, renderTemplate} from './util.js';
+import {startTime} from './game.js';
 import gameTwo from './module-game-2-screen.js';
 import {setEventForBtnBack} from './module-back-btn.js';
 /** =========================================
@@ -95,12 +96,15 @@ export default () => {
    *  обьявление переменных
    */
   const form = element.querySelector(`.game__content`);
+  const gameTimer = element.querySelector(`.game__timer`);
   /** =========================================
   * работа с DOM
   */
   form.addEventListener(`change`, changeFormHandler);
 
   setEventForBtnBack(element);
+
+  startTime(gameTimer);
 
   return element;
 };
