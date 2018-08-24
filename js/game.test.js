@@ -51,6 +51,14 @@ describe(`Change lives`, () => {
 
     assert.equal(setLives(data).lives, 1);
   });
+
+  it(`return 0`, () => {
+    let data = {
+      lives: 0
+    };
+
+    assert.equal(setLives(data).lives, 0);
+  });
 });
 
 describe(`Change level`, () => {

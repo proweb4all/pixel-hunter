@@ -7,6 +7,15 @@ const INITIAL_GAME = Object.freeze({
   time: 0,
   points: 0
 });
+const MIN_ANSWER = 10;
+const FAST_TIME = 10;
+const NORMAL_TIME_VALUE_ONE = 10;
+const NORMAL_TIME_VALUE_TWO = 20;
+const SLOW_TIME = 20;
+const POINT_ADD = 100;
+const POINT_BONUS = 50;
+const POINT_FINE = 50;
+const POINT_BONUS_LIVES = 50;
 /** =========================================
 * обьявление фукнции
 */
@@ -15,11 +24,13 @@ const INITIAL_GAME = Object.freeze({
 * @return {Object} newData
 */
 const setLives = (startData) => {
-  const newData = Object.assign({}, startData);
-  if (newData.lives === 0) {
-    return newData.lives;
+  if (startData.lives === 0) {
+    return startData;
   }
-  newData.lives = newData.lives - 1;
+  const tempObj = {
+    lives: startData.lives - 1
+  };
+  const newData = Object.assign({}, startData, tempObj);
   return newData;
 };
 /** Переключение уровней
@@ -27,8 +38,10 @@ const setLives = (startData) => {
 * @return {Object} newData
 */
 const changeLevel = (startData) => {
-  const newData = Object.assign({}, startData);
-  newData.level = newData.level + 1;
+  const tempObj = {
+    level: startData.level + 1
+  };
+  const newData = Object.assign({}, startData, tempObj);
   return newData;
 };
 /** запись текста времени
@@ -64,15 +77,6 @@ const startTime = (timerElement) => {
 */
 const countingPoints = (arrayUserAnswers, lives, startData) => {
   const newData = Object.assign({}, startData);
-  const MIN_ANSWER = 10;
-  const FAST_TIME = 10;
-  const NORMAL_TIME_VALUE_ONE = 10;
-  const NORMAL_TIME_VALUE_TWO = 20;
-  const SLOW_TIME = 20;
-  const POINT_ADD = 100;
-  const POINT_BONUS = 50;
-  const POINT_FINE = 50;
-  const POINT_BONUS_LIVES = 50;
 
   if (arrayUserAnswers.length < MIN_ANSWER) {
     newData.points = -1;
