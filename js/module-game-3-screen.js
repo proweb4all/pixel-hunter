@@ -2,6 +2,7 @@
  * импорт модулей
  */
 import {changeScreen, renderTemplate} from './util.js';
+import {startTime} from './game.js';
 import resultScreen from './module-result-screen.js';
 import {setEventForBtnBack} from './module-back-btn.js';
 /** =========================================
@@ -77,14 +78,16 @@ export default () => {
    *  обьявление переменных
    */
   const imgs = element.querySelectorAll(`.game__content img`);
+  const gameTimer = element.querySelector(`.game__timer`);
   /** =========================================
-  * работа с DOM
-  */
+   * работа с DOM
+   */
   imgs.forEach((item) => {
     item.addEventListener(`click`, clickFormHandler);
   });
 
   setEventForBtnBack(element);
+  startTime(gameTimer);
 
   return element;
 };
