@@ -1,9 +1,12 @@
 /** =========================================
  * импорт модулей
  */
-import {changeScreen, renderTemplate} from './util.js';
-import gameOne from './module-game-1-screen.js';
+import {changeScreen, renderTemplate, setScreen} from './util.js';
 import {setEventForBtnBack} from './module-back-btn.js';
+import header from './module-header.js';
+import {INITIAL_GAME} from './game.js';
+import returnScreenGame from './module-game-screens';
+import arrayDemoData from './data-game.js';
 /** =========================================
  * обьявление констант
  */
@@ -53,7 +56,8 @@ const changeNameHandler = (evt, btnForm) => {
 const submitFormHandler = (evt) => {
   evt.preventDefault();
 
-  changeScreen(gameOne());
+  // changeScreen(header(INITIAL_GAME), returnScreenGame('gameOne')());
+  changeScreen(header(INITIAL_GAME), returnScreenGame(setScreen(arrayDemoData))());
 };
 /** =========================================
 * экспорт

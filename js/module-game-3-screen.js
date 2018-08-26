@@ -1,31 +1,17 @@
 /** =========================================
  * импорт модулей
  */
-import {changeScreen, renderTemplate} from './util.js';
-import {startTime} from './game.js';
-import resultScreen from './module-result-screen.js';
-import {setEventForBtnBack} from './module-back-btn.js';
+// import {changeScreen, renderTemplate} from './util.js';
+// import resultScreen from './module-result-screen.js';
+import header from './module-header.js';
+import {INITIAL_GAME} from './game.js';
+import {changeScreen, renderTemplate, setScreen} from './util.js';
+import returnScreenGame from './module-game-screens';
+import arrayDemoData from './data-game.js';
 /** =========================================
  * обьявление констант
  */
 const GAME_THREE_SCREEN = `
-  <header class="header">
-    <button class="back">
-      <span class="visually-hidden">Вернуться к началу</span>
-      <svg class="icon" width="45" height="45" viewBox="0 0 45 45" fill="#000000">
-        <use xlink:href="img/sprite.svg#arrow-left"></use>
-      </svg>
-      <svg class="icon" width="101" height="44" viewBox="0 0 101 44" fill="#000000">
-        <use xlink:href="img/sprite.svg#logo-small"></use>
-      </svg>
-    </button>
-    <div class="game__timer">NN</div>
-    <div class="game__lives">
-      <img src="img/heart__empty.svg" class="game__heart" alt="Life" width="31" height="27">
-      <img src="img/heart__full.svg" class="game__heart" alt="Life" width="31" height="27">
-      <img src="img/heart__full.svg" class="game__heart" alt="Life" width="31" height="27">
-    </div>
-  </header>
   <section class="game">
     <p class="game__task">Найдите рисунок среди изображений</p>
     <form class="game__content  game__content--triple">
@@ -63,7 +49,8 @@ const GAME_THREE_SCREEN = `
  *
  */
 const clickFormHandler = () => {
-  changeScreen(resultScreen());
+  // changeScreen(resultScreen());
+  changeScreen(header(INITIAL_GAME), returnScreenGame(setScreen(arrayDemoData))());
 };
 /** =========================================
  * экспорт
@@ -78,16 +65,12 @@ export default () => {
    *  обьявление переменных
    */
   const imgs = element.querySelectorAll(`.game__content img`);
-  const gameTimer = element.querySelector(`.game__timer`);
   /** =========================================
    * работа с DOM
    */
   imgs.forEach((item) => {
     item.addEventListener(`click`, clickFormHandler);
   });
-
-  setEventForBtnBack(element);
-  startTime(gameTimer);
 
   return element;
 };

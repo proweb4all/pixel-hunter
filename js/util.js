@@ -12,16 +12,22 @@ const mainElement = document.querySelector(`#main`);
 */
 const renderTemplate = (strHtml) => {
   const wrapperTemplate = document.createElement(`template`);
-  wrapperTemplate.innerHTML = strHtml.trim();
+  wrapperTemplate.innerHTML = strHtml;
   return wrapperTemplate.content;
 };
 /**
 * вставка данных из template
-* @param {HTMLElement} element
+* @param {HTMLElement} elements
 */
-const changeScreen = (element) => {
+const changeScreen = (...elements) => {
   mainElement.innerHTML = ``;
-  mainElement.appendChild(element);
+  if (elements.length === 2 && elements[1].querySelector(`.result`)) {
+    mainElement.appendChild(elements[1]);
+  } else {
+    elements.forEach((element) => {
+      mainElement.appendChild(element);
+    });
+  }
 };
 /**
 * вставка данных из template "модального окна"
@@ -30,10 +36,17 @@ const changeScreen = (element) => {
 const addModal = (element) => {
   mainElement.appendChild(element);
 };
+
+const setScreen = (array) => {
+  if (!array.length) {
+    return ``;
+  }
+  return array.pop().screenName;
+};
 /** =========================================
 * работа с данными
 */
 /** =========================================
 * экспорт
 */
-export {changeScreen, renderTemplate, addModal, mainElement};
+export {changeScreen, renderTemplate, addModal, mainElement, setScreen};

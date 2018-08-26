@@ -26,10 +26,21 @@ const ESC_CODE = 27;
 * обьявление фукнции
 */
 /**
-* удаление "модального окна"
+* отмена отправки формы у "модального окна"
 *
 */
-const clickCloseHandler = () => {
+// const submitFormHandler = (evt) => {
+//   evt.preventDefault();
+//   console.log(evt);
+// };
+/**
+* удаление "модального окна"
+* @param {Event} evt
+*/
+const clickCloseHandler = (evt) => {
+  evt.preventDefault();
+  // console.log(`close modal`);
+  // let mainElement = document.querySelector(`.central__content`);
   mainElement.removeChild(mainElement.lastChild);
   document.removeEventListener(`keydown`, escCloseHandler);
 };
@@ -38,15 +49,14 @@ const clickCancelHandler = clickCloseHandler;
 
 const escCloseHandler = function (evt) {
   if (evt.keyCode === ESC_CODE) {
-    clickCloseHandler();
+    clickCloseHandler(evt);
   }
 };
 /**
 * смена screen после подтверждения
 * @param {Event} evt
 */
-const confirmHandler = (evt) => {
-  evt.preventDefault();
+const confirmHandler = () => {
   changeScreen(welcome());
 };
 /** =========================================
@@ -61,12 +71,14 @@ export default () => {
   /**
    *  обьявление переменных
    */
+  // const modalForm = element.querySelector(`.modal__inner`);
   const modalBtnClose = element.querySelector(`.modal__close`);
   const modalBtnOk = element.querySelectorAll(`.modal__btn`)[0];
   const modalBtnCancel = element.querySelectorAll(`.modal__btn`)[1];
   /** =========================================
   * работа с DOM
   */
+  // modalForm.addEventListener(`submit`, submitFormHandler);
   modalBtnClose.addEventListener(`click`, clickCloseHandler);
   modalBtnOk.addEventListener(`click`, confirmHandler);
   modalBtnCancel.addEventListener(`click`, clickCancelHandler);
