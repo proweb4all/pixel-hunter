@@ -1,4 +1,4 @@
-export default [
+const array = [
   {
     screenName: `gameOne`,
     imgSrc: [`https://k42.kn3.net/CF42609C8.jpg`, `https://k42.kn3.net/D2F0370D6.jpg`],
@@ -50,3 +50,4 @@ export default [
     imgType: [`photo`, `photo`, `paint`]
   },
 ];
+export default array;

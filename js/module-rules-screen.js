@@ -1,12 +1,12 @@
 /** =========================================
  * импорт модулей
  */
-import {changeScreen, renderTemplate, setScreen} from './util.js';
+import {changeScreen, renderTemplate, setScreen, demoData} from './util.js';
 import {setEventForBtnBack} from './module-back-btn.js';
 import header from './module-header.js';
 import {INITIAL_GAME} from './game.js';
 import returnScreenGame from './module-game-screens';
-import arrayDemoData from './data-game.js';
+// import arrayDemoData from './data-game.js';
 /** =========================================
  * обьявление констант
  */
@@ -57,7 +57,7 @@ const submitFormHandler = (evt) => {
   evt.preventDefault();
 
   // changeScreen(header(INITIAL_GAME), returnScreenGame('gameOne')());
-  changeScreen(header(INITIAL_GAME), returnScreenGame(setScreen(arrayDemoData))());
+  changeScreen(header(INITIAL_GAME), returnScreenGame(setScreen(demoData))());
 };
 /** =========================================
 * экспорт

@@ -1,3 +1,4 @@
+import arrayDemoData from './data-game.js';
 /** =========================================
 * обьявление переменных
 */
@@ -38,6 +39,7 @@ const addModal = (element) => {
 };
 
 const setScreen = (array) => {
+  console.log(array);
   if (!array.length) {
     return ``;
   }
@@ -46,7 +48,12 @@ const setScreen = (array) => {
 /** =========================================
 * работа с данными
 */
+let demoData;
+let returnDemoData =  function () {
+  return demoData = arrayDemoData.slice(0);
+};
+returnDemoData();
 /** =========================================
 * экспорт
 */
-export {changeScreen, renderTemplate, addModal, mainElement, setScreen};
+export {changeScreen, renderTemplate, addModal, mainElement, setScreen, demoData, returnDemoData};

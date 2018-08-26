@@ -5,9 +5,9 @@
 // import gameThree from './module-game-3-screen.js';
 import header from './module-header.js';
 import {INITIAL_GAME} from './game.js';
-import {changeScreen, renderTemplate, setScreen} from './util.js';
+import {changeScreen, renderTemplate, setScreen, demoData} from './util.js';
 import returnScreenGame from './module-game-screens';
-import arrayDemoData from './data-game.js';
+// import arrayDemoData from './data-game.js';
 /** =========================================
  * обьявление констант
  */
@@ -49,7 +49,7 @@ const GAME_TWO_SCREEN = `
  */
 const changeFormHandler = () => {
   // changeScreen(header(INITIAL_GAME), gameThree());
-  changeScreen(header(INITIAL_GAME), returnScreenGame(setScreen(arrayDemoData))());
+  changeScreen(header(INITIAL_GAME), returnScreenGame(setScreen(demoData))());
 };
 /** =========================================
 * экспорт
