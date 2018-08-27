@@ -83,6 +83,13 @@ const pushUserAnswer = function (value) {
     userStat.answers.push({answer: false});
   }
 };
+/**
+* удаление HTMLElement
+* @param {HTMLElement} element
+*/
+const deleteElement = (element) => {
+  mainElement.removeChild(element);
+};
 /** =========================================
 * работа с данными
 */
@@ -90,4 +97,4 @@ cloneDemoData();
 /** =========================================
 * экспорт
 */
-export {changeScreen, renderTemplate, addModal, mainElement, returnTypeGameScreen, setGame, demoData, cloneDemoData, pushUserAnswer};
+export {changeScreen, renderTemplate, addModal, mainElement, returnTypeGameScreen, setGame, demoData, cloneDemoData, pushUserAnswer, deleteElement};

@@ -1,7 +1,7 @@
 /** =========================================
  * импорт модулей
  */
-import {changeScreen, renderTemplate, mainElement, cloneDemoData} from './util.js';
+import {changeScreen, renderTemplate, mainElement, cloneDemoData, deleteElement} from './util.js';
 import welcome from './module-welcome-screen.js';
 import {userStat} from './game.js';
 /** =========================================
@@ -23,6 +23,7 @@ const MODAL_CONFIRM = `
   </section>
 `;
 const ESC_CODE = 27;
+let objectHandler;
 /** =========================================
 * обьявление фукнции
 */
@@ -36,21 +37,25 @@ const ESC_CODE = 27;
 // };
 /**
 * удаление "модального окна"
+* @param {HTMLElement} elem
 * @param {Event} evt
 */
-const clickCloseHandler = (evt) => {
+const clickCloseHandler = (evt, elem) => {
   evt.preventDefault();
-  // console.log(`close modal`);
-  // let mainElement = document.querySelector(`.central__content`);
-  mainElement.removeChild(mainElement.lastChild);
-  document.removeEventListener(`keydown`, escCloseHandler);
+
+  deleteElement(elem);
+  document.removeEventListener(`keydown`, objectHandler);
 };
 
 const clickCancelHandler = clickCloseHandler;
-
-const escCloseHandler = function (evt) {
+/**
+* удаление "модального окна" по клавише ESC
+* @param {HTMLElement} elem
+* @param {Event} evt
+*/
+const escCloseHandler = (evt, elem) => {
   if (evt.keyCode === ESC_CODE) {
-    clickCloseHandler(evt);
+    clickCloseHandler(evt, elem);
   }
 };
 /**
@@ -75,6 +80,7 @@ export default () => {
    *  обьявление переменных
    */
   // const modalForm = element.querySelector(`.modal__inner`);
+  const modal = element.querySelector(`.modal`);
   const modalBtnClose = element.querySelector(`.modal__close`);
   const modalBtnOk = element.querySelectorAll(`.modal__btn`)[0];
   const modalBtnCancel = element.querySelectorAll(`.modal__btn`)[1];
@@ -82,10 +88,21 @@ export default () => {
   * работа с DOM
   */
   // modalForm.addEventListener(`submit`, submitFormHandler);
-  modalBtnClose.addEventListener(`click`, clickCloseHandler);
+  modalBtnClose.addEventListener(`click`, (evt) => {
+    clickCloseHandler(evt, modal);
+  });
   modalBtnOk.addEventListener(`click`, confirmHandler);
-  modalBtnCancel.addEventListener(`click`, clickCancelHandler);
-  document.addEventListener(`keydown`, escCloseHandler);
+  modalBtnCancel.addEventListener(`click`, (evt) => {
+    clickCancelHandler(evt, modal);
+  });
+
+  objectHandler = {
+    elem: modal,
+    handleEvent: function (evt) {
+      escCloseHandler(evt, this.elem);
+    }
+  };
+  document.addEventListener('keydown', objectHandler);
 
   return element;
 };
