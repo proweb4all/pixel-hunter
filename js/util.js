@@ -41,7 +41,7 @@ const addModal = (element) => {
 };
 /**
 * возврашает имя игрового скрина для его приминения
-* @param {Array} array
+* @param {String} typeGameScreen
 * @return {String}
 */
 const returnTypeGameScreen = (typeGameScreen) => {
@@ -56,7 +56,6 @@ const returnTypeGameScreen = (typeGameScreen) => {
 * @return {Function}
 */
 const setGame = (array) => {
-  console.log(array);
   let data = array.pop();
 
   if (!data) {
@@ -67,10 +66,9 @@ const setGame = (array) => {
 };
 /**
 * возврашает клон массива с демо данными
-* @return {Array}
 */
 let cloneDemoData = function () {
-  return demoData = arrayDemoData.slice(0);
+  demoData = arrayDemoData.slice(0);
 };
 /** =========================================
 * работа с данными

@@ -5,9 +5,14 @@ import header from './module-header.js';
 import {INITIAL_GAME} from './game.js';
 import {changeScreen, renderTemplate, setGame, demoData} from './util.js';
 /** =========================================
- * обьявление констант
+ * обьявление фукнции
  */
-const GAME_THREE_SCREEN = (arr) => {
+/** =========================================
+ * возврашает шаблон с данными
+ * @param {Array} arr
+ * @return {String}
+ */
+const template = (arr) => {
   let htmlImages = ``;
   arr.forEach((item, index) => {
     htmlImages += `<div class="game__option">
@@ -33,14 +38,8 @@ const GAME_THREE_SCREEN = (arr) => {
         <li class="stats__result stats__result--unknown"></li>
       </ul>
     </section>
-  `
+  `;
 };
-/** =========================================
- * обьявление переменных
- */
-/** =========================================
- * обьявление фукнции
- */
 /** при выборе ответа в форме, переключение экрана
  *
  */
@@ -49,13 +48,14 @@ const clickFormHandler = () => {
 };
 /** =========================================
  * экспорт
+ * @param {Array} arr
  * @return {HTMLElement} element
  */
 export default (arr) => {
   /**
    *  работа с данными
    */
-  const element = renderTemplate(GAME_THREE_SCREEN(arr));
+  const element = renderTemplate(template(arr));
   /**
    *  обьявление переменных
    */

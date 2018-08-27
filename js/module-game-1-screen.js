@@ -7,7 +7,12 @@ import {changeScreen, renderTemplate, setGame, demoData} from './util.js';
 /** =========================================
  * обьявление констант
  */
-const GAME_ONE_SCREEN = (arr) => {
+/** =========================================
+ * возврашает шаблон с данными
+ * @param {Array} arr
+ * @return {String}
+ */
+const template = (arr) => {
   let html = ``;
   arr.forEach((item, index) => {
     html += `<div class="game__option">
@@ -41,7 +46,7 @@ const GAME_ONE_SCREEN = (arr) => {
         <li class="stats__result stats__result--unknown"></li>
       </ul>
     </section>
-  `
+  `;
 };
 /** =========================================
  * обьявление фукнции
@@ -62,13 +67,14 @@ const changeFormHandler = (evt) => {
 };
 /** =========================================
  * экспорт
+ * @param {Array} arr
  * @return {HTMLElement} element
  */
 export default (arr) => {
   /**
    *  работа с данными
    */
-  const element = renderTemplate(GAME_ONE_SCREEN(arr));
+  const element = renderTemplate(template(arr));
   /**
    *  обьявление переменных
    */
