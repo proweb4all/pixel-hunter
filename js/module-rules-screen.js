@@ -83,7 +83,7 @@ export default () => {
     changeNameHandler(evt, btnRulesForm);
   });
   rulesForm.addEventListener(`submit`, (evt) => {
-    submitFormHandler(evt, name)
+    submitFormHandler(evt, name);
   });
 
   setEventForBtnBack(element);

@@ -1,5 +1,6 @@
 import arrayDemoData from './data-game.js';
 import returnScreenGame from './module-game-screens';
+import {userStat} from './game.js';
 /** =========================================
 * обьявление переменных
 */
@@ -71,10 +72,22 @@ let cloneDemoData = function () {
   demoData = arrayDemoData.slice(0);
 };
 /** =========================================
+/**
+* записываем ответ пользователя
+* @param {Boolean} value
+*/
+const pushUserAnswer = function (value) {
+  if (value) {
+    userStat.answers.push({answer: true});
+  } else {
+    userStat.answers.push({answer: false});
+  }
+};
+/** =========================================
 * работа с данными
 */
 cloneDemoData();
 /** =========================================
 * экспорт
 */
-export {changeScreen, renderTemplate, addModal, mainElement, returnTypeGameScreen, setGame, demoData, cloneDemoData};
+export {changeScreen, renderTemplate, addModal, mainElement, returnTypeGameScreen, setGame, demoData, cloneDemoData, pushUserAnswer};

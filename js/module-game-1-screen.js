@@ -3,7 +3,7 @@
  */
 import header from './module-header.js';
 import {INITIAL_GAME} from './game.js';
-import {changeScreen, renderTemplate, setGame, demoData} from './util.js';
+import {changeScreen, renderTemplate, setGame, demoData, pushUserAnswer} from './util.js';
 /** =========================================
  * обьявление констант
  */
@@ -55,13 +55,16 @@ const template = (arr) => {
  * @param {Event} evt
  */
 const changeFormHandler = (evt) => {
-  let array = Array.from(evt.currentTarget.elements)
-              .map((item) => item.checked)
-              .filter(function (item) {
-                return !!item;
-              });
+  const selectUserAnswer = Array.from(evt.currentTarget.elements)
+                                .map((item) => item.checked && item.value)
+                                .filter(function (item) {
+                                  return !!item;
+                                });
+  const correctAnswer = Array.from(evt.currentTarget.querySelectorAll(`img`))
+                              .map((item) => item.getAttribute(`data-type`));
 
-  if (array.length === 2) {
+  if (selectUserAnswer.length === correctAnswer.length) {
+    pushUserAnswer(JSON.stringify(selectUserAnswer) === JSON.stringify(correctAnswer));
     changeScreen(header(INITIAL_GAME), setGame(demoData));
   }
 };

@@ -16,7 +16,10 @@ const POINT_ADD = 100;
 const POINT_BONUS = 50;
 const POINT_FINE = 50;
 const POINT_BONUS_LIVES = 50;
-let userStat = {};
+let userStat = {
+  name: ``,
+  answers: []
+};
 /** =========================================
 * обьявление фукнции
 */

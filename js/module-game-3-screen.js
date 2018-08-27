@@ -3,7 +3,11 @@
  */
 import header from './module-header.js';
 import {INITIAL_GAME} from './game.js';
-import {changeScreen, renderTemplate, setGame, demoData} from './util.js';
+import {changeScreen, renderTemplate, setGame, demoData, pushUserAnswer} from './util.js';
+/** =========================================
+ * обьявление переменных
+ */
+const CORRECT_ANSWER = `paint`;
 /** =========================================
  * обьявление фукнции
  */
@@ -41,9 +45,13 @@ const template = (arr) => {
   `;
 };
 /** при выборе ответа в форме, переключение экрана
- *
+ * @param {Event} evt
  */
-const clickFormHandler = () => {
+const clickFormHandler = (evt) => {
+  let target = evt.target;
+  let selectUserAnswer = target.getAttribute(`data-type`);
+
+  pushUserAnswer(CORRECT_ANSWER === selectUserAnswer);
   changeScreen(header(INITIAL_GAME), setGame(demoData));
 };
 /** =========================================
