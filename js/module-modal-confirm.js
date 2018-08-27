@@ -1,7 +1,7 @@
 /** =========================================
  * импорт модулей
  */
-import {changeScreen, renderTemplate, mainElement, cloneDemoData, deleteElement} from './util.js';
+import {changeScreen, renderTemplate, cloneDemoData, deleteElement} from './util.js';
 import welcome from './module-welcome-screen.js';
 import {userStat} from './game.js';
 /** =========================================
@@ -37,8 +37,8 @@ let objectHandler;
 // };
 /**
 * удаление "модального окна"
-* @param {HTMLElement} elem
 * @param {Event} evt
+* @param {HTMLElement} elem
 */
 const clickCloseHandler = (evt, elem) => {
   evt.preventDefault();
@@ -50,8 +50,8 @@ const clickCloseHandler = (evt, elem) => {
 const clickCancelHandler = clickCloseHandler;
 /**
 * удаление "модального окна" по клавише ESC
-* @param {HTMLElement} elem
 * @param {Event} evt
+* @param {HTMLElement} elem
 */
 const escCloseHandler = (evt, elem) => {
   if (evt.keyCode === ESC_CODE) {
@@ -97,12 +97,11 @@ export default () => {
   });
 
   objectHandler = {
-    elem: modal,
-    handleEvent: function (evt) {
-      escCloseHandler(evt, this.elem);
+    handleEvent(evt) {
+      escCloseHandler(evt, modal);
     }
   };
-  document.addEventListener('keydown', objectHandler);
+  document.addEventListener(`keydown`, objectHandler);
 
   return element;
 };
