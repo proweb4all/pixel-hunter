@@ -16,6 +16,7 @@ const POINT_ADD = 100;
 const POINT_BONUS = 50;
 const POINT_FINE = 50;
 const POINT_BONUS_LIVES = 50;
+let userStat = {};
 /** =========================================
 * обьявление фукнции
 */
@@ -99,4 +100,4 @@ const countingPoints = (arrayUserAnswers, lives, startData) => {
 /** =========================================
 * экспорт
 */
-export {countingPoints, startTime, INITIAL_GAME, setLives, changeLevel};
+export {countingPoints, startTime, INITIAL_GAME, setLives, changeLevel, userStat};

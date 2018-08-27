@@ -4,7 +4,7 @@
 import {changeScreen, renderTemplate, setGame, demoData} from './util.js';
 import {setEventForBtnBack} from './module-back-btn.js';
 import header from './module-header.js';
-import {INITIAL_GAME} from './game.js';
+import {INITIAL_GAME, userStat} from './game.js';
 /** =========================================
  * обьявление констант
  */
@@ -50,11 +50,15 @@ const changeNameHandler = (evt, btnForm) => {
 };
 /** изменение sreen при отправке формы
 * @param {Event} evt
+* @param {HTMLElement} inputElem
 */
-const submitFormHandler = (evt) => {
+const submitFormHandler = (evt, inputElem) => {
   evt.preventDefault();
 
-  // changeScreen(header(INITIAL_GAME), returnScreenGame(returnTypeGameScreen(demoData))(arr));
+  if (inputElem.value) {
+    userStat.name = inputElem.value;
+  }
+
   changeScreen(header(INITIAL_GAME), setGame(demoData));
 };
 /** =========================================
@@ -78,7 +82,9 @@ export default () => {
   name.addEventListener(`input`, (evt) => {
     changeNameHandler(evt, btnRulesForm);
   });
-  rulesForm.addEventListener(`submit`, submitFormHandler);
+  rulesForm.addEventListener(`submit`, (evt) => {
+    submitFormHandler(evt, name)
+  });
 
   setEventForBtnBack(element);
 
