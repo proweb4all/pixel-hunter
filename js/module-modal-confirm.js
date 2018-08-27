@@ -3,6 +3,7 @@
  */
 import {changeScreen, renderTemplate, mainElement, cloneDemoData} from './util.js';
 import welcome from './module-welcome-screen.js';
+import {userStat} from './game.js';
 /** =========================================
  * обьявление констант
  */
@@ -59,6 +60,7 @@ const escCloseHandler = function (evt) {
 const confirmHandler = () => {
   changeScreen(welcome());
   cloneDemoData();
+  userStat.answers = null;
 };
 /** =========================================
 * экспорт
