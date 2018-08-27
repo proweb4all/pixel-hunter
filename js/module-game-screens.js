@@ -4,18 +4,18 @@ import gameThree from './module-game-3-screen.js';
 import resultScreen from './module-result-screen.js';
 
 export default (valueScreen) => {
-  let screenName = ``;
+  let typeScreen = ``;
   switch (valueScreen) {
     case `gameOne`:
-      screenName = gameOne;
+      typeScreen = gameOne;
       break;
     case `gameTwo`:
-      screenName = gameTwo;
+      typeScreen = gameTwo;
       break;
     case `gameThree`:
-      screenName = gameThree;
+      typeScreen = gameThree;
       break;
-    default : screenName = resultScreen;
+    default: typeScreen = resultScreen;
   }
-  return screenName;
+  return typeScreen;
 };

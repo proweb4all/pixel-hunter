@@ -1,7 +1,7 @@
 /** =========================================
  * импорт модулей
  */
-import {changeScreen, renderTemplate, mainElement, returnDemoData} from './util.js';
+import {changeScreen, renderTemplate, mainElement, cloneDemoData} from './util.js';
 import welcome from './module-welcome-screen.js';
 /** =========================================
  * обьявление констант
@@ -58,7 +58,7 @@ const escCloseHandler = function (evt) {
 */
 const confirmHandler = () => {
   changeScreen(welcome());
-  returnDemoData();
+  cloneDemoData();
 };
 /** =========================================
 * экспорт

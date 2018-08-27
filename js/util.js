@@ -1,8 +1,10 @@
 import arrayDemoData from './data-game.js';
+import returnScreenGame from './module-game-screens';
 /** =========================================
 * обьявление переменных
 */
 const mainElement = document.querySelector(`#main`);
+let demoData;
 /** =========================================
 * обьявление фукнции
 */
@@ -37,23 +39,44 @@ const changeScreen = (...elements) => {
 const addModal = (element) => {
   mainElement.appendChild(element);
 };
-
-const setScreen = (array) => {
-  console.log(array);
-  if (!array.length) {
+/**
+* возврашает имя игрового скрина для его приминения
+* @param {Array} array
+* @return {String}
+*/
+const returnTypeGameScreen = (typeGameScreen) => {
+  if (!typeGameScreen) {
     return ``;
   }
-  return array.pop().screenName;
+  return typeGameScreen;
+};
+/**
+* возврашает функцию устанавливаюшую игровой экран или экран результатов
+* @param {Array} array
+* @return {Function}
+*/
+const setGame = (array) => {
+  console.log(array);
+  let data = array.pop();
+
+  if (!data) {
+    return returnScreenGame(returnTypeGameScreen())();
+  }
+
+  return returnScreenGame(returnTypeGameScreen(data.typeGameScreen))(data.images);
+};
+/**
+* возврашает клон массива с демо данными
+* @return {Array}
+*/
+let cloneDemoData = function () {
+  return demoData = arrayDemoData.slice(0);
 };
 /** =========================================
 * работа с данными
 */
-let demoData;
-let returnDemoData =  function () {
-  return demoData = arrayDemoData.slice(0);
-};
-returnDemoData();
+cloneDemoData();
 /** =========================================
 * экспорт
 */
-export {changeScreen, renderTemplate, addModal, mainElement, setScreen, demoData, returnDemoData};
+export {changeScreen, renderTemplate, addModal, mainElement, returnTypeGameScreen, setGame, demoData, cloneDemoData};
