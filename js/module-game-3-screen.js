@@ -20,7 +20,7 @@ const template = (arr) => {
   let htmlImages = ``;
   arr.forEach((item, index) => {
     htmlImages += `<div class="game__option">
-              <img src="${item.src}" data-type="${item.isTypeImg}" alt="Option ${index}" width="304" height="455">
+              <img src="${item.src}" data-type="${item.imageType}" alt="Option ${index}" width="304" height="455">
             </div>`;
   });
   return `

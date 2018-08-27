@@ -16,7 +16,7 @@ const template = (arr) => {
   let html = ``;
   arr.forEach((item, index) => {
     html += `<div class="game__option">
-                  <img src="${item.src}" data-type="${item.isTypeImg}" alt="Option ${index}" width="468" height="458">
+                  <img src="${item.src}" data-type="${item.imageType}" alt="Option ${index}" width="468" height="458">
                   <label class="game__answer game__answer--photo">
                     <input class="visually-hidden" name="question${index}" type="radio" value="photo">
                     <span>Фото</span>

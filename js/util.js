@@ -63,7 +63,7 @@ const setGame = (array) => {
     return returnScreenGame(returnTypeGameScreen())();
   }
 
-  return returnScreenGame(returnTypeGameScreen(data.typeGameScreen))(data.images);
+  return returnScreenGame(returnTypeGameScreen(data.type))(data.images);
 };
 /**
 * возврашает клон массива с демо данными
