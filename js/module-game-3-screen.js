@@ -48,11 +48,10 @@ const template = (arr) => {
  * @param {Event} evt
  */
 const clickFormHandler = (evt) => {
-  let target = evt.target;
-  let selectUserAnswer = target.getAttribute(`data-type`);
+  const target = evt.target;
+  const selectUserAnswer = target.getAttribute(`data-type`);
 
   pushUserAnswer(CORRECT_ANSWER === selectUserAnswer);
-  // changeScreen(header(INITIAL_GAME), setGame(demoData));
   changeScreen(header(initialStateGame), setGame(demoData));
 };
 /** =========================================

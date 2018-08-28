@@ -57,11 +57,10 @@ const template = (arr) => {
 const changeFormHandler = (evt) => {
   const targetInput = evt.target;
   const currentTarget = evt.currentTarget;
-  let selectUserAnswer = targetInput.value;
-  let correctAnswer = currentTarget.querySelector(`img`).getAttribute(`data-type`);
+  const selectUserAnswer = targetInput.value;
+  const correctAnswer = currentTarget.querySelector(`img`).getAttribute(`data-type`);
 
   pushUserAnswer(correctAnswer === selectUserAnswer);
-  // changeScreen(header(INITIAL_GAME), setGame(demoData));
   changeScreen(header(initialStateGame), setGame(demoData));
 };
 /** =========================================

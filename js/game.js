@@ -28,21 +28,25 @@ let userStat = {
 */
 /** Управление жизнями игрока
 * @param {Object} startData
-* @return {Object} newData
+* @return {Object} initialStateGame
 */
 const setLives = (startData) => {
-  let data = demoData;
-  if (!startData) {
-    startData = Object.assign({}, startData, INITIAL_GAME);
-  }
   if (startData.lives === 0) {
-    data.length = 0;
+    demoData.length = 0;
     return startData;
   }
   const tempObj = {
     lives: startData.lives - 1
   };
   initialStateGame = Object.assign({}, startData, tempObj);
+  return initialStateGame;
+};
+/** инициальзация данных
+* @param {Object} data
+* @return {Object} initialStateGame
+*/
+const initData = (data) => {
+  initialStateGame = Object.assign({}, initialStateGame, data);
   return initialStateGame;
 };
 /** Переключение уровней
@@ -82,32 +86,48 @@ const startTime = (timerElement) => {
 };
 /** Подсчет очков при окончании игры
 * @param {Array} arrayUserAnswers
-* @param {Number} lives
 * @param {Object} startData
 * @return {Object} newData
 */
-const countingPoints = (arrayUserAnswers, lives, startData) => {
+const countingPoints = (arrayUserAnswers, startData) => {
   const newData = Object.assign({}, startData);
 
   if (arrayUserAnswers.length < MIN_ANSWER) {
     newData.points = -1;
     return newData;
   }
+  newData.fastPoints = {
+    points: 0,
+    items: 0
+  };
+  newData.slowPoints = {
+    points: 0,
+    items: 0
+  };
+  newData.livesPoints = {
+    points: 0,
+    items: 0
+  };
 
   arrayUserAnswers.forEach((item) => {
     if (item.answer && item.elapsedTime < FAST_TIME) {
-      newData.points = newData.points + POINT_ADD + POINT_BONUS;
+      newData.fastPoints.points = newData.fastPoints.points + POINT_ADD + POINT_BONUS;
+      newData.fastPoints.items += 1;
     } else if (item.answer && item.elapsedTime >= NORMAL_TIME_VALUE_ONE && item.elapsedTime <= NORMAL_TIME_VALUE_TWO) {
       newData.points = newData.points + POINT_ADD;
     } else if (item.answer && item.elapsedTime > SLOW_TIME) {
-      newData.points = newData.points + POINT_ADD - POINT_FINE;
+      newData.slowPoints.points = newData.slowPoints.points + POINT_ADD - POINT_FINE;
+      newData.slowPoints.items += 1;
     }
   });
 
-  newData.points = newData.points + lives * POINT_BONUS_LIVES;
+  newData.livesPoints.points = newData.livesPoints.points + startData.lives * POINT_BONUS_LIVES;
+  newData.livesPoints.items = startData.lives;
+  newData.points = newData.points + newData.fastPoints.points + newData.slowPoints.points + newData.livesPoints.points;
+
   return newData;
 };
 /** =========================================
 * экспорт
 */
-export {countingPoints, startTime, INITIAL_GAME, setLives, changeLevel, userStat, timeText, initialStateGame};
+export {countingPoints, startTime, INITIAL_GAME, setLives, changeLevel, userStat, timeText, initialStateGame, initData};

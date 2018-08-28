@@ -64,8 +64,8 @@ const changeFormHandler = (evt) => {
                               .map((item) => item.getAttribute(`data-type`));
 
   if (selectUserAnswer.length === correctAnswer.length) {
+    // как лучше сравнить 2 массва?
     pushUserAnswer(JSON.stringify(selectUserAnswer) === JSON.stringify(correctAnswer));
-    // changeScreen(header(INITIAL_GAME), setGame(demoData));
     changeScreen(header(initialStateGame), setGame(demoData));
   }
 };

@@ -4,7 +4,7 @@
 import {changeScreen, renderTemplate, setGame, demoData} from './util.js';
 import {setEventForBtnBack} from './module-back-btn.js';
 import header from './module-header.js';
-import {INITIAL_GAME, userStat} from './game.js';
+import {INITIAL_GAME, userStat, initData} from './game.js';
 /** =========================================
  * обьявление констант
  */
@@ -59,7 +59,7 @@ const submitFormHandler = (evt, inputElem) => {
     userStat.name = inputElem.value;
   }
 
-  changeScreen(header(INITIAL_GAME), setGame(demoData));
+  changeScreen(header(initData(INITIAL_GAME)), setGame(demoData));
 };
 /** =========================================
 * экспорт
