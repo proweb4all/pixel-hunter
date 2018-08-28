@@ -2,7 +2,7 @@
  * импорт модулей
  */
 import header from './module-header.js';
-import {INITIAL_GAME} from './game.js';
+import {INITIAL_GAME, initialStateGame} from './game.js';
 import {changeScreen, renderTemplate, setGame, demoData, pushUserAnswer} from './util.js';
 /** =========================================
  * обьявление констант
@@ -65,7 +65,8 @@ const changeFormHandler = (evt) => {
 
   if (selectUserAnswer.length === correctAnswer.length) {
     pushUserAnswer(JSON.stringify(selectUserAnswer) === JSON.stringify(correctAnswer));
-    changeScreen(header(INITIAL_GAME), setGame(demoData));
+    // changeScreen(header(INITIAL_GAME), setGame(demoData));
+    changeScreen(header(initialStateGame), setGame(demoData));
   }
 };
 /** =========================================

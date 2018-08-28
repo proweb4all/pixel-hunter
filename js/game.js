@@ -1,3 +1,4 @@
+import {demoData} from './util.js';
 /** =========================================
 * обьявление переменных
 */
@@ -17,10 +18,12 @@ const POINT_BONUS = 50;
 const POINT_FINE = 50;
 const POINT_BONUS_LIVES = 50;
 let timeText;
+let initialStateGame;
 let userStat = {
   name: ``,
   answers: []
 };
+
 /** =========================================
 * обьявление фукнции
 */
@@ -29,14 +32,19 @@ let userStat = {
 * @return {Object} newData
 */
 const setLives = (startData) => {
+  let data = demoData;
+  if (!startData) {
+    startData = Object.assign({}, startData, INITIAL_GAME);
+  }
   if (startData.lives === 0) {
+    data.length = 0;
     return startData;
   }
   const tempObj = {
     lives: startData.lives - 1
   };
-  const newData = Object.assign({}, startData, tempObj);
-  return newData;
+  initialStateGame = Object.assign({}, startData, tempObj);
+  return initialStateGame;
 };
 /** Переключение уровней
 * @param {Object} startData
@@ -103,4 +111,4 @@ const countingPoints = (arrayUserAnswers, lives, startData) => {
 /** =========================================
 * экспорт
 */
-export {countingPoints, startTime, INITIAL_GAME, setLives, changeLevel, userStat, timeText};
+export {countingPoints, startTime, INITIAL_GAME, setLives, changeLevel, userStat, timeText, initialStateGame};

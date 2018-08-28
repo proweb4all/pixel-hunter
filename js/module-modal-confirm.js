@@ -3,7 +3,7 @@
  */
 import {changeScreen, renderTemplate, cloneDemoData, deleteElement} from './util.js';
 import welcome from './module-welcome-screen.js';
-import {userStat} from './game.js';
+import {userStat, initialStateGame} from './game.js';
 /** =========================================
  * обьявление констант
  */
@@ -27,14 +27,6 @@ let objectHandler;
 /** =========================================
 * обьявление фукнции
 */
-/**
-* отмена отправки формы у "модального окна"
-*
-*/
-// const submitFormHandler = (evt) => {
-//   evt.preventDefault();
-//   console.log(evt);
-// };
 /**
 * удаление "модального окна"
 * @param {Event} evt
@@ -65,7 +57,8 @@ const escCloseHandler = (evt, elem) => {
 const confirmHandler = () => {
   changeScreen(welcome());
   cloneDemoData();
-  userStat.answers = null;
+  userStat.answers = [];
+  initialStateGame.lives = 3;
 };
 /** =========================================
 * экспорт
@@ -79,7 +72,6 @@ export default () => {
   /**
    *  обьявление переменных
    */
-  // const modalForm = element.querySelector(`.modal__inner`);
   const modal = element.querySelector(`.modal`);
   const modalBtnClose = element.querySelector(`.modal__close`);
   const modalBtnOk = element.querySelectorAll(`.modal__btn`)[0];
@@ -87,7 +79,6 @@ export default () => {
   /** =========================================
   * работа с DOM
   */
-  // modalForm.addEventListener(`submit`, submitFormHandler);
   modalBtnClose.addEventListener(`click`, (evt) => {
     clickCloseHandler(evt, modal);
   });

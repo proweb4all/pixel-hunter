@@ -1,6 +1,6 @@
 import arrayDemoData from './data-game.js';
 import returnScreenGame from './module-game-screens';
-import {userStat, timeText} from './game.js';
+import {userStat, timeText, setLives, initialStateGame} from './game.js';
 /** =========================================
 * обьявление переменных
 */
@@ -81,6 +81,7 @@ const pushUserAnswer = function (value) {
     userStat.answers.push({answer: true, elapsedTime: timeText});
   } else {
     userStat.answers.push({answer: false, elapsedTime: timeText});
+    setLives(initialStateGame);
   }
 };
 /**
