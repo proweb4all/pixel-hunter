@@ -26,7 +26,7 @@ const template = (arr) => {
   return `
     <section class="game">
       <p class="game__task">Найдите рисунок среди изображений</p>
-      <form class="game__content  game__content--triple">
+      <form class="game__content game__content--triple">
         ${htmlImages}
       </form>
       <ul class="stats">

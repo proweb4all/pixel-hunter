@@ -1,6 +1,6 @@
 import arrayDemoData from './data-game.js';
 import returnScreenGame from './module-game-screens';
-import {userStat} from './game.js';
+import {userStat, timeText} from './game.js';
 /** =========================================
 * обьявление переменных
 */
@@ -78,9 +78,9 @@ let cloneDemoData = function () {
 */
 const pushUserAnswer = function (value) {
   if (value) {
-    userStat.answers.push({answer: true});
+    userStat.answers.push({answer: true, elapsedTime: timeText});
   } else {
-    userStat.answers.push({answer: false});
+    userStat.answers.push({answer: false, elapsedTime: timeText});
   }
 };
 /**

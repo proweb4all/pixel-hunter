@@ -16,6 +16,7 @@ const POINT_ADD = 100;
 const POINT_BONUS = 50;
 const POINT_FINE = 50;
 const POINT_BONUS_LIVES = 50;
+let timeText;
 let userStat = {
   name: ``,
   answers: []
@@ -64,7 +65,6 @@ const setTextTime = (element, text) => {
 */
 const startTime = (timerElement) => {
   let date = Date.now();
-  let timeText;
 
   setInterval(() => {
     let now = Date.now();
@@ -103,4 +103,4 @@ const countingPoints = (arrayUserAnswers, lives, startData) => {
 /** =========================================
 * экспорт
 */
-export {countingPoints, startTime, INITIAL_GAME, setLives, changeLevel, userStat};
+export {countingPoints, startTime, INITIAL_GAME, setLives, changeLevel, userStat, timeText};
