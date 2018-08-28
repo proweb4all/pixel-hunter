@@ -2,7 +2,7 @@
  * импорт модулей
  */
 import header from './module-header.js';
-import {INITIAL_GAME, initialStateGame} from './game.js';
+import {initialStateGame} from './game.js';
 import {changeScreen, renderTemplate, setGame, demoData, pushUserAnswer} from './util.js';
 /** =========================================
  * обьявление констант
