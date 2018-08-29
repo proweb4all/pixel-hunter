@@ -12,7 +12,8 @@ import {countingPoints, initialStateGame, userStat} from './game.js';
 * @return {String} html
 */
 const template = (obj) => {
-  let html = `<header class="header">
+  let html = ``;
+  let htmlHeader = `<header class="header">
     <button class="back">
       <span class="visually-hidden">Вернуться к началу</span>
       <svg class="icon" width="45" height="45" viewBox="0 0 45 45" fill="#000000">
@@ -49,23 +50,23 @@ const template = (obj) => {
     <tr>
       <td></td>
       <td class="result__extra">Бонус за скорость:</td>
-      <td class="result__extra">${obj.fastPoints.items}<span class="stats__result stats__result--fast"></span></td>
+      <td class="result__extra">${obj.fastPoints ? obj.fastPoints.items : ``}<span class="stats__result stats__result--fast"></span></td>
       <td class="result__points">× 150</td>
-      <td class="result__total">${obj.fastPoints.points}</td>
+      <td class="result__total">${obj.fastPoints ? obj.fastPoints.points : ``}</td>
     </tr>
     <tr>
       <td></td>
       <td class="result__extra">Бонус за жизни:</td>
-      <td class="result__extra">${obj.livesPoints.items}<span class="stats__result stats__result--alive"></span></td>
+      <td class="result__extra">${obj.livesPoints ? obj.livesPoints.items : ``}<span class="stats__result stats__result--alive"></span></td>
       <td class="result__points">× 50</td>
-      <td class="result__total">${obj.livesPoints.points}</td>
+      <td class="result__total">${obj.livesPoints ? obj.livesPoints.points : ``}</td>
     </tr>
     <tr>
       <td></td>
       <td class="result__extra">Штраф за медлительность:</td>
-      <td class="result__extra">${obj.slowPoints.items}<span class="stats__result stats__result--slow"></span></td>
+      <td class="result__extra">${obj.slowPoints ? obj.slowPoints.items : obj.slowPoints}<span class="stats__result stats__result--slow"></span></td>
       <td class="result__points">× 50</td>
-      <td class="result__total">${obj.slowPoints.points === 0 ? 0 : `-` + obj.slowPoints.points}</td>
+      <td class="result__total">${obj.slowPoints ? (obj.slowPoints.points === 0 ? 0 : `-` + obj.slowPoints.points) : ``}</td>
     </tr>
     <tr>
       <td colspan="5" class="result__total  result__total--final">${obj.points}</td>
@@ -95,10 +96,10 @@ const template = (obj) => {
   </table>`;
 
   if (obj.points === -1) {
-    html += HTML_TABLE_FAIL;
+    html = htmlHeader + HTML_TABLE_FAIL;
   }
   if (obj.points > 0) {
-    html += HTML_TABLE_POINTS;
+    html = htmlHeader + HTML_TABLE_POINTS;
   }
 
 

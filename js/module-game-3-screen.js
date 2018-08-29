@@ -2,8 +2,9 @@
  * импорт модулей
  */
 import header from './module-header.js';
-import {initialStateGame} from './game.js';
+import {initialStateGame, userStat, initData, controlGameScreens} from './game.js';
 import {changeScreen, renderTemplate, setGame, demoData, pushUserAnswer} from './util.js';
+import dataGame from './data-game.js';
 /** =========================================
  * обьявление переменных
  */
@@ -52,7 +53,7 @@ const clickFormHandler = (evt) => {
   const selectUserAnswer = target.getAttribute(`data-type`);
 
   pushUserAnswer(CORRECT_ANSWER === selectUserAnswer);
-  changeScreen(header(initialStateGame), setGame(demoData));
+  controlGameScreens(initialStateGame, dataGame);
 };
 /** =========================================
  * экспорт

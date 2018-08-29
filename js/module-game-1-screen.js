@@ -2,8 +2,9 @@
  * импорт модулей
  */
 import header from './module-header.js';
-import {initialStateGame} from './game.js';
+import {initialStateGame, controlGameScreens} from './game.js';
 import {changeScreen, renderTemplate, setGame, demoData, pushUserAnswer} from './util.js';
+import dataGame from './data-game.js'
 /** =========================================
  * обьявление констант
  */
@@ -66,7 +67,7 @@ const changeFormHandler = (evt) => {
   if (selectUserAnswer.length === correctAnswer.length) {
     // как лучше сравнить 2 массва?
     pushUserAnswer(JSON.stringify(selectUserAnswer) === JSON.stringify(correctAnswer));
-    changeScreen(header(initialStateGame), setGame(demoData));
+    controlGameScreens(initialStateGame, dataGame);
   }
 };
 /** =========================================

@@ -2,8 +2,9 @@
  * импорт модулей
  */
 import header from './module-header.js';
-import {initialStateGame} from './game.js';
+import {initialStateGame, controlGameScreens} from './game.js';
 import {changeScreen, renderTemplate, setGame, demoData, pushUserAnswer} from './util.js';
+import dataGame from './data-game.js'
 /** =========================================
  * обьявление констант
  */
@@ -61,7 +62,8 @@ const changeFormHandler = (evt) => {
   const correctAnswer = currentTarget.querySelector(`img`).getAttribute(`data-type`);
 
   pushUserAnswer(correctAnswer === selectUserAnswer);
-  changeScreen(header(initialStateGame), setGame(demoData));
+  // changeScreen(header(initialStateGame), setGame(demoData));
+  controlGameScreens(initialStateGame, dataGame);
 };
 /** =========================================
  * экспорт

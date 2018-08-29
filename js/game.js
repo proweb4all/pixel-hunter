@@ -1,4 +1,6 @@
-import {demoData} from './util.js';
+import header from './module-header.js';
+import {changeScreen, setGame} from './util.js';
+import resultScreen from './module-result-screen.js';
 /** =========================================
 * обьявление переменных
 */
@@ -31,10 +33,6 @@ let userStat = {
 * @return {Object} initialStateGame
 */
 const setLives = (startData) => {
-  if (startData.lives === 0) {
-    demoData.length = 0;
-    return startData;
-  }
   const tempObj = {
     lives: startData.lives - 1
   };
@@ -57,8 +55,10 @@ const changeLevel = (startData) => {
   const tempObj = {
     level: startData.level + 1
   };
-  const newData = Object.assign({}, startData, tempObj);
-  return newData;
+
+  initialStateGame = Object.assign({}, startData, tempObj);
+
+  return initialStateGame;
 };
 /** запись текста времени
 * @param {HTMLElement} element
@@ -83,6 +83,24 @@ const startTime = (timerElement) => {
     setTextTime(timerElement, timeText);
   }, 20);
   return timeText;
+};
+/**
+* управление игровыми экранами
+* @param {Object} state
+* @param {Array} questions
+*/
+const controlGameScreens = (state = initData(INITIAL_GAME), questions = []) => {
+
+  if (state.lives === 0) {
+    changeScreen(resultScreen());
+    return;
+  }
+  if (state.level >= questions.length) {
+    changeScreen(resultScreen());
+    return;
+  }
+
+  changeScreen(header(initialStateGame), setGame(questions));
 };
 /** Подсчет очков при окончании игры
 * @param {Array} arrayUserAnswers
@@ -130,4 +148,4 @@ const countingPoints = (arrayUserAnswers, startData) => {
 /** =========================================
 * экспорт
 */
-export {countingPoints, startTime, INITIAL_GAME, setLives, changeLevel, userStat, timeText, initialStateGame, initData};
+export {countingPoints, startTime, INITIAL_GAME, setLives, changeLevel, userStat, timeText, initialStateGame, initData, controlGameScreens};

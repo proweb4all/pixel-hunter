@@ -1,7 +1,7 @@
 /** =========================================
  * импорт модулей
  */
-import {changeScreen, renderTemplate, cloneDemoData, deleteElement} from './util.js';
+import {changeScreen, renderTemplate, deleteElement} from './util.js';
 import welcome from './module-welcome-screen.js';
 import {userStat, initialStateGame} from './game.js';
 /** =========================================
@@ -56,9 +56,9 @@ const escCloseHandler = (evt, elem) => {
 */
 const confirmHandler = () => {
   changeScreen(welcome());
-  cloneDemoData();
   userStat.answers = [];
   initialStateGame.lives = 3;
+  initialStateGame.level = 0;
 };
 /** =========================================
 * экспорт

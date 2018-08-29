@@ -1,11 +1,11 @@
 import arrayDemoData from './data-game.js';
 import returnScreenGame from './module-game-screens';
-import {userStat, timeText, setLives, initialStateGame} from './game.js';
+import {userStat, timeText, setLives, initialStateGame, changeLevel} from './game.js';
 /** =========================================
 * обьявление переменных
 */
 const mainElement = document.querySelector(`#main`);
-let demoData;
+// let demoData;
 /** =========================================
 * обьявление фукнции
 */
@@ -25,13 +25,9 @@ const renderTemplate = (strHtml) => {
 */
 const changeScreen = (...elements) => {
   mainElement.innerHTML = ``;
-  if (elements.length === 2 && elements[1].querySelector(`.result`)) {
-    mainElement.appendChild(elements[1]);
-  } else {
-    elements.forEach((element) => {
-      mainElement.appendChild(element);
-    });
-  }
+  elements.forEach((element) => {
+    mainElement.appendChild(element);
+  });
 };
 /**
 * вставка данных из template "модального окна"
@@ -57,19 +53,11 @@ const returnTypeGameScreen = (typeGameScreen) => {
 * @return {Function}
 */
 const setGame = (array) => {
-  let data = array.pop();
+  let index = initialStateGame.level;
 
-  if (!data) {
-    return returnScreenGame(returnTypeGameScreen())();
-  }
+  changeLevel(initialStateGame);
 
-  return returnScreenGame(returnTypeGameScreen(data.type))(data.images);
-};
-/**
-* возврашает клон массива с демо данными
-*/
-let cloneDemoData = function () {
-  demoData = arrayDemoData.slice(0);
+  return returnScreenGame(returnTypeGameScreen(array[index].type))(array[index].images);
 };
 /** =========================================
 /**
@@ -94,8 +82,7 @@ const deleteElement = (element) => {
 /** =========================================
 * работа с данными
 */
-cloneDemoData();
 /** =========================================
 * экспорт
 */
-export {changeScreen, renderTemplate, addModal, mainElement, returnTypeGameScreen, setGame, demoData, cloneDemoData, pushUserAnswer, deleteElement};
+export {changeScreen, renderTemplate, addModal, mainElement, returnTypeGameScreen, setGame, demoData, pushUserAnswer, deleteElement};
