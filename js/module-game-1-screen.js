@@ -1,4 +1,4 @@
-import {returnInitialStateGame, controlGameScreens, renderTemplate, pushUserAnswer} from './game.js';
+import {returnInitialStateGame, controlGameScreens, renderTemplate, pushUserAnswer, createStatsPicture} from './game.js';
 import dataGame from './data-game.js';
 
 /** =========================================
@@ -7,6 +7,7 @@ import dataGame from './data-game.js';
  * @return {String}
  */
 const template = (arr) => {
+  // let answersList =
   let html = ``;
   arr.forEach((item, index) => {
     html += `<div class="game__option">
@@ -28,16 +29,7 @@ const template = (arr) => {
       ${html}
       </form>
       <ul class="stats">
-        <li class="stats__result stats__result--wrong"></li>
-        <li class="stats__result stats__result--slow"></li>
-        <li class="stats__result stats__result--fast"></li>
-        <li class="stats__result stats__result--correct"></li>
-        <li class="stats__result stats__result--unknown"></li>
-        <li class="stats__result stats__result--unknown"></li>
-        <li class="stats__result stats__result--unknown"></li>
-        <li class="stats__result stats__result--unknown"></li>
-        <li class="stats__result stats__result--unknown"></li>
-        <li class="stats__result stats__result--unknown"></li>
+        ${createStatsPicture()}
       </ul>
     </section>
   `;

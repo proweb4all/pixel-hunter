@@ -18,6 +18,11 @@ const FAST_TIME = 10;
 const NORMAL_TIME_VALUE_ONE = 10;
 const NORMAL_TIME_VALUE_TWO = 20;
 const SLOW_TIME = 20;
+const WRONG_TEXT = `<li class="stats__result stats__result--wrong"></li>`;
+const SLOW_TEXT = `<li class="stats__result stats__result--slow"></li>`;
+const FAST_TEXT = `<li class="stats__result stats__result--fast"></li>`;
+const CORRECT_TEXT = `<li class="stats__result stats__result--correct"></li>`;
+const UNKNOWN_TEXT = `<li class="stats__result stats__result--unknown"></li>`;
 const POINT_ADD = 100;
 const POINT_BONUS = 50;
 const POINT_FINE = 50;
@@ -159,6 +164,43 @@ const setTextTime = (element, text) => {
   element.innerHTML = text;
 };
 /** Счетчик времени
+* @return {String} answersList
+*/
+const createStatsPicture = () => {
+  let answersList = new Array(10);
+
+  let answersListTime = returnUserStat().answers.map((item) => {
+    return item;
+  });
+
+  if (answersListTime.length === 0) {
+    answersListTime = new Array(10);
+  }
+
+  for (let i = 0; i < answersList.length; i++) {
+    if (answersListTime[i] === undefined) {
+      answersList[i] = UNKNOWN_TEXT;
+    }
+    if (answersListTime[i]) {
+      if (answersListTime[i].elapsedTime < FAST_TIME) {
+        answersList[i] = FAST_TEXT;
+      }
+      if (answersListTime[i].elapsedTime > SLOW_TIME) {
+        answersList[i] = SLOW_TEXT;
+      }
+      if (answersListTime[i].elapsedTime >= NORMAL_TIME_VALUE_ONE && answersListTime[i].elapsedTime <= NORMAL_TIME_VALUE_TWO) {
+        answersList[i] = CORRECT_TEXT;
+      }
+      if (answersListTime[i].answer === false) {
+        answersList[i] = WRONG_TEXT;
+      }
+    }
+  }
+
+  answersList = answersList.join(``);
+  return answersList;
+};
+/** Счетчик времени
 * @param {HTMLElement} timerElement
 * @return {Number} timeText
 */
@@ -235,4 +277,4 @@ const countingPoints = (arrayUserAnswers, startData) => {
 /** =========================================
 * экспорт
 */
-export {countingPoints, startTime, setLives, changeLevel, initData, controlGameScreens, changeScreen, renderTemplate, addModal, mainElement, returnTypeGameScreen, setGame, pushUserAnswer, deleteElement, returnInitialStateGame, returnUserStat, recordNameUserStat};
+export {countingPoints, startTime, setLives, changeLevel, initData, controlGameScreens, changeScreen, renderTemplate, addModal, mainElement, returnTypeGameScreen, setGame, pushUserAnswer, deleteElement, returnInitialStateGame, returnUserStat, recordNameUserStat, createStatsPicture};

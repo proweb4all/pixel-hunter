@@ -1,5 +1,5 @@
 import {setEventForBtnBack} from './module-back-btn.js';
-import {renderTemplate, countingPoints, returnInitialStateGame, returnUserStat} from './game.js';
+import {renderTemplate, countingPoints, returnInitialStateGame, returnUserStat, createStatsPicture} from './game.js';
 
 /** результаты игры
 * @param {Object} obj
@@ -33,16 +33,7 @@ const template = (obj) => {
       <td class="result__number">1.</td>
       <td colspan="2">
         <ul class="stats">
-          <li class="stats__result stats__result--wrong"></li>
-          <li class="stats__result stats__result--slow"></li>
-          <li class="stats__result stats__result--fast"></li>
-          <li class="stats__result stats__result--correct"></li>
-          <li class="stats__result stats__result--wrong"></li>
-          <li class="stats__result stats__result--unknown"></li>
-          <li class="stats__result stats__result--slow"></li>
-          <li class="stats__result stats__result--unknown"></li>
-          <li class="stats__result stats__result--fast"></li>
-          <li class="stats__result stats__result--unknown"></li>
+          ${createStatsPicture()}
         </ul>
       </td>
       <td class="result__points">× 100</td>
