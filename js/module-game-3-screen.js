@@ -1,17 +1,8 @@
-/** =========================================
- * импорт модулей
- */
-import header from './module-header.js';
-import {initialStateGame, userStat, initData, controlGameScreens} from './game.js';
-import {changeScreen, renderTemplate, setGame, demoData, pushUserAnswer} from './util.js';
+import {controlGameScreens, renderTemplate, pushUserAnswer, returnInitialStateGame} from './game.js';
 import dataGame from './data-game.js';
-/** =========================================
- * обьявление переменных
- */
+
 const CORRECT_ANSWER = `paint`;
-/** =========================================
- * обьявление фукнции
- */
+
 /** =========================================
  * возврашает шаблон с данными
  * @param {Array} arr
@@ -53,7 +44,7 @@ const clickFormHandler = (evt) => {
   const selectUserAnswer = target.getAttribute(`data-type`);
 
   pushUserAnswer(CORRECT_ANSWER === selectUserAnswer);
-  controlGameScreens(initialStateGame, dataGame);
+  controlGameScreens(returnInitialStateGame(), dataGame);
 };
 /** =========================================
  * экспорт
@@ -61,17 +52,9 @@ const clickFormHandler = (evt) => {
  * @return {HTMLElement} element
  */
 export default (arr) => {
-  /**
-   *  работа с данными
-   */
   const element = renderTemplate(template(arr));
-  /**
-   *  обьявление переменных
-   */
   const imgs = element.querySelectorAll(`.game__content img`);
-  /** =========================================
-   * работа с DOM
-   */
+
   imgs.forEach((item) => {
     item.addEventListener(`click`, clickFormHandler);
   });

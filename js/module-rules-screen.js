@@ -1,14 +1,7 @@
-/** =========================================
- * импорт модулей
- */
-import {changeScreen, renderTemplate, setGame, demoData} from './util.js';
 import {setEventForBtnBack} from './module-back-btn.js';
-import header from './module-header.js';
-import {INITIAL_GAME, userStat, initData, controlGameScreens, initialStateGame} from './game.js';
-import dataGame from './data-game.js'
-/** =========================================
- * обьявление констант
- */
+import {renderTemplate, controlGameScreens, returnInitialStateGame, recordNameUserStat} from './game.js';
+import dataGame from './data-game.js';
+
 const RULES_SCREEN = `
   <header class="header">
     <button class="back">
@@ -38,9 +31,7 @@ const RULES_SCREEN = `
     </form>
   </section>
 `;
-/** =========================================
-* обьявление фукнции
-*/
+
 /** функция управляет состоянием disabled кнопки формы btnRulesForm в зависимости от значения инпута в форме
 * @param {Event} evt
 * @param {HTMLElement} btnForm
@@ -57,29 +48,21 @@ const submitFormHandler = (evt, inputElem) => {
   evt.preventDefault();
 
   if (inputElem.value) {
-    userStat.name = inputElem.value;
+    recordNameUserStat(inputElem.value);
   }
 
-  controlGameScreens(initialStateGame, dataGame);
+  controlGameScreens(returnInitialStateGame(), dataGame);
 };
 /** =========================================
 * экспорт
 * @return {HTMLElement} element
 */
 export default () => {
-  /**
-   *  работа с данными
-   */
   const element = renderTemplate(RULES_SCREEN);
-  /**
-   *  обьявление переменных
-   */
   const name = element.querySelector(`.rules__input`);
   const rulesForm = element.querySelector(`.rules__form`);
   const btnRulesForm = element.querySelector(`.rules__button`);
-  /** =========================================
-   * работа с DOM
-   */
+
   name.addEventListener(`input`, (evt) => {
     changeNameHandler(evt, btnRulesForm);
   });

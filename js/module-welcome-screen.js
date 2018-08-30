@@ -1,11 +1,6 @@
-/** =========================================
- * импорт модулей
- */
-import {changeScreen, renderTemplate} from './util.js';
+import {changeScreen, renderTemplate} from './game.js';
 import rulesScreen from './module-rules-screen.js';
-/** =========================================
- * обьявление констант
- */
+
 const WELCOME_SCREEN = `
   <section class="greeting central--blur">
     <img class="greeting__logo" src="img/logo_ph-big.svg" width="201" height="89" alt="Pixel Hunter">
@@ -28,9 +23,7 @@ const WELCOME_SCREEN = `
     </button>
   </section>
 `;
-/** =========================================
-* обьявление фукнции
-*/
+
 /** изменение sreen при клике
 *
 */
@@ -42,17 +35,9 @@ const clickBtnHandler = () => {
 * @return {HTMLElement} element
 */
 export default () => {
-  /**
-   *  работа с данными
-   */
   const element = renderTemplate(WELCOME_SCREEN);
-  /**
-   *  обьявление переменных
-   */
   const btnGreetingContinue = element.querySelector(`.greeting__continue`);
-  /** =========================================
-   * работа с DOM
-   */
+
   btnGreetingContinue.addEventListener(`click`, clickBtnHandler);
 
   return element;

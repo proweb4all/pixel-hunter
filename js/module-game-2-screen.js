@@ -1,13 +1,6 @@
-/** =========================================
- * импорт модулей
- */
-import header from './module-header.js';
-import {initialStateGame, controlGameScreens} from './game.js';
-import {changeScreen, renderTemplate, setGame, demoData, pushUserAnswer} from './util.js';
-import dataGame from './data-game.js'
-/** =========================================
- * обьявление констант
- */
+import {controlGameScreens, renderTemplate, pushUserAnswer, returnInitialStateGame} from './game.js';
+import dataGame from './data-game.js';
+
 /** =========================================
  * возврашает шаблон с данными
  * @param {Array} arr
@@ -49,9 +42,7 @@ const template = (arr) => {
     </section>
   `;
 };
-/** =========================================
- * обьявление фукнции
- */
+
 /** при выборе ответа в форме, переключение экрана
  * @param {Event} evt
  */
@@ -62,8 +53,7 @@ const changeFormHandler = (evt) => {
   const correctAnswer = currentTarget.querySelector(`img`).getAttribute(`data-type`);
 
   pushUserAnswer(correctAnswer === selectUserAnswer);
-  // changeScreen(header(initialStateGame), setGame(demoData));
-  controlGameScreens(initialStateGame, dataGame);
+  controlGameScreens(returnInitialStateGame(), dataGame);
 };
 /** =========================================
  * экспорт
@@ -71,17 +61,9 @@ const changeFormHandler = (evt) => {
  * @return {HTMLElement} element
  */
 export default (arr) => {
-  /**
-   *  работа с данными
-   */
   const element = renderTemplate(template(arr));
-  /**
-   *  обьявление переменных
-   */
   const form = element.querySelector(`.game__content`);
-  /** =========================================
-   * работа с DOM
-   */
+
   form.addEventListener(`change`, changeFormHandler);
 
   return element;

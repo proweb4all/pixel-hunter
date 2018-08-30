@@ -1,11 +1,9 @@
-import arrayDemoData from './data-game.js';
 import returnScreenGame from './module-game-screens';
 import {userStat, timeText, setLives, initialStateGame, changeLevel} from './game.js';
 /** =========================================
 * обьявление переменных
 */
 const mainElement = document.querySelector(`#main`);
-// let demoData;
 /** =========================================
 * обьявление фукнции
 */
@@ -85,4 +83,4 @@ const deleteElement = (element) => {
 /** =========================================
 * экспорт
 */
-export {changeScreen, renderTemplate, addModal, mainElement, returnTypeGameScreen, setGame, demoData, pushUserAnswer, deleteElement};
+export {changeScreen, renderTemplate, addModal, mainElement, returnTypeGameScreen, setGame, pushUserAnswer, deleteElement};

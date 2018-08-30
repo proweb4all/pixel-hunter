@@ -1,11 +1,6 @@
-/** =========================================
- * импорт модулей
- */
-import {addModal} from './util.js';
+import {addModal} from './game.js';
 import modalConfirm from './module-modal-confirm.js';
-/** =========================================
- * обьявление фукнции
- */
+
 /**
  * добавляет модальное окно с подтверждением
  */
@@ -20,7 +15,4 @@ const setEventForBtnBack = (searchElementInWrap) => {
   btnBack.addEventListener(`click`, clickHandler);
 };
 
-/** =========================================
- * экспорт
- */
 export {setEventForBtnBack};

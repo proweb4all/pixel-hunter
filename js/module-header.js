@@ -1,5 +1,4 @@
-import {renderTemplate} from './util.js';
-import {startTime} from './game.js';
+import {renderTemplate, startTime} from './game.js';
 import {setEventForBtnBack} from './module-back-btn.js';
 
 const headerTemplate = (state) => `<header class="header">

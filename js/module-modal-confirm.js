@@ -1,12 +1,6 @@
-/** =========================================
- * импорт модулей
- */
-import {changeScreen, renderTemplate, deleteElement} from './util.js';
 import welcome from './module-welcome-screen.js';
-import {userStat, initialStateGame} from './game.js';
-/** =========================================
- * обьявление констант
- */
+import {changeScreen, renderTemplate, deleteElement, returnInitialStateGame, returnUserStat} from './game.js';
+
 const MODAL_CONFIRM = `
   <section class="modal">
     <form class="modal__inner">
@@ -24,9 +18,7 @@ const MODAL_CONFIRM = `
 `;
 const ESC_CODE = 27;
 let objectHandler;
-/** =========================================
-* обьявление фукнции
-*/
+
 /**
 * удаление "модального окна"
 * @param {Event} evt
@@ -56,29 +48,21 @@ const escCloseHandler = (evt, elem) => {
 */
 const confirmHandler = () => {
   changeScreen(welcome());
-  userStat.answers = [];
-  initialStateGame.lives = 3;
-  initialStateGame.level = 0;
+  returnUserStat.answers = [];
+  returnInitialStateGame().lives = 3;
+  returnInitialStateGame().level = 0;
 };
 /** =========================================
 * экспорт
 * @return {HTMLElement} element
 */
 export default () => {
-  /**
-   *  работа с данными
-   */
   const element = renderTemplate(MODAL_CONFIRM);
-  /**
-   *  обьявление переменных
-   */
   const modal = element.querySelector(`.modal`);
   const modalBtnClose = element.querySelector(`.modal__close`);
   const modalBtnOk = element.querySelectorAll(`.modal__btn`)[0];
   const modalBtnCancel = element.querySelectorAll(`.modal__btn`)[1];
-  /** =========================================
-  * работа с DOM
-  */
+
   modalBtnClose.addEventListener(`click`, (evt) => {
     clickCloseHandler(evt, modal);
   });

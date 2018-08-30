@@ -1,19 +1,20 @@
-/** =========================================
- * импорт модулей
- */
-import {renderTemplate} from './util.js';
 import {setEventForBtnBack} from './module-back-btn.js';
-import {countingPoints, initialStateGame, userStat} from './game.js';
-/** =========================================
- * обьявление констант
- */
+import {renderTemplate, countingPoints, returnInitialStateGame, returnUserStat} from './game.js';
+
 /** результаты игры
 * @param {Object} obj
 * @return {String} html
 */
 const template = (obj) => {
+  let slowPoint;
+  if (obj.slowPoints) {
+    slowPoint = obj.slowPoints.points === 0 ? 0 : `-` + obj.slowPoints.points;
+  } else {
+    slowPoint = ``;
+  }
+
   let html = ``;
-  let htmlHeader = `<header class="header">
+  const htmlHeader = `<header class="header">
     <button class="back">
       <span class="visually-hidden">Вернуться к началу</span>
       <svg class="icon" width="45" height="45" viewBox="0 0 45 45" fill="#000000">
@@ -66,7 +67,7 @@ const template = (obj) => {
       <td class="result__extra">Штраф за медлительность:</td>
       <td class="result__extra">${obj.slowPoints ? obj.slowPoints.items : obj.slowPoints}<span class="stats__result stats__result--slow"></span></td>
       <td class="result__points">× 50</td>
-      <td class="result__total">${obj.slowPoints ? (obj.slowPoints.points === 0 ? 0 : `-` + obj.slowPoints.points) : ``}</td>
+      <td class="result__total">${slowPoint}</td>
     </tr>
     <tr>
       <td colspan="5" class="result__total  result__total--final">${obj.points}</td>
@@ -111,13 +112,8 @@ const template = (obj) => {
  * @return {HTMLElement} element
  */
 export default () => {
-  /**
-   *  работа с данными
-   */
-  const element = renderTemplate(template(countingPoints(userStat.answers, initialStateGame)));
-  /** =========================================
-  * работа с DOM
-  */
+  const element = renderTemplate(template(countingPoints(returnUserStat().answers, returnInitialStateGame())));
+
   setEventForBtnBack(element);
 
   return element;

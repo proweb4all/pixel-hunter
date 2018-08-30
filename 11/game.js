@@ -1,12 +1,9 @@
-import returnScreenGame from './module-game-screens';
-// import {userStat, timeText, setLives, initialStateGame, changeLevel} from './game.js';
 import header from './module-header.js';
-// import {changeScreen, setGame} from './util.js';
+import {changeScreen, setGame} from './util.js';
 import resultScreen from './module-result-screen.js';
 /** =========================================
 * обьявление переменных
 */
-const mainElement = document.querySelector(`#main`);
 const INITIAL_GAME = Object.freeze({
   lives: 3,
   level: 0,
@@ -31,78 +28,9 @@ let userStat = {
 /** =========================================
 * обьявление фукнции
 */
-/**
-* рендеринг template
-* @param {String} strHtml
-* @return {HTMLElement} fragment
-*/
-const renderTemplate = (strHtml) => {
-  const wrapperTemplate = document.createElement(`template`);
-  wrapperTemplate.innerHTML = strHtml;
-  return wrapperTemplate.content;
-};
-/**
-* вставка данных из template
-* @param {HTMLElement} elements
-*/
-const changeScreen = (...elements) => {
-  mainElement.innerHTML = ``;
-  elements.forEach((element) => {
-    mainElement.appendChild(element);
-  });
-};
-/**
-* вставка данных из template "модального окна"
-* @param {HTMLElement} element
-*/
-const addModal = (element) => {
-  mainElement.appendChild(element);
-};
-/**
-* возврашает имя игрового скрина для его приминения
-* @param {String} typeGameScreen
-* @return {String}
-*/
-const returnTypeGameScreen = (typeGameScreen) => {
-  if (!typeGameScreen) {
-    return ``;
-  }
-  return typeGameScreen;
-};
-/**
-* возврашает функцию устанавливаюшую игровой экран или экран результатов
-* @param {Array} array
-* @return {Function}
-*/
-const setGame = (array) => {
-  let index = initialStateGame.level;
-
-  changeLevel(initialStateGame);
-
-  return returnScreenGame(returnTypeGameScreen(array[index].type))(array[index].images);
-};
-/** =========================================
-/**
-* записываем ответ пользователя
-* @param {Boolean} value
-*/
-const pushUserAnswer = function (value) {
-  if (value) {
-    userStat.answers.push({answer: true, elapsedTime: timeText});
-  } else {
-    userStat.answers.push({answer: false, elapsedTime: timeText});
-    setLives(initialStateGame);
-  }
-};
-/**
-* удаление HTMLElement
-* @param {HTMLElement} element
-*/
-const deleteElement = (element) => {
-  mainElement.removeChild(element);
-};
 /** Управление жизнями игрока
 * @param {Object} startData
+* @return {Object} initialStateGame
 */
 const setLives = (startData) => {
   const tempObj = {
@@ -110,30 +38,12 @@ const setLives = (startData) => {
   };
   initialStateGame = Object.assign({}, startData, tempObj);
 };
-/** возврашает
-* @return {Object} initialStateGame
-*/
-const returnInitialStateGame = () => {
-  return initialStateGame;
-};
-/** возврашает
-* @return {Object} userStat
-*/
-const returnUserStat = () => {
-  return userStat;
-};
-/** Запись имени игрока
-* @param {String} value
-*/
-const recordNameUserStat = (value) => {
-  userStat.name = value;
-};
 /** инициальзация данных
 * @param {Object} data
 * @return {Object} initialStateGame
 */
 const initData = (data) => {
-  return Object.assign({}, initialStateGame, data);
+  initialStateGame = Object.assign({}, initialStateGame, data);;
 };
 /** Переключение уровней
 * @param {Object} startData
@@ -177,7 +87,8 @@ const startTime = (timerElement) => {
 * @param {Object} state
 * @param {Array} questions
 */
-const controlGameScreens = (state = initialStateGame = initData(INITIAL_GAME), questions) => {
+const controlGameScreens = (state = initData(INITIAL_GAME), questions = []) => {
+
   if (state.lives === 0) {
     changeScreen(resultScreen());
     return;
@@ -235,4 +146,4 @@ const countingPoints = (arrayUserAnswers, startData) => {
 /** =========================================
 * экспорт
 */
-export {countingPoints, startTime, setLives, changeLevel, initData, controlGameScreens, changeScreen, renderTemplate, addModal, mainElement, returnTypeGameScreen, setGame, pushUserAnswer, deleteElement, returnInitialStateGame, returnUserStat, recordNameUserStat};
+export {countingPoints, startTime, INITIAL_GAME, setLives, changeLevel, userStat, timeText, initialStateGame, initData, controlGameScreens};

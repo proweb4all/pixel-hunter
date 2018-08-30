@@ -1,13 +1,6 @@
-/** =========================================
- * импорт модулей
- */
-import header from './module-header.js';
-import {initialStateGame, controlGameScreens} from './game.js';
-import {changeScreen, renderTemplate, setGame, demoData, pushUserAnswer} from './util.js';
-import dataGame from './data-game.js'
-/** =========================================
- * обьявление констант
- */
+import {returnInitialStateGame, controlGameScreens, renderTemplate, pushUserAnswer} from './game.js';
+import dataGame from './data-game.js';
+
 /** =========================================
  * возврашает шаблон с данными
  * @param {Array} arr
@@ -49,9 +42,7 @@ const template = (arr) => {
     </section>
   `;
 };
-/** =========================================
- * обьявление фукнции
- */
+
 /** при выборе 2 ответов в форме, переключение экрана
  * @param {Event} evt
  */
@@ -65,9 +56,11 @@ const changeFormHandler = (evt) => {
                               .map((item) => item.getAttribute(`data-type`));
 
   if (selectUserAnswer.length === correctAnswer.length) {
-    // как лучше сравнить 2 массва?
-    pushUserAnswer(JSON.stringify(selectUserAnswer) === JSON.stringify(correctAnswer));
-    controlGameScreens(initialStateGame, dataGame);
+    const sameArrays = selectUserAnswer.every((item, index) => {
+      return item === correctAnswer[index];
+    });
+    pushUserAnswer(sameArrays);
+    controlGameScreens(returnInitialStateGame(), dataGame);
   }
 };
 /** =========================================
@@ -76,17 +69,9 @@ const changeFormHandler = (evt) => {
  * @return {HTMLElement} element
  */
 export default (arr) => {
-  /**
-   *  работа с данными
-   */
   const element = renderTemplate(template(arr));
-  /**
-   *  обьявление переменных
-   */
   const form = element.querySelector(`.game__content`);
-  /** =========================================
-  * работа с DOM
-  */
+
   form.addEventListener(`change`, changeFormHandler);
 
   return element;
