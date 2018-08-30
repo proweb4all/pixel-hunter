@@ -168,7 +168,7 @@ const setTextTime = (element, text) => {
 */
 const createStatsPicture = () => {
   let answersList = new Array(10);
-
+  console.log(returnUserStat().answers);
   let answersListTime = returnUserStat().answers.map((item) => {
     return item;
   });

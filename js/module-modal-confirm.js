@@ -48,7 +48,7 @@ const escCloseHandler = (evt, elem) => {
 */
 const confirmHandler = () => {
   changeScreen(welcome());
-  returnUserStat.answers = [];
+  returnUserStat().answers.length = 0;
   returnInitialStateGame().lives = 3;
   returnInitialStateGame().level = 0;
 };
