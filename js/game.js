@@ -163,7 +163,7 @@ const setTextTime = (element, text) => {
   }
   element.innerHTML = text;
 };
-/** Счетчик времени
+/** создание графики ответов
 * @return {String} answersList
 */
 const createStatsPicture = () => {
@@ -174,7 +174,7 @@ const createStatsPicture = () => {
   });
 
   if (answersListTime.length === 0) {
-    answersListTime = new Array(10);
+    answersListTime = new Array(10).fill(undefined);
   }
 
   for (let i = 0; i < answersList.length; i++) {
