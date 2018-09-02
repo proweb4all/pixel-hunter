@@ -1,11 +1,11 @@
-import {managmentGame} from './game.js';
+import {managentDom} from './module-mangment-dom.js';
 import modalConfirm from './module-modal-confirm.js';
 
 /**
  * добавляет модальное окно с подтверждением
  */
 const clickHandler = () => {
-  managmentGame.addModal(modalConfirm());
+  managentDom.addModal(modalConfirm());
 };
 /** поиск кнопки назад на экране и установка события
  * @param {HTMLElement} searchElementInWrap

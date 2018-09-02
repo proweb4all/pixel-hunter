@@ -1,4 +1,5 @@
 import {setEventForBtnBack} from './module-back-btn.js';
+import {managentDom} from './module-mangment-dom.js';
 import {managmentGame} from './game.js';
 import dataGame from './data-game.js';
 
@@ -46,19 +47,19 @@ const changeNameHandler = (evt, btnForm) => {
 */
 const submitFormHandler = (evt, inputElem) => {
   evt.preventDefault();
-
+  // как записать имя игрока?
   if (inputElem.value) {
-    managmentGame.recordNameUserStat(inputElem.value);
+    // managmentGame.recordNameUserStat(inputElem.value);
   }
 
-  managmentGame.controlGameScreens(managmentGame.INITIAL_GAME, dataGame);
+  managmentGame.controlGameScreens(undefined, dataGame);
 };
 /** =========================================
 * экспорт
 * @return {HTMLElement} element
 */
 export default () => {
-  const element = managmentGame.renderTemplate(RULES_SCREEN);
+  const element = managentDom.renderTemplate(RULES_SCREEN);
   const name = element.querySelector(`.rules__input`);
   const rulesForm = element.querySelector(`.rules__form`);
   const btnRulesForm = element.querySelector(`.rules__button`);

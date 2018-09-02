@@ -1,11 +1,12 @@
 import {setEventForBtnBack} from './module-back-btn.js';
-import {managmentGame} from './game.js';
+import {managentDom} from './module-mangment-dom.js';
 
 /** результаты игры
 * @param {Object} obj
+* @param {String} statsPictureStr
 * @return {String} html
 */
-const template = (obj) => {
+const template = (obj, statsPictureStr) => {
   let slowPoint;
   if (obj.slowPoints) {
     slowPoint = obj.slowPoints.points === 0 ? 0 : `-` + obj.slowPoints.points;
@@ -33,7 +34,7 @@ const template = (obj) => {
       <td class="result__number">1.</td>
       <td colspan="2">
         <ul class="stats">
-          ${managmentGame.createStatsPicture()}
+          ${statsPictureStr}
         </ul>
       </td>
       <td class="result__points">× 100</td>
@@ -70,7 +71,7 @@ const template = (obj) => {
       <td class="result__number">2.</td>
       <td>
         <ul class="stats">
-          ${managmentGame.createStatsPicture()}
+          ${statsPictureStr}
         </ul>
       </td>
       <td class="result__total"></td>
@@ -92,10 +93,11 @@ const template = (obj) => {
 /** =========================================
  * экспорт
  * @param {Object} objUserStat
+ * @param {String} statsPictureStr
  * @return {HTMLElement} element
  */
-export default (objUserStat) => {
-  const element = managmentGame.renderTemplate(template(managmentGame.countingPoints(objUserStat.answers, managmentGame.INITIAL_GAME)));
+export default (objUserStat, statsPictureStr) => {
+  const element = managentDom.renderTemplate(template(objUserStat, statsPictureStr));
 
   setEventForBtnBack(element);
 

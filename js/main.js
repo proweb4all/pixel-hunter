@@ -1,4 +1,4 @@
-import {managmentGame} from './game.js';
+import {managentDom} from './module-mangment-dom.js';
 import mainScreen from './module-main-screen.js';
 
-managmentGame.changeScreen(mainScreen());
+managentDom.changeScreen(mainScreen());

@@ -1,4 +1,4 @@
-import {managmentGame} from './game.js';
+import {managentDom} from './module-mangment-dom.js';
 import rulesScreen from './module-rules-screen.js';
 
 const WELCOME_SCREEN = `
@@ -28,14 +28,14 @@ const WELCOME_SCREEN = `
 *
 */
 const clickBtnHandler = () => {
-  managmentGame.changeScreen(rulesScreen());
+  managentDom.changeScreen(rulesScreen());
 };
 /** =========================================
 * экспорт
 * @return {HTMLElement} element
 */
 export default () => {
-  const element = managmentGame.renderTemplate(WELCOME_SCREEN);
+  const element = managentDom.renderTemplate(WELCOME_SCREEN);
   const btnGreetingContinue = element.querySelector(`.greeting__continue`);
 
   btnGreetingContinue.addEventListener(`click`, clickBtnHandler);

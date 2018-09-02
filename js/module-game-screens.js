@@ -1,7 +1,6 @@
 import gameOne from './module-game-1-screen.js';
 import gameTwo from './module-game-2-screen.js';
 import gameThree from './module-game-3-screen.js';
-import resultScreen from './module-result-screen.js';
 
 export default (valueScreen) => {
   let typeScreen = ``;
@@ -15,7 +14,6 @@ export default (valueScreen) => {
     case `gameThree`:
       typeScreen = gameThree;
       break;
-    default: typeScreen = resultScreen;
   }
   return typeScreen;
 };

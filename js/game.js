@@ -1,16 +1,16 @@
 import returnScreenGame from './module-game-screens';
 import header from './module-header.js';
+import {managentDom} from './module-mangment-dom.js';
 import resultScreen from './module-result-screen.js';
 /** =========================================
 * обьявление переменных
 */
-const mainElement = document.querySelector(`#main`);
-const INITIAL_GAME = {
+const INITIAL_GAME = Object.freeze({
   lives: 3,
   level: 0,
   time: 0,
   points: 0
-};
+});
 const MIN_ANSWER = 10;
 const FAST_TIME = 10;
 const NORMAL_TIME_VALUE_ONE = 10;
@@ -30,105 +30,64 @@ let userStat = {
   name: ``,
   answers: []
 };
-/** =========================================
-* обьявление фукнции
-*/
-/**
-* рендеринг template
-* @param {String} strHtml
-* @return {HTMLElement} fragment
-*/
-const renderTemplate = (strHtml) => {
-  const wrapperTemplate = document.createElement(`template`);
-  wrapperTemplate.innerHTML = strHtml;
-  return wrapperTemplate.content;
-};
-/**
-* вставка данных из template
-* @param {HTMLElement} elements
-*/
-const changeScreen = (...elements) => {
-  mainElement.innerHTML = ``;
-  elements.forEach((element) => {
-    mainElement.appendChild(element);
-  });
-};
-/**
-* вставка данных из template "модального окна"
-* @param {HTMLElement} element
-*/
-const addModal = (element) => {
-  mainElement.appendChild(element);
-};
+
 /**
 * возврашает функцию устанавливаюшую игровой экран или экран результатов
 * @param {Object} state
 * @param {Array} array
+* @param {String} statsPictureStr
 * @return {Function}
 */
-const setGame = (state, array) => {
+const setGame = (state, array, statsPictureStr) => {
   let index = state.level;
 
-  changeLevel(state);
-
-  return returnScreenGame(array[index].type)(array[index].images);
+  return returnScreenGame(array[index].type)(changeLevel(state), array[index].images, statsPictureStr);
 };
-/** =========================================
 /**
 * записываем ответ пользователя
 * @param {Boolean} value
+* @param {Object} state
+* @return {Object}
 */
-const pushUserAnswer = function (value) {
+const pushUserAnswer = function (value, state) {
   if (value) {
     userStat.answers.push({answer: true, elapsedTime: timeText});
+    return state;
   } else {
     userStat.answers.push({answer: false, elapsedTime: timeText});
-    setLives(INITIAL_GAME);
+    return setLives(state);
   }
-};
-/**
-* удаление HTMLElement
-* @param {HTMLElement} element
-*/
-const deleteElement = (element) => {
-  mainElement.removeChild(element);
 };
 /** Управление жизнями игрока
 * @param {Object} startData
+* @return {Object}
 */
 const setLives = (startData) => {
-  startData.lives -= 1;
-};
-/**
-* Играть заново
-*/
-const startOverGame = () => {
-  userStat.answers.length = 0;
-  INITIAL_GAME.lives = 3;
-  INITIAL_GAME.level = 0;
-};
-/** Запись имени игрока
-* @param {String} value
-*/
-const recordNameUserStat = (value) => {
-  userStat.name = value;
+  const tempObj = {
+    lives: startData.lives - 1
+  };
+  return Object.assign({}, startData, tempObj);
 };
 /** Переключение уровней
 * @param {Object} startData
+* @return {Object}
 */
 const changeLevel = (startData) => {
-  startData.level += 1;
+  const tempObj = {
+    level: startData.level + 1
+  };
+  return Object.assign({}, startData, tempObj);
 };
-/** запись текста времени
-* @param {HTMLElement} element
-* @param {String} text
-*/
-const setTextTime = (element, text) => {
-  if (text < 10) {
-    text = `0` + text;
-  }
-  element.innerHTML = text;
-};
+// /** запись текста времени
+// * @param {HTMLElement} element
+// * @param {String} text
+// */
+// const setTextTime = (element, text) => {
+//   if (text < 10) {
+//     text = `0` + text;
+//   }
+//   element.innerHTML = text;
+// };
 /** создание графики ответов
 * @return {String} answersList
 */
@@ -154,7 +113,7 @@ const createStatsPicture = () => {
       if (answersListTime[i].elapsedTime > SLOW_TIME) {
         answersList[i] = SLOW_TEXT;
       }
-      if (answersListTime[i].elapsedTime >= NORMAL_TIME_VALUE_ONE && answersListTime[i].elapsedTime <= NORMAL_TIME_VALUE_TWO) {
+      if (answersListTime[i].elapsedTime >= NORMAL_TIME_VALUE_ONE && answersListTime[i].elapsedTime <= NORMAL_TIME_VALUE_TWO || answersListTime[i].elapsedTime === undefined) {
         answersList[i] = CORRECT_TEXT;
       }
       if (answersListTime[i].answer === false) {
@@ -166,32 +125,38 @@ const createStatsPicture = () => {
   answersList = answersList.join(``);
   return answersList;
 };
-/** Счетчик времени
-* @param {HTMLElement} timerElement
-* @return {Number} timeText
-*/
-const startTime = (timerElement) => {
-  let date = Date.now();
+// /** Счетчик времени
+// * @param {HTMLElement} timerElement
+// * @return {Number} timeText
+// */
+// const startTime = (timerElement) => {
+//   let date = Date.now();
 
-  setInterval(() => {
-    let now = Date.now();
-    timeText = Math.round((now - date) / 1000);
-    setTextTime(timerElement, timeText);
-  }, 20);
-  return timeText;
-};
+//   setInterval(() => {
+//     let now = Date.now();
+//     timeText = Math.round((now - date) / 1000);
+//     setTextTime(timerElement, timeText);
+//   }, 20);
+//   return timeText;
+// };
 /**
 * управление игровыми экранами
 * @param {Object} state
 * @param {Array} questions
 */
-const controlGameScreens = (state = INITIAL_GAME, questions) => {
+const controlGameScreens = (state = Object.assign({}, INITIAL_GAME), questions) => {
+  let statsPictureStr = createStatsPicture();
+  if (state.level === 0) {
+    userStat.answers.length = 0;
+    statsPictureStr = createStatsPicture();
+  }
   if (state.lives === 0 || state.level >= questions.length) {
-    changeScreen(resultScreen(userStat));
+    const resulltUserStat = countingPoints(userStat.answers, state);
+    managentDom.changeScreen(resultScreen(resulltUserStat, statsPictureStr));
     return;
   }
 
-  changeScreen(header(state), setGame(state, questions));
+  managentDom.changeScreen(header(state), setGame(state, questions, statsPictureStr));
 };
 /** Подсчет очков при окончании игры
 * @param {Array} arrayUserAnswers
@@ -240,18 +205,8 @@ const countingPoints = (arrayUserAnswers, startData) => {
 * экспорт
 */
 const managmentGame = {
-  countingPoints,
-  startTime,
   controlGameScreens,
-  changeScreen,
-  renderTemplate,
-  addModal,
-  pushUserAnswer,
-  deleteElement,
-  INITIAL_GAME,
-  recordNameUserStat,
-  createStatsPicture,
-  startOverGame
+  pushUserAnswer
 };
 
 export {managmentGame};

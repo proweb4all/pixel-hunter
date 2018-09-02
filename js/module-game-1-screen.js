@@ -1,15 +1,16 @@
+import {managentDom} from './module-mangment-dom.js';
 import {managmentGame} from './game.js';
 import dataGame from './data-game.js';
 
 /** =========================================
  * возврашает шаблон с данными
- * @param {Array} arr
+ * @param {Array} arrImages
+ * @param {String} statsPictureStr
  * @return {String}
  */
-const template = (arr) => {
-  // let answersList =
+const template = (arrImages, statsPictureStr) => {
   let html = ``;
-  arr.forEach((item, index) => {
+  arrImages.forEach((item, index) => {
     html += `<div class="game__option">
                   <img src="${item.src}" data-type="${item.imageType}" alt="Option ${index}" width="468" height="458">
                   <label class="game__answer game__answer--photo">
@@ -29,7 +30,7 @@ const template = (arr) => {
       ${html}
       </form>
       <ul class="stats">
-        ${managmentGame.createStatsPicture()}
+        ${statsPictureStr}
       </ul>
     </section>
   `;
@@ -37,8 +38,9 @@ const template = (arr) => {
 
 /** при выборе 2 ответов в форме, переключение экрана
  * @param {Event} evt
+ * @param {Object} state
  */
-const changeFormHandler = (evt) => {
+const changeFormHandler = (evt, state) => {
   const selectUserAnswer = Array.from(evt.currentTarget.elements)
                                 .map((item) => item.checked && item.value)
                                 .filter(function (item) {
@@ -51,20 +53,25 @@ const changeFormHandler = (evt) => {
     const sameArrays = selectUserAnswer.every((item, index) => {
       return item === correctAnswer[index];
     });
-    managmentGame.pushUserAnswer(sameArrays);
-    managmentGame.controlGameScreens(managmentGame.INITIAL_GAME, dataGame);
+
+    const newState = managmentGame.pushUserAnswer(sameArrays, state);
+    managmentGame.controlGameScreens(newState, dataGame);
   }
 };
 /** =========================================
  * экспорт
- * @param {Array} arr
+ * @param {Object} state
+ * @param {Array} arrImages
+ * @param {String} statsPictureStr
  * @return {HTMLElement} element
  */
-export default (arr) => {
-  const element = managmentGame.renderTemplate(template(arr));
+export default (state, arrImages, statsPictureStr) => {
+  const element = managentDom.renderTemplate(template(arrImages, statsPictureStr));
   const form = element.querySelector(`.game__content`);
 
-  form.addEventListener(`change`, changeFormHandler);
+  form.addEventListener(`change`, (evt) => {
+    changeFormHandler(evt, state);
+  });
 
   return element;
 };

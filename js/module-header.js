@@ -1,4 +1,4 @@
-import {managmentGame} from './game.js';
+import {managentDom} from './module-mangment-dom.js';
 import {setEventForBtnBack} from './module-back-btn.js';
 
 const headerTemplate = (state) => `<header class="header">
@@ -20,12 +20,12 @@ const headerTemplate = (state) => `<header class="header">
 `;
 
 export default (state) => {
-  const element = managmentGame.renderTemplate(headerTemplate(state));
+  const element = managentDom.renderTemplate(headerTemplate(state));
 
-  const gameTimer = element.querySelector(`.game__timer`);
+  // const gameTimer = element.querySelector(`.game__timer`);
 
   setEventForBtnBack(element);
-  managmentGame.startTime(gameTimer);
+  // managmentGame.startTime(gameTimer);
 
   return element;
 };
