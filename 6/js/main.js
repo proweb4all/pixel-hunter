@@ -103,7 +103,7 @@
       ${html}
       </form>
       <ul class="stats">
-        ${createStatsPicture()}
+        ${managmentGame.createStatsPicture()}
       </ul>
     </section>
   `;
@@ -125,8 +125,8 @@
       const sameArrays = selectUserAnswer.every((item, index) => {
         return item === correctAnswer[index];
       });
-      pushUserAnswer(sameArrays);
-      controlGameScreens(returnInitialStateGame(), dataGame);
+      managmentGame.pushUserAnswer(sameArrays);
+      managmentGame.controlGameScreens(managmentGame.INITIAL_GAME, dataGame);
     }
   };
   /** =========================================
@@ -135,7 +135,7 @@
    * @return {HTMLElement} element
    */
   var gameOne = (arr) => {
-    const element = renderTemplate(template(arr));
+    const element = managmentGame.renderTemplate(template(arr));
     const form = element.querySelector(`.game__content`);
 
     form.addEventListener(`change`, changeFormHandler);
@@ -170,7 +170,7 @@
         ${html}
       </form>
       <ul class="stats">
-        ${createStatsPicture()}
+        ${managmentGame.createStatsPicture()}
       </ul>
     </section>
   `;
@@ -185,8 +185,8 @@
     const selectUserAnswer = targetInput.value;
     const correctAnswer = currentTarget.querySelector(`img`).getAttribute(`data-type`);
 
-    pushUserAnswer(correctAnswer === selectUserAnswer);
-    controlGameScreens(returnInitialStateGame(), dataGame);
+    managmentGame.pushUserAnswer(correctAnswer === selectUserAnswer);
+    managmentGame.controlGameScreens(managmentGame.INITIAL_GAME, dataGame);
   };
   /** =========================================
    * экспорт
@@ -194,7 +194,7 @@
    * @return {HTMLElement} element
    */
   var gameTwo = (arr) => {
-    const element = renderTemplate(template$1(arr));
+    const element = managmentGame.renderTemplate(template$1(arr));
     const form = element.querySelector(`.game__content`);
 
     form.addEventListener(`change`, changeFormHandler$1);
@@ -223,7 +223,7 @@
         ${htmlImages}
       </form>
       <ul class="stats">
-        ${createStatsPicture()}
+        ${managmentGame.createStatsPicture()}
       </ul>
     </section>
   `;
@@ -235,8 +235,8 @@
     const target = evt.target;
     const selectUserAnswer = target.getAttribute(`data-type`);
 
-    pushUserAnswer(CORRECT_ANSWER === selectUserAnswer);
-    controlGameScreens(returnInitialStateGame(), dataGame);
+    managmentGame.pushUserAnswer(CORRECT_ANSWER === selectUserAnswer);
+    managmentGame.controlGameScreens(managmentGame.INITIAL_GAME, dataGame);
   };
   /** =========================================
    * экспорт
@@ -244,7 +244,7 @@
    * @return {HTMLElement} element
    */
   var gameThree = (arr) => {
-    const element = renderTemplate(template$2(arr));
+    const element = managmentGame.renderTemplate(template$2(arr));
     const imgs = element.querySelectorAll(`.game__content img`);
 
     imgs.forEach((item) => {
@@ -300,17 +300,17 @@
     evt.preventDefault();
 
     if (inputElem.value) {
-      recordNameUserStat(inputElem.value);
+      managmentGame.recordNameUserStat(inputElem.value);
     }
 
-    controlGameScreens(returnInitialStateGame(), dataGame);
+    managmentGame.controlGameScreens(managmentGame.INITIAL_GAME, dataGame);
   };
   /** =========================================
   * экспорт
   * @return {HTMLElement} element
   */
   var rulesScreen = () => {
-    const element = renderTemplate(RULES_SCREEN);
+    const element = managmentGame.renderTemplate(RULES_SCREEN);
     const name = element.querySelector(`.rules__input`);
     const rulesForm = element.querySelector(`.rules__form`);
     const btnRulesForm = element.querySelector(`.rules__button`);
@@ -354,14 +354,14 @@
   *
   */
   const clickBtnHandler = () => {
-    changeScreen(rulesScreen());
+    managmentGame.changeScreen(rulesScreen());
   };
   /** =========================================
   * экспорт
   * @return {HTMLElement} element
   */
   var welcome = () => {
-    const element = renderTemplate(WELCOME_SCREEN);
+    const element = managmentGame.renderTemplate(WELCOME_SCREEN);
     const btnGreetingContinue = element.querySelector(`.greeting__continue`);
 
     btnGreetingContinue.addEventListener(`click`, clickBtnHandler);
@@ -395,7 +395,7 @@
   const clickCloseHandler = (evt, elem) => {
     evt.preventDefault();
 
-    deleteElement(elem);
+    managmentGame.deleteElement(elem);
     document.removeEventListener(`keydown`, objectHandler);
   };
 
@@ -415,17 +415,15 @@
   * @param {Event} evt
   */
   const confirmHandler = () => {
-    changeScreen(welcome());
-    returnUserStat().answers.length = 0;
-    returnInitialStateGame().lives = 3;
-    returnInitialStateGame().level = 0;
+    managmentGame.changeScreen(welcome());
+    managmentGame.startOverGame();
   };
   /** =========================================
   * экспорт
   * @return {HTMLElement} element
   */
   var modalConfirm = () => {
-    const element = renderTemplate(MODAL_CONFIRM);
+    const element = managmentGame.renderTemplate(MODAL_CONFIRM);
     const modal = element.querySelector(`.modal`);
     const modalBtnClose = element.querySelector(`.modal__close`);
     const modalBtnOk = element.querySelectorAll(`.modal__btn`)[0];
@@ -453,7 +451,7 @@
    * добавляет модальное окно с подтверждением
    */
   const clickHandler = () => {
-    addModal(modalConfirm());
+    managmentGame.addModal(modalConfirm());
   };
   /** поиск кнопки назад на экране и установка события
    * @param {HTMLElement} searchElementInWrap
@@ -495,7 +493,7 @@
       <td class="result__number">1.</td>
       <td colspan="2">
         <ul class="stats">
-          ${createStatsPicture()}
+          ${managmentGame.createStatsPicture()}
         </ul>
       </td>
       <td class="result__points">× 100</td>
@@ -532,7 +530,7 @@
       <td class="result__number">2.</td>
       <td>
         <ul class="stats">
-          ${createStatsPicture()}
+          ${managmentGame.createStatsPicture()}
         </ul>
       </td>
       <td class="result__total"></td>
@@ -553,10 +551,11 @@
   };
   /** =========================================
    * экспорт
+   * @param {Object} objUserStat
    * @return {HTMLElement} element
    */
-  var resultScreen = () => {
-    const element = renderTemplate(template$3(countingPoints(returnUserStat().answers, returnInitialStateGame())));
+  var resultScreen = (objUserStat) => {
+    const element = managmentGame.renderTemplate(template$3(managmentGame.countingPoints(objUserStat.answers, managmentGame.INITIAL_GAME)));
 
     setEventForBtnBack(element);
 
@@ -599,12 +598,12 @@
 `;
 
   var header = (state) => {
-    const element = renderTemplate(headerTemplate(state));
+    const element = managmentGame.renderTemplate(headerTemplate(state));
 
     const gameTimer = element.querySelector(`.game__timer`);
 
     setEventForBtnBack(element);
-    startTime(gameTimer);
+    managmentGame.startTime(gameTimer);
 
     return element;
   };
@@ -613,12 +612,12 @@
   * обьявление переменных
   */
   const mainElement = document.querySelector(`#main`);
-  const INITIAL_GAME = Object.freeze({
+  const INITIAL_GAME = {
     lives: 3,
     level: 0,
     time: 0,
     points: 0
-  });
+  };
   const MIN_ANSWER = 10;
   const FAST_TIME = 10;
   const NORMAL_TIME_VALUE_ONE = 10;
@@ -634,7 +633,6 @@
   const POINT_FINE = 50;
   const POINT_BONUS_LIVES = 50;
   let timeText;
-  let initialStateGame;
   let userStat = {
     name: ``,
     answers: []
@@ -670,27 +668,17 @@
     mainElement.appendChild(element);
   };
   /**
-  * возврашает имя игрового скрина для его приминения
-  * @param {String} typeGameScreen
-  * @return {String}
-  */
-  const returnTypeGameScreen = (typeGameScreen) => {
-    if (!typeGameScreen) {
-      return ``;
-    }
-    return typeGameScreen;
-  };
-  /**
   * возврашает функцию устанавливаюшую игровой экран или экран результатов
+  * @param {Object} state
   * @param {Array} array
   * @return {Function}
   */
-  const setGame = (array) => {
-    let index = initialStateGame.level;
+  const setGame = (state, array) => {
+    let index = state.level;
 
-    changeLevel(initialStateGame);
+    changeLevel(state);
 
-    return returnScreenGame(returnTypeGameScreen(array[index].type))(array[index].images);
+    return returnScreenGame(array[index].type)(array[index].images);
   };
   /** =========================================
   /**
@@ -702,7 +690,7 @@
       userStat.answers.push({answer: true, elapsedTime: timeText});
     } else {
       userStat.answers.push({answer: false, elapsedTime: timeText});
-      setLives(initialStateGame);
+      setLives(INITIAL_GAME);
     }
   };
   /**
@@ -716,22 +704,15 @@
   * @param {Object} startData
   */
   const setLives = (startData) => {
-    const tempObj = {
-      lives: startData.lives - 1
-    };
-    initialStateGame = Object.assign({}, startData, tempObj);
+    startData.lives -= 1;
   };
-  /** возврашает
-  * @return {Object} initialStateGame
+  /**
+  * Играть заново
   */
-  const returnInitialStateGame = () => {
-    return initialStateGame;
-  };
-  /** возврашает
-  * @return {Object} userStat
-  */
-  const returnUserStat = () => {
-    return userStat;
+  const startOverGame = () => {
+    userStat.answers.length = 0;
+    INITIAL_GAME.lives = 3;
+    INITIAL_GAME.level = 0;
   };
   /** Запись имени игрока
   * @param {String} value
@@ -739,25 +720,11 @@
   const recordNameUserStat = (value) => {
     userStat.name = value;
   };
-  /** инициальзация данных
-  * @param {Object} data
-  * @return {Object} initialStateGame
-  */
-  const initData = (data) => {
-    return Object.assign({}, initialStateGame, data);
-  };
   /** Переключение уровней
   * @param {Object} startData
-  * @return {Object} newData
   */
   const changeLevel = (startData) => {
-    const tempObj = {
-      level: startData.level + 1
-    };
-
-    initialStateGame = Object.assign({}, startData, tempObj);
-
-    return initialStateGame;
+    startData.level += 1;
   };
   /** запись текста времени
   * @param {HTMLElement} element
@@ -775,7 +742,7 @@
   const createStatsPicture = () => {
     let answersList = new Array(10);
 
-    let answersListTime = returnUserStat().answers.map((item) => {
+    let answersListTime = userStat.answers.map((item) => {
       return item;
     });
 
@@ -825,17 +792,13 @@
   * @param {Object} state
   * @param {Array} questions
   */
-  const controlGameScreens = (state = initialStateGame = initData(INITIAL_GAME), questions) => {
-    if (state.lives === 0) {
-      changeScreen(resultScreen());
-      return;
-    }
-    if (state.level >= questions.length) {
-      changeScreen(resultScreen());
+  const controlGameScreens = (state = INITIAL_GAME, questions) => {
+    if (state.lives === 0 || state.level >= questions.length) {
+      changeScreen(resultScreen(userStat));
       return;
     }
 
-    changeScreen(header(initialStateGame), setGame(questions));
+    changeScreen(header(state), setGame(state, questions));
   };
   /** Подсчет очков при окончании игры
   * @param {Array} arrayUserAnswers
@@ -880,6 +843,23 @@
 
     return newData;
   };
+  /** =========================================
+  * экспорт
+  */
+  const managmentGame = {
+    countingPoints,
+    startTime,
+    controlGameScreens,
+    changeScreen,
+    renderTemplate,
+    addModal,
+    pushUserAnswer,
+    deleteElement,
+    INITIAL_GAME,
+    recordNameUserStat,
+    createStatsPicture,
+    startOverGame
+  };
 
   const MAIN_SCREEN = `
   <section class="intro">
@@ -892,14 +872,14 @@
   *
   */
   const clickBtnHandler$1 = () => {
-    changeScreen(welcome());
+    managmentGame.changeScreen(welcome());
   };
   /** =========================================
   * экспорт
   * @return {HTMLElement} element
   */
   var mainScreen = () => {
-    const element = renderTemplate(MAIN_SCREEN);
+    const element = managmentGame.renderTemplate(MAIN_SCREEN);
     const btnIntroAsterisk = element.querySelector(`.intro__asterisk`);
 
     btnIntroAsterisk.addEventListener(`click`, clickBtnHandler$1);
@@ -907,7 +887,7 @@
     return element;
   };
 
-  changeScreen(mainScreen());
+  managmentGame.changeScreen(mainScreen());
 
 }());
 
