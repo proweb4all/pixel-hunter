@@ -1,6 +1,141 @@
 (function () {
   'use strict';
 
+  const mainElement = document.querySelector(`#main`);
+
+  /**
+  * рендеринг template
+  * @param {String} strHtml
+  * @return {HTMLElement} fragment
+  */
+  const renderTemplate = (strHtml) => {
+    const wrapperTemplate = document.createElement(`template`);
+    wrapperTemplate.innerHTML = strHtml;
+    return wrapperTemplate.content;
+  };
+  /**
+  * вставка данных из template
+  * @param {HTMLElement} elements
+  */
+  const changeScreen = (...elements) => {
+    mainElement.innerHTML = ``;
+    elements.forEach((element) => {
+      mainElement.appendChild(element);
+    });
+  };
+  /**
+  * вставка данных из template "модального окна"
+  * @param {HTMLElement} element
+  */
+  const addModal = (element) => {
+    mainElement.appendChild(element);
+  };
+  /**
+  * удаление HTMLElement
+  * @param {HTMLElement} element
+  */
+  const deleteElement = (element) => {
+    mainElement.removeChild(element);
+  };
+
+  const managentDom = {
+    renderTemplate,
+    changeScreen,
+    addModal,
+    deleteElement
+  };
+
+  const MODAL_CONFIRM = `
+  <section class="modal">
+    <form class="modal__inner">
+      <button class="modal__close" type="button">
+        <span class="visually-hidden">Закрыть</span>
+      </button>
+      <h2 class="modal__title">Подтверждение</h2>
+      <p class="modal__text">Вы уверены что хотите начать игру заново?</p>
+      <div class="modal__button-wrapper">
+        <button class="modal__btn">Ок</button>
+        <button class="modal__btn">Отмена</button>
+      </div>
+    </form>
+  </section>
+`;
+  const ESC_CODE = 27;
+  let objectHandler;
+
+  /**
+  * удаление "модального окна"
+  * @param {Event} evt
+  * @param {HTMLElement} elem
+  */
+  const clickCloseHandler = (evt, elem) => {
+    evt.preventDefault();
+
+    managentDom.deleteElement(elem);
+    document.removeEventListener(`keydown`, objectHandler);
+  };
+
+  const clickCancelHandler = clickCloseHandler;
+  /**
+  * удаление "модального окна" по клавише ESC
+  * @param {Event} evt
+  * @param {HTMLElement} elem
+  */
+  const escCloseHandler = (evt, elem) => {
+    if (evt.keyCode === ESC_CODE) {
+      clickCloseHandler(evt, elem);
+    }
+  };
+  /**
+  * смена screen после подтверждения
+  * @param {Event} evt
+  */
+  const confirmHandler = () => {
+    managentDom.changeScreen(welcome());
+  };
+  /** =========================================
+  * экспорт
+  * @return {HTMLElement} element
+  */
+  var modalConfirm = () => {
+    const element = managentDom.renderTemplate(MODAL_CONFIRM);
+    const modal = element.querySelector(`.modal`);
+    const modalBtnClose = element.querySelector(`.modal__close`);
+    const modalBtnOk = element.querySelectorAll(`.modal__btn`)[0];
+    const modalBtnCancel = element.querySelectorAll(`.modal__btn`)[1];
+
+    modalBtnClose.addEventListener(`click`, (evt) => {
+      clickCloseHandler(evt, modal);
+    });
+    modalBtnOk.addEventListener(`click`, confirmHandler);
+    modalBtnCancel.addEventListener(`click`, (evt) => {
+      clickCancelHandler(evt, modal);
+    });
+
+    objectHandler = {
+      handleEvent(evt) {
+        escCloseHandler(evt, modal);
+      }
+    };
+    document.addEventListener(`keydown`, objectHandler);
+
+    return element;
+  };
+
+  /**
+   * добавляет модальное окно с подтверждением
+   */
+  const clickHandler = () => {
+    managentDom.addModal(modalConfirm());
+  };
+  /** поиск кнопки назад на экране и установка события
+   * @param {HTMLElement} searchElementInWrap
+   */
+  const setEventForBtnBack = (searchElementInWrap) => {
+    const btnBack = searchElementInWrap.querySelector(`.back`);
+    btnBack.addEventListener(`click`, clickHandler);
+  };
+
   var dataGame = [
     {
       type: `gameOne`,
@@ -77,13 +212,13 @@
 
   /** =========================================
    * возврашает шаблон с данными
-   * @param {Array} arr
+   * @param {Array} arrImages
+   * @param {String} statsPictureStr
    * @return {String}
    */
-  const template = (arr) => {
-    // let answersList =
+  const template = (arrImages, statsPictureStr) => {
     let html = ``;
-    arr.forEach((item, index) => {
+    arrImages.forEach((item, index) => {
       html += `<div class="game__option">
                   <img src="${item.src}" data-type="${item.imageType}" alt="Option ${index}" width="468" height="458">
                   <label class="game__answer game__answer--photo">
@@ -103,7 +238,7 @@
       ${html}
       </form>
       <ul class="stats">
-        ${managmentGame.createStatsPicture()}
+        ${statsPictureStr}
       </ul>
     </section>
   `;
@@ -111,8 +246,9 @@
 
   /** при выборе 2 ответов в форме, переключение экрана
    * @param {Event} evt
+   * @param {Object} state
    */
-  const changeFormHandler = (evt) => {
+  const changeFormHandler = (evt, state) => {
     const selectUserAnswer = Array.from(evt.currentTarget.elements)
                                   .map((item) => item.checked && item.value)
                                   .filter(function (item) {
@@ -125,32 +261,38 @@
       const sameArrays = selectUserAnswer.every((item, index) => {
         return item === correctAnswer[index];
       });
-      managmentGame.pushUserAnswer(sameArrays);
-      managmentGame.controlGameScreens(managmentGame.INITIAL_GAME, dataGame);
+
+      const newState = managmentGame.pushUserAnswer(sameArrays, state);
+      managmentGame.controlGameScreens(newState, dataGame);
     }
   };
   /** =========================================
    * экспорт
-   * @param {Array} arr
+   * @param {Object} state
+   * @param {Array} arrImages
+   * @param {String} statsPictureStr
    * @return {HTMLElement} element
    */
-  var gameOne = (arr) => {
-    const element = managmentGame.renderTemplate(template(arr));
+  var gameOne = (state, arrImages, statsPictureStr) => {
+    const element = managentDom.renderTemplate(template(arrImages, statsPictureStr));
     const form = element.querySelector(`.game__content`);
 
-    form.addEventListener(`change`, changeFormHandler);
+    form.addEventListener(`change`, (evt) => {
+      changeFormHandler(evt, state);
+    });
 
     return element;
   };
 
   /** =========================================
    * возврашает шаблон с данными
-   * @param {Array} arr
+   * @param {Array} arrImages
+   * @param {String} statsPictureStr
    * @return {String}
    */
-  const template$1 = (arr) => {
+  const template$1 = (arrImages, statsPictureStr) => {
     let html = ``;
-    arr.forEach((item, index) => {
+    arrImages.forEach((item, index) => {
       html += `<div class="game__option">
                   <img src="${item.src}" data-type="${item.imageType}" alt="Option ${index}" width="468" height="458">
                   <label class="game__answer game__answer--photo">
@@ -170,7 +312,7 @@
         ${html}
       </form>
       <ul class="stats">
-        ${managmentGame.createStatsPicture()}
+        ${statsPictureStr}
       </ul>
     </section>
   `;
@@ -178,26 +320,31 @@
 
   /** при выборе ответа в форме, переключение экрана
    * @param {Event} evt
+   * @param {Object} state
    */
-  const changeFormHandler$1 = (evt) => {
+  const changeFormHandler$1 = (evt, state) => {
     const targetInput = evt.target;
     const currentTarget = evt.currentTarget;
     const selectUserAnswer = targetInput.value;
     const correctAnswer = currentTarget.querySelector(`img`).getAttribute(`data-type`);
 
-    managmentGame.pushUserAnswer(correctAnswer === selectUserAnswer);
-    managmentGame.controlGameScreens(managmentGame.INITIAL_GAME, dataGame);
+    const newState = managmentGame.pushUserAnswer(correctAnswer === selectUserAnswer, state);
+    managmentGame.controlGameScreens(newState, dataGame);
   };
   /** =========================================
    * экспорт
-   * @param {Array} arr
+   * @param {Object} state
+   * @param {Array} arrImages
+   * @param {String} statsPictureStr
    * @return {HTMLElement} element
    */
-  var gameTwo = (arr) => {
-    const element = managmentGame.renderTemplate(template$1(arr));
+  var gameTwo = (state, arrImages, statsPictureStr) => {
+    const element = managentDom.renderTemplate(template$1(arrImages, statsPictureStr));
     const form = element.querySelector(`.game__content`);
 
-    form.addEventListener(`change`, changeFormHandler$1);
+    form.addEventListener(`change`, (evt) => {
+      changeFormHandler$1(evt, state);
+    });
 
     return element;
   };
@@ -206,12 +353,13 @@
 
   /** =========================================
    * возврашает шаблон с данными
-   * @param {Array} arr
+   * @param {Array} arrImages
+   * @param {String} statsPictureStr
    * @return {String}
    */
-  const template$2 = (arr) => {
+  const template$2 = (arrImages, statsPictureStr) => {
     let htmlImages = ``;
-    arr.forEach((item, index) => {
+    arrImages.forEach((item, index) => {
       htmlImages += `<div class="game__option">
               <img src="${item.src}" data-type="${item.imageType}" alt="Option ${index}" width="304" height="455">
             </div>`;
@@ -223,249 +371,93 @@
         ${htmlImages}
       </form>
       <ul class="stats">
-        ${managmentGame.createStatsPicture()}
+        ${statsPictureStr}
       </ul>
     </section>
   `;
   };
   /** при выборе ответа в форме, переключение экрана
    * @param {Event} evt
+   * @param {Object} state
    */
-  const clickFormHandler = (evt) => {
+  const clickFormHandler = (evt, state) => {
     const target = evt.target;
     const selectUserAnswer = target.getAttribute(`data-type`);
 
-    managmentGame.pushUserAnswer(CORRECT_ANSWER === selectUserAnswer);
-    managmentGame.controlGameScreens(managmentGame.INITIAL_GAME, dataGame);
+    const newState = managmentGame.pushUserAnswer(CORRECT_ANSWER === selectUserAnswer, state);
+    managmentGame.controlGameScreens(newState, dataGame);
   };
   /** =========================================
    * экспорт
-   * @param {Array} arr
+   * @param {Object} state
+   * @param {Array} arrImages
+   * @param {String} statsPictureStr
    * @return {HTMLElement} element
    */
-  var gameThree = (arr) => {
-    const element = managmentGame.renderTemplate(template$2(arr));
+  var gameThree = (state, arrImages, statsPictureStr) => {
+    const element = managentDom.renderTemplate(template$2(arrImages, statsPictureStr));
     const imgs = element.querySelectorAll(`.game__content img`);
 
     imgs.forEach((item) => {
-      item.addEventListener(`click`, clickFormHandler);
+      item.addEventListener(`click`, (evt) => {
+        clickFormHandler(evt, state);
+      });
     });
 
     return element;
   };
 
-  const RULES_SCREEN = `
-  <header class="header">
-    <button class="back">
-      <span class="visually-hidden">Вернуться к началу</span>
-      <svg class="icon" width="45" height="45" viewBox="0 0 45 45" fill="#000000">
-        <use xlink:href="img/sprite.svg#arrow-left"></use>
-      </svg>
-      <svg class="icon" width="101" height="44" viewBox="0 0 101 44" fill="#000000">
-        <use xlink:href="img/sprite.svg#logo-small"></use>
-      </svg>
-    </button>
+  var returnScreenGame = (valueScreen) => {
+    let typeScreen = ``;
+    switch (valueScreen) {
+      case `gameOne`:
+        typeScreen = gameOne;
+        break;
+      case `gameTwo`:
+        typeScreen = gameTwo;
+        break;
+      case `gameThree`:
+        typeScreen = gameThree;
+        break;
+    }
+    return typeScreen;
+  };
+
+  const headerTemplate = (state) => `<header class="header">
+  <button class="back">
+    <span class="visually-hidden">Вернуться к началу</span>
+    <svg class="icon" width="45" height="45" viewBox="0 0 45 45" fill="#000000">
+      <use xlink:href="img/sprite.svg#arrow-left"></use>
+    </svg>
+    <svg class="icon" width="101" height="44" viewBox="0 0 101 44" fill="#000000">
+      <use xlink:href="img/sprite.svg#logo-small"></use>
+    </svg>
+  </button>
+  <div class="game__timer">NN</div>
+  <div class="game__lives">
+    ${new Array(3 - state.lives).fill(`<img src="img/heart__empty.svg" class="game__heart" alt=" Missed Life" width="31" height="27">`).join(``)}
+    ${new Array(state.lives).fill(`<img src="img/heart__full.svg" class="game__heart" alt="Life" width="31" height="27">`).join(``)}
+  </div>
   </header>
-  <section class="rules">
-    <h2 class="rules__title">Правила</h2>
-    <ul class="rules__description">
-      <li>Угадай 10 раз для каждого изображения фото
-        <img class="rules__icon" src="img/icon-photo.png" width="32" height="31" alt="Фото"> или рисунок
-        <img class="rules__icon" src="img/icon-paint.png" width="32" height="31" alt="Рисунок"></li>
-      <li>Фотографиями или рисунками могут быть оба изображения.</li>
-      <li>На каждую попытку отводится 30 секунд.</li>
-      <li>Ошибиться можно не более 3 раз.</li>
-    </ul>
-    <p class="rules__ready">Готовы?</p>
-    <form class="rules__form">
-      <input class="rules__input" type="text" placeholder="Ваше Имя">
-      <button class="rules__button  continue" type="submit" disabled>Go!</button>
-    </form>
-  </section>
 `;
 
-  /** функция управляет состоянием disabled кнопки формы btnRulesForm в зависимости от значения инпута в форме
-  * @param {Event} evt
-  * @param {HTMLElement} btnForm
-  */
-  const changeNameHandler = (evt, btnForm) => {
-    const targetValue = evt.target.value;
-    btnForm.disabled = !targetValue;
-  };
-  /** изменение sreen при отправке формы
-  * @param {Event} evt
-  * @param {HTMLElement} inputElem
-  */
-  const submitFormHandler = (evt, inputElem) => {
-    evt.preventDefault();
+  var header = (state) => {
+    const element = managentDom.renderTemplate(headerTemplate(state));
 
-    if (inputElem.value) {
-      managmentGame.recordNameUserStat(inputElem.value);
-    }
-
-    managmentGame.controlGameScreens(managmentGame.INITIAL_GAME, dataGame);
-  };
-  /** =========================================
-  * экспорт
-  * @return {HTMLElement} element
-  */
-  var rulesScreen = () => {
-    const element = managmentGame.renderTemplate(RULES_SCREEN);
-    const name = element.querySelector(`.rules__input`);
-    const rulesForm = element.querySelector(`.rules__form`);
-    const btnRulesForm = element.querySelector(`.rules__button`);
-
-    name.addEventListener(`input`, (evt) => {
-      changeNameHandler(evt, btnRulesForm);
-    });
-    rulesForm.addEventListener(`submit`, (evt) => {
-      submitFormHandler(evt, name);
-    });
+    // const gameTimer = element.querySelector(`.game__timer`);
 
     setEventForBtnBack(element);
+    // managmentGame.startTime(gameTimer);
 
     return element;
-  };
-
-  const WELCOME_SCREEN = `
-  <section class="greeting central--blur">
-    <img class="greeting__logo" src="img/logo_ph-big.svg" width="201" height="89" alt="Pixel Hunter">
-    <div class="greeting__asterisk asterisk"><span class="visually-hidden">Я просто красивая звёздочка</span>*</div>
-    <div class="greeting__challenge">
-      <h3 class="greeting__challenge-title">Лучшие художники-фотореалисты бросают тебе вызов!</h3>
-      <p class="greeting__challenge-text">Правила игры просты:</p>
-      <ul class="greeting__challenge-list">
-        <li>Нужно отличить рисунок от фотографии и сделать выбор.</li>
-        <li>Задача кажется тривиальной, но не думай, что все так просто.</li>
-        <li>Фотореализм обманчив и коварен.</li>
-        <li>Помни, главное — смотреть очень внимательно.</li>
-      </ul>
-    </div>
-    <button class="greeting__continue" type="button">
-      <span class="visually-hidden">Продолжить</span>
-      <svg class="icon" width="64" height="64" viewBox="0 0 64 64" fill="#000000">
-        <use xlink:href="img/sprite.svg#arrow-right"></use>
-      </svg>
-    </button>
-  </section>
-`;
-
-  /** изменение sreen при клике
-  *
-  */
-  const clickBtnHandler = () => {
-    managmentGame.changeScreen(rulesScreen());
-  };
-  /** =========================================
-  * экспорт
-  * @return {HTMLElement} element
-  */
-  var welcome = () => {
-    const element = managmentGame.renderTemplate(WELCOME_SCREEN);
-    const btnGreetingContinue = element.querySelector(`.greeting__continue`);
-
-    btnGreetingContinue.addEventListener(`click`, clickBtnHandler);
-
-    return element;
-  };
-
-  const MODAL_CONFIRM = `
-  <section class="modal">
-    <form class="modal__inner">
-      <button class="modal__close" type="button">
-        <span class="visually-hidden">Закрыть</span>
-      </button>
-      <h2 class="modal__title">Подтверждение</h2>
-      <p class="modal__text">Вы уверены что хотите начать игру заново?</p>
-      <div class="modal__button-wrapper">
-        <button class="modal__btn">Ок</button>
-        <button class="modal__btn">Отмена</button>
-      </div>
-    </form>
-  </section>
-`;
-  const ESC_CODE = 27;
-  let objectHandler;
-
-  /**
-  * удаление "модального окна"
-  * @param {Event} evt
-  * @param {HTMLElement} elem
-  */
-  const clickCloseHandler = (evt, elem) => {
-    evt.preventDefault();
-
-    managmentGame.deleteElement(elem);
-    document.removeEventListener(`keydown`, objectHandler);
-  };
-
-  const clickCancelHandler = clickCloseHandler;
-  /**
-  * удаление "модального окна" по клавише ESC
-  * @param {Event} evt
-  * @param {HTMLElement} elem
-  */
-  const escCloseHandler = (evt, elem) => {
-    if (evt.keyCode === ESC_CODE) {
-      clickCloseHandler(evt, elem);
-    }
-  };
-  /**
-  * смена screen после подтверждения
-  * @param {Event} evt
-  */
-  const confirmHandler = () => {
-    managmentGame.changeScreen(welcome());
-    managmentGame.startOverGame();
-  };
-  /** =========================================
-  * экспорт
-  * @return {HTMLElement} element
-  */
-  var modalConfirm = () => {
-    const element = managmentGame.renderTemplate(MODAL_CONFIRM);
-    const modal = element.querySelector(`.modal`);
-    const modalBtnClose = element.querySelector(`.modal__close`);
-    const modalBtnOk = element.querySelectorAll(`.modal__btn`)[0];
-    const modalBtnCancel = element.querySelectorAll(`.modal__btn`)[1];
-
-    modalBtnClose.addEventListener(`click`, (evt) => {
-      clickCloseHandler(evt, modal);
-    });
-    modalBtnOk.addEventListener(`click`, confirmHandler);
-    modalBtnCancel.addEventListener(`click`, (evt) => {
-      clickCancelHandler(evt, modal);
-    });
-
-    objectHandler = {
-      handleEvent(evt) {
-        escCloseHandler(evt, modal);
-      }
-    };
-    document.addEventListener(`keydown`, objectHandler);
-
-    return element;
-  };
-
-  /**
-   * добавляет модальное окно с подтверждением
-   */
-  const clickHandler = () => {
-    managmentGame.addModal(modalConfirm());
-  };
-  /** поиск кнопки назад на экране и установка события
-   * @param {HTMLElement} searchElementInWrap
-   */
-  const setEventForBtnBack = (searchElementInWrap) => {
-    const btnBack = searchElementInWrap.querySelector(`.back`);
-    btnBack.addEventListener(`click`, clickHandler);
   };
 
   /** результаты игры
   * @param {Object} obj
+  * @param {String} statsPictureStr
   * @return {String} html
   */
-  const template$3 = (obj) => {
+  const template$3 = (obj, statsPictureStr) => {
     let slowPoint;
     if (obj.slowPoints) {
       slowPoint = obj.slowPoints.points === 0 ? 0 : `-` + obj.slowPoints.points;
@@ -493,7 +485,7 @@
       <td class="result__number">1.</td>
       <td colspan="2">
         <ul class="stats">
-          ${managmentGame.createStatsPicture()}
+          ${statsPictureStr}
         </ul>
       </td>
       <td class="result__points">× 100</td>
@@ -530,7 +522,7 @@
       <td class="result__number">2.</td>
       <td>
         <ul class="stats">
-          ${managmentGame.createStatsPicture()}
+          ${statsPictureStr}
         </ul>
       </td>
       <td class="result__total"></td>
@@ -552,58 +544,13 @@
   /** =========================================
    * экспорт
    * @param {Object} objUserStat
+   * @param {String} statsPictureStr
    * @return {HTMLElement} element
    */
-  var resultScreen = (objUserStat) => {
-    const element = managmentGame.renderTemplate(template$3(managmentGame.countingPoints(objUserStat.answers, managmentGame.INITIAL_GAME)));
+  var resultScreen = (objUserStat, statsPictureStr) => {
+    const element = managentDom.renderTemplate(template$3(objUserStat, statsPictureStr));
 
     setEventForBtnBack(element);
-
-    return element;
-  };
-
-  var returnScreenGame = (valueScreen) => {
-    let typeScreen = ``;
-    switch (valueScreen) {
-      case `gameOne`:
-        typeScreen = gameOne;
-        break;
-      case `gameTwo`:
-        typeScreen = gameTwo;
-        break;
-      case `gameThree`:
-        typeScreen = gameThree;
-        break;
-      default: typeScreen = resultScreen;
-    }
-    return typeScreen;
-  };
-
-  const headerTemplate = (state) => `<header class="header">
-  <button class="back">
-    <span class="visually-hidden">Вернуться к началу</span>
-    <svg class="icon" width="45" height="45" viewBox="0 0 45 45" fill="#000000">
-      <use xlink:href="img/sprite.svg#arrow-left"></use>
-    </svg>
-    <svg class="icon" width="101" height="44" viewBox="0 0 101 44" fill="#000000">
-      <use xlink:href="img/sprite.svg#logo-small"></use>
-    </svg>
-  </button>
-  <div class="game__timer">NN</div>
-  <div class="game__lives">
-    ${new Array(3 - state.lives).fill(`<img src="img/heart__empty.svg" class="game__heart" alt=" Missed Life" width="31" height="27">`).join(``)}
-    ${new Array(state.lives).fill(`<img src="img/heart__full.svg" class="game__heart" alt="Life" width="31" height="27">`).join(``)}
-  </div>
-  </header>
-`;
-
-  var header = (state) => {
-    const element = managmentGame.renderTemplate(headerTemplate(state));
-
-    const gameTimer = element.querySelector(`.game__timer`);
-
-    setEventForBtnBack(element);
-    managmentGame.startTime(gameTimer);
 
     return element;
   };
@@ -611,13 +558,12 @@
   /** =========================================
   * обьявление переменных
   */
-  const mainElement = document.querySelector(`#main`);
-  const INITIAL_GAME = {
+  const INITIAL_GAME = Object.freeze({
     lives: 3,
     level: 0,
     time: 0,
     points: 0
-  };
+  });
   const MIN_ANSWER = 10;
   const FAST_TIME = 10;
   const NORMAL_TIME_VALUE_ONE = 10;
@@ -637,105 +583,64 @@
     name: ``,
     answers: []
   };
-  /** =========================================
-  * обьявление фукнции
-  */
-  /**
-  * рендеринг template
-  * @param {String} strHtml
-  * @return {HTMLElement} fragment
-  */
-  const renderTemplate = (strHtml) => {
-    const wrapperTemplate = document.createElement(`template`);
-    wrapperTemplate.innerHTML = strHtml;
-    return wrapperTemplate.content;
-  };
-  /**
-  * вставка данных из template
-  * @param {HTMLElement} elements
-  */
-  const changeScreen = (...elements) => {
-    mainElement.innerHTML = ``;
-    elements.forEach((element) => {
-      mainElement.appendChild(element);
-    });
-  };
-  /**
-  * вставка данных из template "модального окна"
-  * @param {HTMLElement} element
-  */
-  const addModal = (element) => {
-    mainElement.appendChild(element);
-  };
+
   /**
   * возврашает функцию устанавливаюшую игровой экран или экран результатов
   * @param {Object} state
   * @param {Array} array
+  * @param {String} statsPictureStr
   * @return {Function}
   */
-  const setGame = (state, array) => {
+  const setGame = (state, array, statsPictureStr) => {
     let index = state.level;
 
-    changeLevel(state);
-
-    return returnScreenGame(array[index].type)(array[index].images);
+    return returnScreenGame(array[index].type)(changeLevel(state), array[index].images, statsPictureStr);
   };
-  /** =========================================
   /**
   * записываем ответ пользователя
   * @param {Boolean} value
+  * @param {Object} state
+  * @return {Object}
   */
-  const pushUserAnswer = function (value) {
+  const pushUserAnswer = function (value, state) {
     if (value) {
       userStat.answers.push({answer: true, elapsedTime: timeText});
+      return state;
     } else {
       userStat.answers.push({answer: false, elapsedTime: timeText});
-      setLives(INITIAL_GAME);
+      return setLives(state);
     }
-  };
-  /**
-  * удаление HTMLElement
-  * @param {HTMLElement} element
-  */
-  const deleteElement = (element) => {
-    mainElement.removeChild(element);
   };
   /** Управление жизнями игрока
   * @param {Object} startData
+  * @return {Object}
   */
   const setLives = (startData) => {
-    startData.lives -= 1;
-  };
-  /**
-  * Играть заново
-  */
-  const startOverGame = () => {
-    userStat.answers.length = 0;
-    INITIAL_GAME.lives = 3;
-    INITIAL_GAME.level = 0;
-  };
-  /** Запись имени игрока
-  * @param {String} value
-  */
-  const recordNameUserStat = (value) => {
-    userStat.name = value;
+    const tempObj = {
+      lives: startData.lives - 1
+    };
+    return Object.assign({}, startData, tempObj);
   };
   /** Переключение уровней
   * @param {Object} startData
+  * @return {Object}
   */
   const changeLevel = (startData) => {
-    startData.level += 1;
+    const tempObj = {
+      level: startData.level + 1
+    };
+    return Object.assign({}, startData, tempObj);
   };
-  /** запись текста времени
-  * @param {HTMLElement} element
-  * @param {String} text
-  */
-  const setTextTime = (element, text) => {
-    if (text < 10) {
-      text = `0` + text;
-    }
-    element.innerHTML = text;
-  };
+  // /** запись текста времени
+  // * @param {HTMLElement} element
+  // * @param {String} text
+  // */
+  // const setTextTime = (element, text) => {
+  //   if (text < 10) {
+  //     text = `0` + text;
+  //   }
+  //   element.innerHTML = text;
+  // };
   /** создание графики ответов
   * @return {String} answersList
   */
@@ -761,7 +666,7 @@
         if (answersListTime[i].elapsedTime > SLOW_TIME) {
           answersList[i] = SLOW_TEXT;
         }
-        if (answersListTime[i].elapsedTime >= NORMAL_TIME_VALUE_ONE && answersListTime[i].elapsedTime <= NORMAL_TIME_VALUE_TWO) {
+        if (answersListTime[i].elapsedTime >= NORMAL_TIME_VALUE_ONE && answersListTime[i].elapsedTime <= NORMAL_TIME_VALUE_TWO || answersListTime[i].elapsedTime === undefined) {
           answersList[i] = CORRECT_TEXT;
         }
         if (answersListTime[i].answer === false) {
@@ -773,32 +678,38 @@
     answersList = answersList.join(``);
     return answersList;
   };
-  /** Счетчик времени
-  * @param {HTMLElement} timerElement
-  * @return {Number} timeText
-  */
-  const startTime = (timerElement) => {
-    let date = Date.now();
+  // /** Счетчик времени
+  // * @param {HTMLElement} timerElement
+  // * @return {Number} timeText
+  // */
+  // const startTime = (timerElement) => {
+  //   let date = Date.now();
 
-    setInterval(() => {
-      let now = Date.now();
-      timeText = Math.round((now - date) / 1000);
-      setTextTime(timerElement, timeText);
-    }, 20);
-    return timeText;
-  };
+  //   setInterval(() => {
+  //     let now = Date.now();
+  //     timeText = Math.round((now - date) / 1000);
+  //     setTextTime(timerElement, timeText);
+  //   }, 20);
+  //   return timeText;
+  // };
   /**
   * управление игровыми экранами
   * @param {Object} state
   * @param {Array} questions
   */
-  const controlGameScreens = (state = INITIAL_GAME, questions) => {
+  const controlGameScreens = (state = Object.assign({}, INITIAL_GAME), questions) => {
+    let statsPictureStr = createStatsPicture();
+    if (state.level === 0) {
+      userStat.answers.length = 0;
+      statsPictureStr = createStatsPicture();
+    }
     if (state.lives === 0 || state.level >= questions.length) {
-      changeScreen(resultScreen(userStat));
+      const resulltUserStat = countingPoints(userStat.answers, state);
+      managentDom.changeScreen(resultScreen(resulltUserStat, statsPictureStr));
       return;
     }
 
-    changeScreen(header(state), setGame(state, questions));
+    managentDom.changeScreen(header(state), setGame(state, questions, statsPictureStr));
   };
   /** Подсчет очков при окончании игры
   * @param {Array} arrayUserAnswers
@@ -847,18 +758,121 @@
   * экспорт
   */
   const managmentGame = {
-    countingPoints,
-    startTime,
     controlGameScreens,
-    changeScreen,
-    renderTemplate,
-    addModal,
-    pushUserAnswer,
-    deleteElement,
-    INITIAL_GAME,
-    recordNameUserStat,
-    createStatsPicture,
-    startOverGame
+    pushUserAnswer
+  };
+
+  const RULES_SCREEN = `
+  <header class="header">
+    <button class="back">
+      <span class="visually-hidden">Вернуться к началу</span>
+      <svg class="icon" width="45" height="45" viewBox="0 0 45 45" fill="#000000">
+        <use xlink:href="img/sprite.svg#arrow-left"></use>
+      </svg>
+      <svg class="icon" width="101" height="44" viewBox="0 0 101 44" fill="#000000">
+        <use xlink:href="img/sprite.svg#logo-small"></use>
+      </svg>
+    </button>
+  </header>
+  <section class="rules">
+    <h2 class="rules__title">Правила</h2>
+    <ul class="rules__description">
+      <li>Угадай 10 раз для каждого изображения фото
+        <img class="rules__icon" src="img/icon-photo.png" width="32" height="31" alt="Фото"> или рисунок
+        <img class="rules__icon" src="img/icon-paint.png" width="32" height="31" alt="Рисунок"></li>
+      <li>Фотографиями или рисунками могут быть оба изображения.</li>
+      <li>На каждую попытку отводится 30 секунд.</li>
+      <li>Ошибиться можно не более 3 раз.</li>
+    </ul>
+    <p class="rules__ready">Готовы?</p>
+    <form class="rules__form">
+      <input class="rules__input" type="text" placeholder="Ваше Имя">
+      <button class="rules__button  continue" type="submit" disabled>Go!</button>
+    </form>
+  </section>
+`;
+
+  /** функция управляет состоянием disabled кнопки формы btnRulesForm в зависимости от значения инпута в форме
+  * @param {Event} evt
+  * @param {HTMLElement} btnForm
+  */
+  const changeNameHandler = (evt, btnForm) => {
+    const targetValue = evt.target.value;
+    btnForm.disabled = !targetValue;
+  };
+  /** изменение sreen при отправке формы
+  * @param {Event} evt
+  * @param {HTMLElement} inputElem
+  */
+  const submitFormHandler = (evt, inputElem) => {
+    evt.preventDefault();
+    // как записать имя игрока?
+    if (inputElem.value) ;
+
+    managmentGame.controlGameScreens(undefined, dataGame);
+  };
+  /** =========================================
+  * экспорт
+  * @return {HTMLElement} element
+  */
+  var rulesScreen = () => {
+    const element = managentDom.renderTemplate(RULES_SCREEN);
+    const name = element.querySelector(`.rules__input`);
+    const rulesForm = element.querySelector(`.rules__form`);
+    const btnRulesForm = element.querySelector(`.rules__button`);
+
+    name.addEventListener(`input`, (evt) => {
+      changeNameHandler(evt, btnRulesForm);
+    });
+    rulesForm.addEventListener(`submit`, (evt) => {
+      submitFormHandler(evt, name);
+    });
+
+    setEventForBtnBack(element);
+
+    return element;
+  };
+
+  const WELCOME_SCREEN = `
+  <section class="greeting central--blur">
+    <img class="greeting__logo" src="img/logo_ph-big.svg" width="201" height="89" alt="Pixel Hunter">
+    <div class="greeting__asterisk asterisk"><span class="visually-hidden">Я просто красивая звёздочка</span>*</div>
+    <div class="greeting__challenge">
+      <h3 class="greeting__challenge-title">Лучшие художники-фотореалисты бросают тебе вызов!</h3>
+      <p class="greeting__challenge-text">Правила игры просты:</p>
+      <ul class="greeting__challenge-list">
+        <li>Нужно отличить рисунок от фотографии и сделать выбор.</li>
+        <li>Задача кажется тривиальной, но не думай, что все так просто.</li>
+        <li>Фотореализм обманчив и коварен.</li>
+        <li>Помни, главное — смотреть очень внимательно.</li>
+      </ul>
+    </div>
+    <button class="greeting__continue" type="button">
+      <span class="visually-hidden">Продолжить</span>
+      <svg class="icon" width="64" height="64" viewBox="0 0 64 64" fill="#000000">
+        <use xlink:href="img/sprite.svg#arrow-right"></use>
+      </svg>
+    </button>
+  </section>
+`;
+
+  /** изменение sreen при клике
+  *
+  */
+  const clickBtnHandler = () => {
+    managentDom.changeScreen(rulesScreen());
+  };
+  /** =========================================
+  * экспорт
+  * @return {HTMLElement} element
+  */
+  var welcome = () => {
+    const element = managentDom.renderTemplate(WELCOME_SCREEN);
+    const btnGreetingContinue = element.querySelector(`.greeting__continue`);
+
+    btnGreetingContinue.addEventListener(`click`, clickBtnHandler);
+
+    return element;
   };
 
   const MAIN_SCREEN = `
@@ -872,14 +886,14 @@
   *
   */
   const clickBtnHandler$1 = () => {
-    managmentGame.changeScreen(welcome());
+    managentDom.changeScreen(welcome());
   };
   /** =========================================
   * экспорт
   * @return {HTMLElement} element
   */
   var mainScreen = () => {
-    const element = managmentGame.renderTemplate(MAIN_SCREEN);
+    const element = managentDom.renderTemplate(MAIN_SCREEN);
     const btnIntroAsterisk = element.querySelector(`.intro__asterisk`);
 
     btnIntroAsterisk.addEventListener(`click`, clickBtnHandler$1);
@@ -887,7 +901,7 @@
     return element;
   };
 
-  managmentGame.changeScreen(mainScreen());
+  managentDom.changeScreen(mainScreen());
 
 }());
 
