@@ -1,5 +1,5 @@
 import welcome from './module-welcome-screen.js';
-import {changeScreen, renderTemplate, deleteElement, returnInitialStateGame, returnUserStat} from './game.js';
+import {managmentGame} from './game.js';
 
 const MODAL_CONFIRM = `
   <section class="modal">
@@ -27,7 +27,7 @@ let objectHandler;
 const clickCloseHandler = (evt, elem) => {
   evt.preventDefault();
 
-  deleteElement(elem);
+  managmentGame.deleteElement(elem);
   document.removeEventListener(`keydown`, objectHandler);
 };
 
@@ -47,17 +47,15 @@ const escCloseHandler = (evt, elem) => {
 * @param {Event} evt
 */
 const confirmHandler = () => {
-  changeScreen(welcome());
-  returnUserStat().answers.length = 0;
-  returnInitialStateGame().lives = 3;
-  returnInitialStateGame().level = 0;
+  managmentGame.changeScreen(welcome());
+  managmentGame.startOverGame();
 };
 /** =========================================
 * экспорт
 * @return {HTMLElement} element
 */
 export default () => {
-  const element = renderTemplate(MODAL_CONFIRM);
+  const element = managmentGame.renderTemplate(MODAL_CONFIRM);
   const modal = element.querySelector(`.modal`);
   const modalBtnClose = element.querySelector(`.modal__close`);
   const modalBtnOk = element.querySelectorAll(`.modal__btn`)[0];

@@ -1,5 +1,5 @@
 import {setEventForBtnBack} from './module-back-btn.js';
-import {renderTemplate, countingPoints, returnInitialStateGame, returnUserStat, createStatsPicture} from './game.js';
+import {managmentGame} from './game.js';
 
 /** результаты игры
 * @param {Object} obj
@@ -33,7 +33,7 @@ const template = (obj) => {
       <td class="result__number">1.</td>
       <td colspan="2">
         <ul class="stats">
-          ${createStatsPicture()}
+          ${managmentGame.createStatsPicture()}
         </ul>
       </td>
       <td class="result__points">× 100</td>
@@ -70,7 +70,7 @@ const template = (obj) => {
       <td class="result__number">2.</td>
       <td>
         <ul class="stats">
-          ${createStatsPicture()}
+          ${managmentGame.createStatsPicture()}
         </ul>
       </td>
       <td class="result__total"></td>
@@ -91,10 +91,11 @@ const template = (obj) => {
 };
 /** =========================================
  * экспорт
+ * @param {Object} objUserStat
  * @return {HTMLElement} element
  */
-export default () => {
-  const element = renderTemplate(template(countingPoints(returnUserStat().answers, returnInitialStateGame())));
+export default (objUserStat) => {
+  const element = managmentGame.renderTemplate(template(managmentGame.countingPoints(objUserStat.answers, managmentGame.INITIAL_GAME)));
 
   setEventForBtnBack(element);
 

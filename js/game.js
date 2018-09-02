@@ -1,18 +1,16 @@
 import returnScreenGame from './module-game-screens';
-// import {userStat, timeText, setLives, initialStateGame, changeLevel} from './game.js';
 import header from './module-header.js';
-// import {changeScreen, setGame} from './util.js';
 import resultScreen from './module-result-screen.js';
 /** =========================================
 * обьявление переменных
 */
 const mainElement = document.querySelector(`#main`);
-const INITIAL_GAME = Object.freeze({
+const INITIAL_GAME = {
   lives: 3,
   level: 0,
   time: 0,
   points: 0
-});
+};
 const MIN_ANSWER = 10;
 const FAST_TIME = 10;
 const NORMAL_TIME_VALUE_ONE = 10;
@@ -28,7 +26,6 @@ const POINT_BONUS = 50;
 const POINT_FINE = 50;
 const POINT_BONUS_LIVES = 50;
 let timeText;
-let initialStateGame;
 let userStat = {
   name: ``,
   answers: []
@@ -64,27 +61,17 @@ const addModal = (element) => {
   mainElement.appendChild(element);
 };
 /**
-* возврашает имя игрового скрина для его приминения
-* @param {String} typeGameScreen
-* @return {String}
-*/
-const returnTypeGameScreen = (typeGameScreen) => {
-  if (!typeGameScreen) {
-    return ``;
-  }
-  return typeGameScreen;
-};
-/**
 * возврашает функцию устанавливаюшую игровой экран или экран результатов
+* @param {Object} state
 * @param {Array} array
 * @return {Function}
 */
-const setGame = (array) => {
-  let index = initialStateGame.level;
+const setGame = (state, array) => {
+  let index = state.level;
 
-  changeLevel(initialStateGame);
+  changeLevel(state);
 
-  return returnScreenGame(returnTypeGameScreen(array[index].type))(array[index].images);
+  return returnScreenGame(array[index].type)(array[index].images);
 };
 /** =========================================
 /**
@@ -96,7 +83,7 @@ const pushUserAnswer = function (value) {
     userStat.answers.push({answer: true, elapsedTime: timeText});
   } else {
     userStat.answers.push({answer: false, elapsedTime: timeText});
-    setLives(initialStateGame);
+    setLives(INITIAL_GAME);
   }
 };
 /**
@@ -110,22 +97,15 @@ const deleteElement = (element) => {
 * @param {Object} startData
 */
 const setLives = (startData) => {
-  const tempObj = {
-    lives: startData.lives - 1
-  };
-  initialStateGame = Object.assign({}, startData, tempObj);
+  startData.lives -= 1;
 };
-/** возврашает
-* @return {Object} initialStateGame
+/**
+* Играть заново
 */
-const returnInitialStateGame = () => {
-  return initialStateGame;
-};
-/** возврашает
-* @return {Object} userStat
-*/
-const returnUserStat = () => {
-  return userStat;
+const startOverGame = () => {
+  userStat.answers.length = 0;
+  INITIAL_GAME.lives = 3;
+  INITIAL_GAME.level = 0;
 };
 /** Запись имени игрока
 * @param {String} value
@@ -133,25 +113,11 @@ const returnUserStat = () => {
 const recordNameUserStat = (value) => {
   userStat.name = value;
 };
-/** инициальзация данных
-* @param {Object} data
-* @return {Object} initialStateGame
-*/
-const initData = (data) => {
-  return Object.assign({}, initialStateGame, data);
-};
 /** Переключение уровней
 * @param {Object} startData
-* @return {Object} newData
 */
 const changeLevel = (startData) => {
-  const tempObj = {
-    level: startData.level + 1
-  };
-
-  initialStateGame = Object.assign({}, startData, tempObj);
-
-  return initialStateGame;
+  startData.level += 1;
 };
 /** запись текста времени
 * @param {HTMLElement} element
@@ -169,7 +135,7 @@ const setTextTime = (element, text) => {
 const createStatsPicture = () => {
   let answersList = new Array(10);
 
-  let answersListTime = returnUserStat().answers.map((item) => {
+  let answersListTime = userStat.answers.map((item) => {
     return item;
   });
 
@@ -219,17 +185,13 @@ const startTime = (timerElement) => {
 * @param {Object} state
 * @param {Array} questions
 */
-const controlGameScreens = (state = initialStateGame = initData(INITIAL_GAME), questions) => {
-  if (state.lives === 0) {
-    changeScreen(resultScreen());
-    return;
-  }
-  if (state.level >= questions.length) {
-    changeScreen(resultScreen());
+const controlGameScreens = (state = INITIAL_GAME, questions) => {
+  if (state.lives === 0 || state.level >= questions.length) {
+    changeScreen(resultScreen(userStat));
     return;
   }
 
-  changeScreen(header(initialStateGame), setGame(questions));
+  changeScreen(header(state), setGame(state, questions));
 };
 /** Подсчет очков при окончании игры
 * @param {Array} arrayUserAnswers
@@ -277,4 +239,19 @@ const countingPoints = (arrayUserAnswers, startData) => {
 /** =========================================
 * экспорт
 */
-export {countingPoints, startTime, setLives, changeLevel, initData, controlGameScreens, changeScreen, renderTemplate, addModal, mainElement, returnTypeGameScreen, setGame, pushUserAnswer, deleteElement, returnInitialStateGame, returnUserStat, recordNameUserStat, createStatsPicture};
+const managmentGame = {
+  countingPoints,
+  startTime,
+  controlGameScreens,
+  changeScreen,
+  renderTemplate,
+  addModal,
+  pushUserAnswer,
+  deleteElement,
+  INITIAL_GAME,
+  recordNameUserStat,
+  createStatsPicture,
+  startOverGame
+};
+
+export {managmentGame};

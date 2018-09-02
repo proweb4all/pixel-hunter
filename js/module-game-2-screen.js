@@ -1,4 +1,4 @@
-import {controlGameScreens, renderTemplate, pushUserAnswer, returnInitialStateGame, createStatsPicture} from './game.js';
+import {managmentGame} from './game.js';
 import dataGame from './data-game.js';
 
 /** =========================================
@@ -28,7 +28,7 @@ const template = (arr) => {
         ${html}
       </form>
       <ul class="stats">
-        ${createStatsPicture()}
+        ${managmentGame.createStatsPicture()}
       </ul>
     </section>
   `;
@@ -43,8 +43,8 @@ const changeFormHandler = (evt) => {
   const selectUserAnswer = targetInput.value;
   const correctAnswer = currentTarget.querySelector(`img`).getAttribute(`data-type`);
 
-  pushUserAnswer(correctAnswer === selectUserAnswer);
-  controlGameScreens(returnInitialStateGame(), dataGame);
+  managmentGame.pushUserAnswer(correctAnswer === selectUserAnswer);
+  managmentGame.controlGameScreens(managmentGame.INITIAL_GAME, dataGame);
 };
 /** =========================================
  * экспорт
@@ -52,7 +52,7 @@ const changeFormHandler = (evt) => {
  * @return {HTMLElement} element
  */
 export default (arr) => {
-  const element = renderTemplate(template(arr));
+  const element = managmentGame.renderTemplate(template(arr));
   const form = element.querySelector(`.game__content`);
 
   form.addEventListener(`change`, changeFormHandler);

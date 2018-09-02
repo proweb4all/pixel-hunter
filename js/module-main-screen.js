@@ -1,4 +1,4 @@
-import {changeScreen, renderTemplate} from './game.js';
+import {managmentGame} from './game.js';
 import welcomeScreen from './module-welcome-screen.js';
 
 const MAIN_SCREEN = `
@@ -12,14 +12,14 @@ const MAIN_SCREEN = `
 *
 */
 const clickBtnHandler = () => {
-  changeScreen(welcomeScreen());
+  managmentGame.changeScreen(welcomeScreen());
 };
 /** =========================================
 * экспорт
 * @return {HTMLElement} element
 */
 export default () => {
-  const element = renderTemplate(MAIN_SCREEN);
+  const element = managmentGame.renderTemplate(MAIN_SCREEN);
   const btnIntroAsterisk = element.querySelector(`.intro__asterisk`);
 
   btnIntroAsterisk.addEventListener(`click`, clickBtnHandler);

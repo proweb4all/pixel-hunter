@@ -1,11 +1,11 @@
-import {addModal} from './game.js';
+import {managmentGame} from './game.js';
 import modalConfirm from './module-modal-confirm.js';
 
 /**
  * добавляет модальное окно с подтверждением
  */
 const clickHandler = () => {
-  addModal(modalConfirm());
+  managmentGame.addModal(modalConfirm());
 };
 /** поиск кнопки назад на экране и установка события
  * @param {HTMLElement} searchElementInWrap

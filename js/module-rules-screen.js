@@ -1,5 +1,5 @@
 import {setEventForBtnBack} from './module-back-btn.js';
-import {renderTemplate, controlGameScreens, returnInitialStateGame, recordNameUserStat} from './game.js';
+import {managmentGame} from './game.js';
 import dataGame from './data-game.js';
 
 const RULES_SCREEN = `
@@ -48,17 +48,17 @@ const submitFormHandler = (evt, inputElem) => {
   evt.preventDefault();
 
   if (inputElem.value) {
-    recordNameUserStat(inputElem.value);
+    managmentGame.recordNameUserStat(inputElem.value);
   }
 
-  controlGameScreens(returnInitialStateGame(), dataGame);
+  managmentGame.controlGameScreens(managmentGame.INITIAL_GAME, dataGame);
 };
 /** =========================================
 * экспорт
 * @return {HTMLElement} element
 */
 export default () => {
-  const element = renderTemplate(RULES_SCREEN);
+  const element = managmentGame.renderTemplate(RULES_SCREEN);
   const name = element.querySelector(`.rules__input`);
   const rulesForm = element.querySelector(`.rules__form`);
   const btnRulesForm = element.querySelector(`.rules__button`);
