@@ -1,6 +1,6 @@
 import returnScreenGame from './module-game-screens';
 import header from './module-header.js';
-import {managentDom} from './module-mangment-dom.js';
+import {changeScreen} from './module-mangment-dom.js';
 import resultScreen from './module-result-screen.js';
 /** =========================================
 * обьявление переменных
@@ -152,11 +152,11 @@ const controlGameScreens = (state = Object.assign({}, INITIAL_GAME), questions) 
   }
   if (state.lives === 0 || state.level >= questions.length) {
     const resulltUserStat = countingPoints(userStat.answers, state);
-    managentDom.changeScreen(resultScreen(resulltUserStat, statsPictureStr));
+    changeScreen(resultScreen(resulltUserStat, statsPictureStr));
     return;
   }
 
-  managentDom.changeScreen(header(state), setGame(state, questions, statsPictureStr));
+  changeScreen(header(state), setGame(state, questions, statsPictureStr));
 };
 /** Подсчет очков при окончании игры
 * @param {Array} arrayUserAnswers

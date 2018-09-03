@@ -1,5 +1,5 @@
 import {setEventForBtnBack} from './module-back-btn.js';
-import {managentDom} from './module-mangment-dom.js';
+import {renderTemplate} from './module-mangment-dom.js';
 
 /** результаты игры
 * @param {Object} obj
@@ -97,7 +97,7 @@ const template = (obj, statsPictureStr) => {
  * @return {HTMLElement} element
  */
 export default (objUserStat, statsPictureStr) => {
-  const element = managentDom.renderTemplate(template(objUserStat, statsPictureStr));
+  const element = renderTemplate(template(objUserStat, statsPictureStr));
 
   setEventForBtnBack(element);
 

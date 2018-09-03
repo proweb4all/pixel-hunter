@@ -35,11 +35,4 @@ const deleteElement = (element) => {
   mainElement.removeChild(element);
 };
 
-const managentDom = {
-  renderTemplate,
-  changeScreen,
-  addModal,
-  deleteElement
-};
-
-export {managentDom};
+export {renderTemplate, changeScreen, addModal, deleteElement};

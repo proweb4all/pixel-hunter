@@ -1,4 +1,4 @@
-import {managentDom} from './module-mangment-dom.js';
+import {deleteElement, changeScreen, renderTemplate} from './module-mangment-dom.js';
 import welcome from './module-welcome-screen.js';
 
 const MODAL_CONFIRM = `
@@ -27,7 +27,7 @@ let objectHandler;
 const clickCloseHandler = (evt, elem) => {
   evt.preventDefault();
 
-  managentDom.deleteElement(elem);
+  deleteElement(elem);
   document.removeEventListener(`keydown`, objectHandler);
 };
 
@@ -47,14 +47,14 @@ const escCloseHandler = (evt, elem) => {
 * @param {Event} evt
 */
 const confirmHandler = () => {
-  managentDom.changeScreen(welcome());
+  changeScreen(welcome());
 };
 /** =========================================
 * экспорт
 * @return {HTMLElement} element
 */
 export default () => {
-  const element = managentDom.renderTemplate(MODAL_CONFIRM);
+  const element = renderTemplate(MODAL_CONFIRM);
   const modal = element.querySelector(`.modal`);
   const modalBtnClose = element.querySelector(`.modal__close`);
   const modalBtnOk = element.querySelectorAll(`.modal__btn`)[0];

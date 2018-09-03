@@ -1,4 +1,4 @@
-import {managentDom} from './module-mangment-dom.js';
+import {renderTemplate} from './module-mangment-dom.js';
 import {managmentGame} from './game.js';
 import dataGame from './data-game.js';
 
@@ -57,7 +57,7 @@ const changeFormHandler = (evt, state) => {
  * @return {HTMLElement} element
  */
 export default (state, arrImages, statsPictureStr) => {
-  const element = managentDom.renderTemplate(template(arrImages, statsPictureStr));
+  const element = renderTemplate(template(arrImages, statsPictureStr));
   const form = element.querySelector(`.game__content`);
 
   form.addEventListener(`change`, (evt) => {

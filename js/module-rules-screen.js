@@ -1,5 +1,5 @@
 import {setEventForBtnBack} from './module-back-btn.js';
-import {managentDom} from './module-mangment-dom.js';
+import {renderTemplate} from './module-mangment-dom.js';
 import {managmentGame} from './game.js';
 import dataGame from './data-game.js';
 
@@ -59,7 +59,7 @@ const submitFormHandler = (evt, inputElem) => {
 * @return {HTMLElement} element
 */
 export default () => {
-  const element = managentDom.renderTemplate(RULES_SCREEN);
+  const element = renderTemplate(RULES_SCREEN);
   const name = element.querySelector(`.rules__input`);
   const rulesForm = element.querySelector(`.rules__form`);
   const btnRulesForm = element.querySelector(`.rules__button`);
