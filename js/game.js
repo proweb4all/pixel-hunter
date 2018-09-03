@@ -166,7 +166,7 @@ const controlGameScreens = (state = Object.assign({}, INITIAL_GAME), questions) 
 const countingPoints = (arrayUserAnswers, startData) => {
   const newData = Object.assign({}, startData);
 
-  if (arrayUserAnswers.length < MIN_ANSWER) {
+  if (arrayUserAnswers.length < MIN_ANSWER || newData.lives === 0) {
     newData.points = -1;
     return newData;
   }
