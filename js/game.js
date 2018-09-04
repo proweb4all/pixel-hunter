@@ -1,7 +1,7 @@
 import returnScreenGame from './module-game-screens';
 import header from './module-header.js';
 import {changeScreen} from './module-mangment-dom.js';
-import resultScreen from './module-result-screen.js';
+import resultScreen from './screens/module-result-screen';
 
 const INITIAL_GAME = Object.freeze({
   lives: 3,
