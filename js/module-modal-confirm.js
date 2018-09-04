@@ -1,11 +1,6 @@
-/** =========================================
- * импорт модулей
- */
-import {changeScreen, renderTemplate, mainElement} from './util.js';
+import {deleteElement, changeScreen, renderTemplate} from './module-mangment-dom.js';
 import welcome from './module-welcome-screen.js';
-/** =========================================
- * обьявление констант
- */
+
 const MODAL_CONFIRM = `
   <section class="modal">
     <form class="modal__inner">
@@ -22,31 +17,36 @@ const MODAL_CONFIRM = `
   </section>
 `;
 const ESC_CODE = 27;
-/** =========================================
-* обьявление фукнции
-*/
+let objectHandler;
+
 /**
 * удаление "модального окна"
-*
+* @param {Event} evt
+* @param {HTMLElement} elem
 */
-const clickCloseHandler = () => {
-  mainElement.removeChild(mainElement.lastChild);
-  document.removeEventListener(`keydown`, escCloseHandler);
+const clickCloseHandler = (evt, elem) => {
+  evt.preventDefault();
+
+  deleteElement(elem);
+  document.removeEventListener(`keydown`, objectHandler);
 };
 
 const clickCancelHandler = clickCloseHandler;
-
-const escCloseHandler = function (evt) {
+/**
+* удаление "модального окна" по клавише ESC
+* @param {Event} evt
+* @param {HTMLElement} elem
+*/
+const escCloseHandler = (evt, elem) => {
   if (evt.keyCode === ESC_CODE) {
-    clickCloseHandler();
+    clickCloseHandler(evt, elem);
   }
 };
 /**
 * смена screen после подтверждения
 * @param {Event} evt
 */
-const confirmHandler = (evt) => {
-  evt.preventDefault();
+const confirmHandler = () => {
   changeScreen(welcome());
 };
 /** =========================================
@@ -54,23 +54,26 @@ const confirmHandler = (evt) => {
 * @return {HTMLElement} element
 */
 export default () => {
-  /**
-   *  работа с данными
-   */
   const element = renderTemplate(MODAL_CONFIRM);
-  /**
-   *  обьявление переменных
-   */
+  const modal = element.querySelector(`.modal`);
   const modalBtnClose = element.querySelector(`.modal__close`);
   const modalBtnOk = element.querySelectorAll(`.modal__btn`)[0];
   const modalBtnCancel = element.querySelectorAll(`.modal__btn`)[1];
-  /** =========================================
-  * работа с DOM
-  */
-  modalBtnClose.addEventListener(`click`, clickCloseHandler);
+
+  modalBtnClose.addEventListener(`click`, (evt) => {
+    clickCloseHandler(evt, modal);
+  });
   modalBtnOk.addEventListener(`click`, confirmHandler);
-  modalBtnCancel.addEventListener(`click`, clickCancelHandler);
-  document.addEventListener(`keydown`, escCloseHandler);
+  modalBtnCancel.addEventListener(`click`, (evt) => {
+    clickCancelHandler(evt, modal);
+  });
+
+  objectHandler = {
+    handleEvent(evt) {
+      escCloseHandler(evt, modal);
+    }
+  };
+  document.addEventListener(`keydown`, objectHandler);
 
   return element;
 };

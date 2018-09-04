@@ -1,12 +1,8 @@
-/** =========================================
- * импорт модулей
- */
-import {changeScreen, renderTemplate} from './util.js';
-import gameOne from './module-game-1-screen.js';
 import {setEventForBtnBack} from './module-back-btn.js';
-/** =========================================
- * обьявление констант
- */
+import {renderTemplate} from './module-mangment-dom.js';
+import {controlGameScreens} from './game.js';
+import dataGame from './data-game.js';
+
 const RULES_SCREEN = `
   <header class="header">
     <button class="back">
@@ -36,9 +32,7 @@ const RULES_SCREEN = `
     </form>
   </section>
 `;
-/** =========================================
-* обьявление фукнции
-*/
+
 /** функция управляет состоянием disabled кнопки формы btnRulesForm в зависимости от значения инпута в форме
 * @param {Event} evt
 * @param {HTMLElement} btnForm
@@ -49,34 +43,33 @@ const changeNameHandler = (evt, btnForm) => {
 };
 /** изменение sreen при отправке формы
 * @param {Event} evt
+* @param {HTMLElement} inputElem
 */
-const submitFormHandler = (evt) => {
+const submitFormHandler = (evt, inputElem) => {
   evt.preventDefault();
+  // как записать имя игрока?
+  if (inputElem.value) {
+    // recordNameUserStat(inputElem.value);
+  }
 
-  changeScreen(gameOne());
+  controlGameScreens(undefined, dataGame);
 };
 /** =========================================
 * экспорт
 * @return {HTMLElement} element
 */
 export default () => {
-  /**
-   *  работа с данными
-   */
   const element = renderTemplate(RULES_SCREEN);
-  /**
-   *  обьявление переменных
-   */
   const name = element.querySelector(`.rules__input`);
   const rulesForm = element.querySelector(`.rules__form`);
   const btnRulesForm = element.querySelector(`.rules__button`);
-  /** =========================================
-   * работа с DOM
-   */
+
   name.addEventListener(`input`, (evt) => {
     changeNameHandler(evt, btnRulesForm);
   });
-  rulesForm.addEventListener(`submit`, submitFormHandler);
+  rulesForm.addEventListener(`submit`, (evt) => {
+    submitFormHandler(evt, name);
+  });
 
   setEventForBtnBack(element);
 

@@ -1,10 +1,5 @@
-/** =========================================
-* обьявление переменных
-*/
 const mainElement = document.querySelector(`#main`);
-/** =========================================
-* обьявление фукнции
-*/
+
 /**
 * рендеринг template
 * @param {String} strHtml
@@ -12,16 +7,18 @@ const mainElement = document.querySelector(`#main`);
 */
 const renderTemplate = (strHtml) => {
   const wrapperTemplate = document.createElement(`template`);
-  wrapperTemplate.innerHTML = strHtml.trim();
+  wrapperTemplate.innerHTML = strHtml;
   return wrapperTemplate.content;
 };
 /**
 * вставка данных из template
-* @param {HTMLElement} element
+* @param {HTMLElement} elements
 */
-const changeScreen = (element) => {
+const changeScreen = (...elements) => {
   mainElement.innerHTML = ``;
-  mainElement.appendChild(element);
+  elements.forEach((element) => {
+    mainElement.appendChild(element);
+  });
 };
 /**
 * вставка данных из template "модального окна"
@@ -30,10 +27,12 @@ const changeScreen = (element) => {
 const addModal = (element) => {
   mainElement.appendChild(element);
 };
-/** =========================================
-* работа с данными
+/**
+* удаление HTMLElement
+* @param {HTMLElement} element
 */
-/** =========================================
-* экспорт
-*/
-export {changeScreen, renderTemplate, addModal, mainElement};
+const deleteElement = (element) => {
+  mainElement.removeChild(element);
+};
+
+export {renderTemplate, changeScreen, addModal, deleteElement};

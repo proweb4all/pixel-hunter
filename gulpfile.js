@@ -122,6 +122,17 @@ gulp.task(`test`, function () {
         commonjs()
       ]
     }, `cjs`))
+    .pipe(gulp.dest(`build/test`));
+});
+// mocha будет падать из-за document
+gulp.task(`test mocha`, function () {
+  return gulp
+    .src([`js/**/*.test.js`])
+    .pipe(rollup({
+      plugins: [
+        commonjs()
+      ]
+    }, `cjs`))
     .pipe(gulp.dest(`build/test`))
     .pipe(mocha({
       reporter: `spec`

@@ -1,93 +1,61 @@
+import {renderTemplate} from './module-mangment-dom.js';
+import {controlGameScreens, recordUserAnswer} from './game.js';
+import dataGame from './data-game.js';
+
+const CORRECT_ANSWER = `paint`;
+
 /** =========================================
- * импорт модулей
+ * возврашает шаблон с данными
+ * @param {Array} arrImages
+ * @param {String} statsAnswersStr
+ * @return {String}
  */
-import {changeScreen, renderTemplate} from './util.js';
-import {startTime} from './game.js';
-import resultScreen from './module-result-screen.js';
-import {setEventForBtnBack} from './module-back-btn.js';
-/** =========================================
- * обьявление констант
- */
-const GAME_THREE_SCREEN = `
-  <header class="header">
-    <button class="back">
-      <span class="visually-hidden">Вернуться к началу</span>
-      <svg class="icon" width="45" height="45" viewBox="0 0 45 45" fill="#000000">
-        <use xlink:href="img/sprite.svg#arrow-left"></use>
-      </svg>
-      <svg class="icon" width="101" height="44" viewBox="0 0 101 44" fill="#000000">
-        <use xlink:href="img/sprite.svg#logo-small"></use>
-      </svg>
-    </button>
-    <div class="game__timer">NN</div>
-    <div class="game__lives">
-      <img src="img/heart__empty.svg" class="game__heart" alt="Life" width="31" height="27">
-      <img src="img/heart__full.svg" class="game__heart" alt="Life" width="31" height="27">
-      <img src="img/heart__full.svg" class="game__heart" alt="Life" width="31" height="27">
-    </div>
-  </header>
-  <section class="game">
-    <p class="game__task">Найдите рисунок среди изображений</p>
-    <form class="game__content  game__content--triple">
-      <div class="game__option">
-        <img src="http://placehold.it/304x455" alt="Option 1" width="304" height="455">
-      </div>
-      <div class="game__option  game__option--selected">
-        <img src="http://placehold.it/304x455" alt="Option 2" width="304" height="455">
-      </div>
-      <div class="game__option">
-        <img src="http://placehold.it/304x455" alt="Option 3" width="304" height="455">
-      </div>
-    </form>
-    <ul class="stats">
-      <li class="stats__result stats__result--wrong"></li>
-      <li class="stats__result stats__result--slow"></li>
-      <li class="stats__result stats__result--fast"></li>
-      <li class="stats__result stats__result--correct"></li>
-      <li class="stats__result stats__result--wrong"></li>
-      <li class="stats__result stats__result--unknown"></li>
-      <li class="stats__result stats__result--slow"></li>
-      <li class="stats__result stats__result--unknown"></li>
-      <li class="stats__result stats__result--fast"></li>
-      <li class="stats__result stats__result--unknown"></li>
-    </ul>
-  </section>
-`;
-/** =========================================
- * обьявление переменных
- */
-/** =========================================
- * обьявление фукнции
- */
+const template = (arrImages, statsAnswersStr) => {
+  let htmlImages = ``;
+  arrImages.forEach((item, index) => {
+    htmlImages += `<div class="game__option">
+              <img src="${item.src}" data-type="${item.imageType}" alt="Option ${index}" width="304" height="455">
+            </div>`;
+  });
+  return `
+    <section class="game">
+      <p class="game__task">Найдите рисунок среди изображений</p>
+      <form class="game__content game__content--triple">
+        ${htmlImages}
+      </form>
+      <ul class="stats">
+        ${statsAnswersStr}
+      </ul>
+    </section>
+  `;
+};
 /** при выборе ответа в форме, переключение экрана
- *
+ * @param {Event} evt
+ * @param {Object} state
  */
-const clickFormHandler = () => {
-  changeScreen(resultScreen());
+const clickFormHandler = (evt, state) => {
+  const target = evt.target;
+  const selectUserAnswer = target.getAttribute(`data-type`);
+
+  const newState = recordUserAnswer(CORRECT_ANSWER === selectUserAnswer, state);
+  controlGameScreens(newState, dataGame);
 };
 /** =========================================
  * экспорт
+ * @param {Object} state
+ * @param {Array} arrImages
+ * @param {String} statsAnswersStr
  * @return {HTMLElement} element
  */
-export default () => {
-  /**
-   *  работа с данными
-   */
-  const element = renderTemplate(GAME_THREE_SCREEN);
-  /**
-   *  обьявление переменных
-   */
+export default (state, arrImages, statsAnswersStr) => {
+  const element = renderTemplate(template(arrImages, statsAnswersStr));
   const imgs = element.querySelectorAll(`.game__content img`);
-  const gameTimer = element.querySelector(`.game__timer`);
-  /** =========================================
-   * работа с DOM
-   */
-  imgs.forEach((item) => {
-    item.addEventListener(`click`, clickFormHandler);
-  });
 
-  setEventForBtnBack(element);
-  startTime(gameTimer);
+  imgs.forEach((item) => {
+    item.addEventListener(`click`, (evt) => {
+      clickFormHandler(evt, state);
+    });
+  });
 
   return element;
 };

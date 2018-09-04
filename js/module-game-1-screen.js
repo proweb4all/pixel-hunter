@@ -1,110 +1,77 @@
+import {renderTemplate} from './module-mangment-dom.js';
+import {controlGameScreens, recordUserAnswer} from './game.js';
+import dataGame from './data-game.js';
+
 /** =========================================
- * импорт модулей
+ * возврашает шаблон с данными
+ * @param {Array} arrImages
+ * @param {String} statsAnswersStr
+ * @return {String}
  */
-import {changeScreen, renderTemplate} from './util.js';
-import {startTime} from './game.js';
-import gameTwo from './module-game-2-screen.js';
-import {setEventForBtnBack} from './module-back-btn.js';
-/** =========================================
- * обьявление констант
- */
-const GAME_ONE_SCREEN = `
-  <header class="header">
-    <button class="back">
-      <span class="visually-hidden">Вернуться к началу</span>
-      <svg class="icon" width="45" height="45" viewBox="0 0 45 45" fill="#000000">
-        <use xlink:href="img/sprite.svg#arrow-left"></use>
-      </svg>
-      <svg class="icon" width="101" height="44" viewBox="0 0 101 44" fill="#000000">
-        <use xlink:href="img/sprite.svg#logo-small"></use>
-      </svg>
-    </button>
-    <div class="game__timer">NN</div>
-    <div class="game__lives">
-      <img src="img/heart__empty.svg" class="game__heart" alt=" Missed Life" width="31" height="27">
-      <img src="img/heart__full.svg" class="game__heart" alt="Life" width="31" height="27">
-      <img src="img/heart__full.svg" class="game__heart" alt="Life" width="31" height="27">
-    </div>
-  </header>
-  <section class="game">
-    <p class="game__task">Угадайте для каждого изображения фото или рисунок?</p>
-    <form class="game__content">
-      <div class="game__option">
-        <img src="http://placehold.it/468x458" alt="Option 1" width="468" height="458">
-        <label class="game__answer game__answer--photo">
-          <input class="visually-hidden" name="question1" type="radio" value="photo">
-          <span>Фото</span>
-        </label>
-        <label class="game__answer game__answer--paint">
-          <input class="visually-hidden" name="question1" type="radio" value="paint">
-          <span>Рисунок</span>
-        </label>
-      </div>
-      <div class="game__option">
-        <img src="http://placehold.it/468x458" alt="Option 2" width="468" height="458">
-        <label class="game__answer  game__answer--photo">
-          <input class="visually-hidden" name="question2" type="radio" value="photo">
-          <span>Фото</span>
-        </label>
-        <label class="game__answer  game__answer--paint">
-          <input class="visually-hidden" name="question2" type="radio" value="paint">
-          <span>Рисунок</span>
-        </label>
-      </div>
-    </form>
-    <ul class="stats">
-      <li class="stats__result stats__result--wrong"></li>
-      <li class="stats__result stats__result--slow"></li>
-      <li class="stats__result stats__result--fast"></li>
-      <li class="stats__result stats__result--correct"></li>
-      <li class="stats__result stats__result--unknown"></li>
-      <li class="stats__result stats__result--unknown"></li>
-      <li class="stats__result stats__result--unknown"></li>
-      <li class="stats__result stats__result--unknown"></li>
-      <li class="stats__result stats__result--unknown"></li>
-      <li class="stats__result stats__result--unknown"></li>
-    </ul>
-  </section>
-`;
-/** =========================================
- * обьявление фукнции
- */
+const template = (arrImages, statsAnswersStr) => {
+  let html = ``;
+  arrImages.forEach((item, index) => {
+    html += `<div class="game__option">
+                  <img src="${item.src}" data-type="${item.imageType}" alt="Option ${index}" width="468" height="458">
+                  <label class="game__answer game__answer--photo">
+                    <input class="visually-hidden" name="question${index}" type="radio" value="photo">
+                    <span>Фото</span>
+                  </label>
+                  <label class="game__answer game__answer--paint">
+                    <input class="visually-hidden" name="question${index}" type="radio" value="paint">
+                    <span>Рисунок</span>
+                  </label>
+                </div>`;
+  });
+  return `
+    <section class="game">
+      <p class="game__task">Угадайте для каждого изображения фото или рисунок?</p>
+      <form class="game__content">
+      ${html}
+      </form>
+      <ul class="stats">
+        ${statsAnswersStr}
+      </ul>
+    </section>
+  `;
+};
+
 /** при выборе 2 ответов в форме, переключение экрана
  * @param {Event} evt
+ * @param {Object} state
  */
-const changeFormHandler = (evt) => {
-  let array = Array.from(evt.currentTarget.elements)
-              .map((item) => item.checked)
-              .filter(function (item) {
-                return !!item;
-              });
+const changeFormHandler = (evt, state) => {
+  const selectUserAnswer = Array.from(evt.currentTarget.elements)
+                                .map((item) => item.checked && item.value)
+                                .filter(function (item) {
+                                  return !!item;
+                                });
+  const correctAnswer = Array.from(evt.currentTarget.querySelectorAll(`img`))
+                              .map((item) => item.getAttribute(`data-type`));
 
-  if (array.length === 2) {
-    changeScreen(gameTwo());
+  if (selectUserAnswer.length === correctAnswer.length) {
+    const sameArrays = selectUserAnswer.every((item, index) => {
+      return item === correctAnswer[index];
+    });
+
+    const newState = recordUserAnswer(sameArrays, state);
+    controlGameScreens(newState, dataGame);
   }
 };
 /** =========================================
  * экспорт
+ * @param {Object} state
+ * @param {Array} arrImages
+ * @param {String} statsAnswersStr
  * @return {HTMLElement} element
  */
-export default () => {
-  /**
-   *  работа с данными
-   */
-  const element = renderTemplate(GAME_ONE_SCREEN);
-  /**
-   *  обьявление переменных
-   */
+export default (state, arrImages, statsAnswersStr) => {
+  const element = renderTemplate(template(arrImages, statsAnswersStr));
   const form = element.querySelector(`.game__content`);
-  const gameTimer = element.querySelector(`.game__timer`);
-  /** =========================================
-  * работа с DOM
-  */
-  form.addEventListener(`change`, changeFormHandler);
 
-  setEventForBtnBack(element);
-
-  startTime(gameTimer);
+  form.addEventListener(`change`, (evt) => {
+    changeFormHandler(evt, state);
+  });
 
   return element;
 };
