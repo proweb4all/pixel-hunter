@@ -38,13 +38,6 @@
     mainElement.removeChild(element);
   };
 
-  const managentDom = {
-    renderTemplate,
-    changeScreen,
-    addModal,
-    deleteElement
-  };
-
   const MODAL_CONFIRM = `
   <section class="modal">
     <form class="modal__inner">
@@ -71,7 +64,7 @@
   const clickCloseHandler = (evt, elem) => {
     evt.preventDefault();
 
-    managentDom.deleteElement(elem);
+    deleteElement(elem);
     document.removeEventListener(`keydown`, objectHandler);
   };
 
@@ -91,14 +84,14 @@
   * @param {Event} evt
   */
   const confirmHandler = () => {
-    managentDom.changeScreen(welcome());
+    changeScreen(welcome());
   };
   /** =========================================
   * экспорт
   * @return {HTMLElement} element
   */
   var modalConfirm = () => {
-    const element = managentDom.renderTemplate(MODAL_CONFIRM);
+    const element = renderTemplate(MODAL_CONFIRM);
     const modal = element.querySelector(`.modal`);
     const modalBtnClose = element.querySelector(`.modal__close`);
     const modalBtnOk = element.querySelectorAll(`.modal__btn`)[0];
@@ -126,7 +119,7 @@
    * добавляет модальное окно с подтверждением
    */
   const clickHandler = () => {
-    managentDom.addModal(modalConfirm());
+    addModal(modalConfirm());
   };
   /** поиск кнопки назад на экране и установка события
    * @param {HTMLElement} searchElementInWrap
@@ -213,10 +206,10 @@
   /** =========================================
    * возврашает шаблон с данными
    * @param {Array} arrImages
-   * @param {String} statsPictureStr
+   * @param {String} statsAnswersStr
    * @return {String}
    */
-  const template = (arrImages, statsPictureStr) => {
+  const template = (arrImages, statsAnswersStr) => {
     let html = ``;
     arrImages.forEach((item, index) => {
       html += `<div class="game__option">
@@ -238,7 +231,7 @@
       ${html}
       </form>
       <ul class="stats">
-        ${statsPictureStr}
+        ${statsAnswersStr}
       </ul>
     </section>
   `;
@@ -262,19 +255,19 @@
         return item === correctAnswer[index];
       });
 
-      const newState = managmentGame.pushUserAnswer(sameArrays, state);
-      managmentGame.controlGameScreens(newState, dataGame);
+      const newState = recordUserAnswer(sameArrays, state);
+      controlGameScreens(newState, dataGame);
     }
   };
   /** =========================================
    * экспорт
    * @param {Object} state
    * @param {Array} arrImages
-   * @param {String} statsPictureStr
+   * @param {String} statsAnswersStr
    * @return {HTMLElement} element
    */
-  var gameOne = (state, arrImages, statsPictureStr) => {
-    const element = managentDom.renderTemplate(template(arrImages, statsPictureStr));
+  var gameOne = (state, arrImages, statsAnswersStr) => {
+    const element = renderTemplate(template(arrImages, statsAnswersStr));
     const form = element.querySelector(`.game__content`);
 
     form.addEventListener(`change`, (evt) => {
@@ -287,10 +280,10 @@
   /** =========================================
    * возврашает шаблон с данными
    * @param {Array} arrImages
-   * @param {String} statsPictureStr
+   * @param {String} statsAnswersStr
    * @return {String}
    */
-  const template$1 = (arrImages, statsPictureStr) => {
+  const template$1 = (arrImages, statsAnswersStr) => {
     let html = ``;
     arrImages.forEach((item, index) => {
       html += `<div class="game__option">
@@ -312,7 +305,7 @@
         ${html}
       </form>
       <ul class="stats">
-        ${statsPictureStr}
+        ${statsAnswersStr}
       </ul>
     </section>
   `;
@@ -328,18 +321,18 @@
     const selectUserAnswer = targetInput.value;
     const correctAnswer = currentTarget.querySelector(`img`).getAttribute(`data-type`);
 
-    const newState = managmentGame.pushUserAnswer(correctAnswer === selectUserAnswer, state);
-    managmentGame.controlGameScreens(newState, dataGame);
+    const newState = recordUserAnswer(correctAnswer === selectUserAnswer, state);
+    controlGameScreens(newState, dataGame);
   };
   /** =========================================
    * экспорт
    * @param {Object} state
    * @param {Array} arrImages
-   * @param {String} statsPictureStr
+   * @param {String} statsAnswersStr
    * @return {HTMLElement} element
    */
-  var gameTwo = (state, arrImages, statsPictureStr) => {
-    const element = managentDom.renderTemplate(template$1(arrImages, statsPictureStr));
+  var gameTwo = (state, arrImages, statsAnswersStr) => {
+    const element = renderTemplate(template$1(arrImages, statsAnswersStr));
     const form = element.querySelector(`.game__content`);
 
     form.addEventListener(`change`, (evt) => {
@@ -354,10 +347,10 @@
   /** =========================================
    * возврашает шаблон с данными
    * @param {Array} arrImages
-   * @param {String} statsPictureStr
+   * @param {String} statsAnswersStr
    * @return {String}
    */
-  const template$2 = (arrImages, statsPictureStr) => {
+  const template$2 = (arrImages, statsAnswersStr) => {
     let htmlImages = ``;
     arrImages.forEach((item, index) => {
       htmlImages += `<div class="game__option">
@@ -371,7 +364,7 @@
         ${htmlImages}
       </form>
       <ul class="stats">
-        ${statsPictureStr}
+        ${statsAnswersStr}
       </ul>
     </section>
   `;
@@ -384,18 +377,18 @@
     const target = evt.target;
     const selectUserAnswer = target.getAttribute(`data-type`);
 
-    const newState = managmentGame.pushUserAnswer(CORRECT_ANSWER === selectUserAnswer, state);
-    managmentGame.controlGameScreens(newState, dataGame);
+    const newState = recordUserAnswer(CORRECT_ANSWER === selectUserAnswer, state);
+    controlGameScreens(newState, dataGame);
   };
   /** =========================================
    * экспорт
    * @param {Object} state
    * @param {Array} arrImages
-   * @param {String} statsPictureStr
+   * @param {String} statsAnswersStr
    * @return {HTMLElement} element
    */
-  var gameThree = (state, arrImages, statsPictureStr) => {
-    const element = managentDom.renderTemplate(template$2(arrImages, statsPictureStr));
+  var gameThree = (state, arrImages, statsAnswersStr) => {
+    const element = renderTemplate(template$2(arrImages, statsAnswersStr));
     const imgs = element.querySelectorAll(`.game__content img`);
 
     imgs.forEach((item) => {
@@ -442,7 +435,7 @@
 `;
 
   var header = (state) => {
-    const element = managentDom.renderTemplate(headerTemplate(state));
+    const element = renderTemplate(headerTemplate(state));
 
     // const gameTimer = element.querySelector(`.game__timer`);
 
@@ -454,16 +447,23 @@
 
   /** результаты игры
   * @param {Object} obj
-  * @param {String} statsPictureStr
+  * @param {String} statsAnswersStr
   * @return {String} html
   */
-  const template$3 = (obj, statsPictureStr) => {
+  const template$3 = (obj, statsAnswersStr) => {
     let slowPoint;
     if (obj.slowPoints) {
       slowPoint = obj.slowPoints.points === 0 ? 0 : `-` + obj.slowPoints.points;
     } else {
       slowPoint = ``;
     }
+    let normalPoints;
+    if (obj.normalPoints) {
+      normalPoints = obj.normalPoints.points !== undefined ? obj.normalPoints.points : ``;
+    } else {
+      normalPoints = ``;
+    }
+
 
     let html = ``;
     const htmlHeader = `<header class="header">
@@ -485,11 +485,11 @@
       <td class="result__number">1.</td>
       <td colspan="2">
         <ul class="stats">
-          ${statsPictureStr}
+          ${statsAnswersStr}
         </ul>
       </td>
       <td class="result__points">× 100</td>
-      <td class="result__total">900</td>
+      <td class="result__total">${normalPoints}</td>
     </tr>
     <tr>
       <td></td>
@@ -522,7 +522,7 @@
       <td class="result__number">2.</td>
       <td>
         <ul class="stats">
-          ${statsPictureStr}
+          ${statsAnswersStr}
         </ul>
       </td>
       <td class="result__total"></td>
@@ -544,20 +544,17 @@
   /** =========================================
    * экспорт
    * @param {Object} objUserStat
-   * @param {String} statsPictureStr
+   * @param {String} statsAnswersStr
    * @return {HTMLElement} element
    */
-  var resultScreen = (objUserStat, statsPictureStr) => {
-    const element = managentDom.renderTemplate(template$3(objUserStat, statsPictureStr));
+  var resultScreen = (objUserStat, statsAnswersStr) => {
+    const element = renderTemplate(template$3(objUserStat, statsAnswersStr));
 
     setEventForBtnBack(element);
 
     return element;
   };
 
-  /** =========================================
-  * обьявление переменных
-  */
   const INITIAL_GAME = Object.freeze({
     lives: 3,
     level: 0,
@@ -588,13 +585,17 @@
   * возврашает функцию устанавливаюшую игровой экран или экран результатов
   * @param {Object} state
   * @param {Array} array
-  * @param {String} statsPictureStr
+  * @param {String} statsAnswersStr
   * @return {Function}
   */
-  const setGame = (state, array, statsPictureStr) => {
+  const setGame = (state, array, statsAnswersStr) => {
     let index = state.level;
+    const gameScreen = returnScreenGame(array[index].type);
+    const newState = Object.assign({}, state, {
+      level: state.level + 1
+    });
 
-    return returnScreenGame(array[index].type)(changeLevel(state), array[index].images, statsPictureStr);
+    return gameScreen(newState, array[index].images, statsAnswersStr);
   };
   /**
   * записываем ответ пользователя
@@ -602,34 +603,16 @@
   * @param {Object} state
   * @return {Object}
   */
-  const pushUserAnswer = function (value, state) {
+  const recordUserAnswer = (value, state) => {
     if (value) {
       userStat.answers.push({answer: true, elapsedTime: timeText});
       return state;
     } else {
       userStat.answers.push({answer: false, elapsedTime: timeText});
-      return setLives(state);
+      return Object.assign({}, state, {
+        lives: state.lives - 1
+      });
     }
-  };
-  /** Управление жизнями игрока
-  * @param {Object} startData
-  * @return {Object}
-  */
-  const setLives = (startData) => {
-    const tempObj = {
-      lives: startData.lives - 1
-    };
-    return Object.assign({}, startData, tempObj);
-  };
-  /** Переключение уровней
-  * @param {Object} startData
-  * @return {Object}
-  */
-  const changeLevel = (startData) => {
-    const tempObj = {
-      level: startData.level + 1
-    };
-    return Object.assign({}, startData, tempObj);
   };
   // /** запись текста времени
   // * @param {HTMLElement} element
@@ -642,41 +625,36 @@
   //   element.innerHTML = text;
   // };
   /** создание графики ответов
-  * @return {String} answersList
+  * @return {String} answersListStr
   */
-  const createStatsPicture = () => {
-    let answersList = new Array(10);
+  const createResponseStatistics = () => {
+    let answersListStr = new Array(10);
 
-    let answersListTime = userStat.answers.map((item) => {
-      return item;
-    });
+    let answersListUser = userStat.answers.slice();
 
-    if (answersListTime.length === 0) {
-      answersListTime = new Array(10).fill(undefined);
-    }
-
-    for (let i = 0; i < answersList.length; i++) {
-      if (answersListTime[i] === undefined) {
-        answersList[i] = UNKNOWN_TEXT;
+    for (let i = 0; i < answersListStr.length; i++) {
+      if (answersListUser[i] === undefined) {
+        answersListStr[i] = UNKNOWN_TEXT;
       }
-      if (answersListTime[i]) {
-        if (answersListTime[i].elapsedTime < FAST_TIME) {
-          answersList[i] = FAST_TEXT;
+      if (answersListUser[i]) {
+        const elapsedTime = answersListUser[i].elapsedTime;
+        if (elapsedTime < FAST_TIME) {
+          answersListStr[i] = FAST_TEXT;
         }
-        if (answersListTime[i].elapsedTime > SLOW_TIME) {
-          answersList[i] = SLOW_TEXT;
+        if (elapsedTime > SLOW_TIME) {
+          answersListStr[i] = SLOW_TEXT;
         }
-        if (answersListTime[i].elapsedTime >= NORMAL_TIME_VALUE_ONE && answersListTime[i].elapsedTime <= NORMAL_TIME_VALUE_TWO || answersListTime[i].elapsedTime === undefined) {
-          answersList[i] = CORRECT_TEXT;
+        if (elapsedTime >= NORMAL_TIME_VALUE_ONE && elapsedTime <= NORMAL_TIME_VALUE_TWO || elapsedTime === undefined) {
+          answersListStr[i] = CORRECT_TEXT;
         }
-        if (answersListTime[i].answer === false) {
-          answersList[i] = WRONG_TEXT;
+        if (answersListUser[i].answer === false) {
+          answersListStr[i] = WRONG_TEXT;
         }
       }
     }
 
-    answersList = answersList.join(``);
-    return answersList;
+    answersListStr = answersListStr.join(``);
+    return answersListStr;
   };
   // /** Счетчик времени
   // * @param {HTMLElement} timerElement
@@ -698,68 +676,66 @@
   * @param {Array} questions
   */
   const controlGameScreens = (state = Object.assign({}, INITIAL_GAME), questions) => {
-    let statsPictureStr = createStatsPicture();
     if (state.level === 0) {
-      userStat.answers.length = 0;
-      statsPictureStr = createStatsPicture();
+      userStat.answers = [];
     }
-    if (state.lives === 0 || state.level >= questions.length) {
-      const resulltUserStat = countingPoints(userStat.answers, state);
-      managentDom.changeScreen(resultScreen(resulltUserStat, statsPictureStr));
+    let statsAnswersStr = createResponseStatistics();
+    if (state.lives === -1 || state.level >= questions.length) {
+      const resulltUserStat = calculatePoints(userStat.answers, state);
+      changeScreen(resultScreen(resulltUserStat, statsAnswersStr));
       return;
     }
 
-    managentDom.changeScreen(header(state), setGame(state, questions, statsPictureStr));
+    changeScreen(header(state), setGame(state, questions, statsAnswersStr));
   };
   /** Подсчет очков при окончании игры
   * @param {Array} arrayUserAnswers
-  * @param {Object} startData
+  * @param {Object} dataAnswers
   * @return {Object} newData
   */
-  const countingPoints = (arrayUserAnswers, startData) => {
-    const newData = Object.assign({}, startData);
-
+  const calculatePoints = (arrayUserAnswers, dataAnswers) => {
     if (arrayUserAnswers.length < MIN_ANSWER) {
-      newData.points = -1;
-      return newData;
+      dataAnswers.points = -1;
+      return dataAnswers;
     }
-    newData.fastPoints = {
+
+    dataAnswers.fastPoints = {
       points: 0,
       items: 0
     };
-    newData.slowPoints = {
+    dataAnswers.slowPoints = {
       points: 0,
       items: 0
     };
-    newData.livesPoints = {
+    dataAnswers.normalPoints = {
+      points: 0,
+      items: 0
+    };
+    dataAnswers.livesPoints = {
       points: 0,
       items: 0
     };
 
     arrayUserAnswers.forEach((item) => {
       if (item.answer && item.elapsedTime < FAST_TIME) {
-        newData.fastPoints.points = newData.fastPoints.points + POINT_ADD + POINT_BONUS;
-        newData.fastPoints.items += 1;
-      } else if (item.answer && item.elapsedTime >= NORMAL_TIME_VALUE_ONE && item.elapsedTime <= NORMAL_TIME_VALUE_TWO) {
-        newData.points = newData.points + POINT_ADD;
+        dataAnswers.fastPoints.points = dataAnswers.fastPoints.points + POINT_ADD + POINT_BONUS;
+        dataAnswers.fastPoints.items += 1;
+      } else if ((item.answer && item.elapsedTime >= NORMAL_TIME_VALUE_ONE && item.elapsedTime <= NORMAL_TIME_VALUE_TWO) || (item.elapsedTime === undefined && item.answer === true)) {
+        dataAnswers.normalPoints.points = dataAnswers.normalPoints.points + POINT_ADD;
+        dataAnswers.normalPoints.items += 1;
       } else if (item.answer && item.elapsedTime > SLOW_TIME) {
-        newData.slowPoints.points = newData.slowPoints.points + POINT_ADD - POINT_FINE;
-        newData.slowPoints.items += 1;
+        dataAnswers.slowPoints.points = dataAnswers.slowPoints.points + POINT_ADD - POINT_FINE;
+        dataAnswers.slowPoints.items += 1;
       }
     });
 
-    newData.livesPoints.points = newData.livesPoints.points + startData.lives * POINT_BONUS_LIVES;
-    newData.livesPoints.items = startData.lives;
-    newData.points = newData.points + newData.fastPoints.points + newData.slowPoints.points + newData.livesPoints.points;
+    if (dataAnswers.lives >= 0) {
+      dataAnswers.livesPoints.points = dataAnswers.livesPoints.points + dataAnswers.lives * POINT_BONUS_LIVES;
+      dataAnswers.livesPoints.items = dataAnswers.lives;
+    }
+    dataAnswers.points = dataAnswers.points + dataAnswers.fastPoints.points + dataAnswers.slowPoints.points + dataAnswers.normalPoints.points + dataAnswers.livesPoints.points;
 
-    return newData;
-  };
-  /** =========================================
-  * экспорт
-  */
-  const managmentGame = {
-    controlGameScreens,
-    pushUserAnswer
+    return dataAnswers;
   };
 
   const RULES_SCREEN = `
@@ -809,14 +785,14 @@
     // как записать имя игрока?
     if (inputElem.value) ;
 
-    managmentGame.controlGameScreens(undefined, dataGame);
+    controlGameScreens(undefined, dataGame);
   };
   /** =========================================
   * экспорт
   * @return {HTMLElement} element
   */
   var rulesScreen = () => {
-    const element = managentDom.renderTemplate(RULES_SCREEN);
+    const element = renderTemplate(RULES_SCREEN);
     const name = element.querySelector(`.rules__input`);
     const rulesForm = element.querySelector(`.rules__form`);
     const btnRulesForm = element.querySelector(`.rules__button`);
@@ -860,14 +836,14 @@
   *
   */
   const clickBtnHandler = () => {
-    managentDom.changeScreen(rulesScreen());
+    changeScreen(rulesScreen());
   };
   /** =========================================
   * экспорт
   * @return {HTMLElement} element
   */
   var welcome = () => {
-    const element = managentDom.renderTemplate(WELCOME_SCREEN);
+    const element = renderTemplate(WELCOME_SCREEN);
     const btnGreetingContinue = element.querySelector(`.greeting__continue`);
 
     btnGreetingContinue.addEventListener(`click`, clickBtnHandler);
@@ -886,14 +862,14 @@
   *
   */
   const clickBtnHandler$1 = () => {
-    managentDom.changeScreen(welcome());
+    changeScreen(welcome());
   };
   /** =========================================
   * экспорт
   * @return {HTMLElement} element
   */
   var mainScreen = () => {
-    const element = managentDom.renderTemplate(MAIN_SCREEN);
+    const element = renderTemplate(MAIN_SCREEN);
     const btnIntroAsterisk = element.querySelector(`.intro__asterisk`);
 
     btnIntroAsterisk.addEventListener(`click`, clickBtnHandler$1);
@@ -901,7 +877,7 @@
     return element;
   };
 
-  managentDom.changeScreen(mainScreen());
+  changeScreen(mainScreen());
 
 }());
 
