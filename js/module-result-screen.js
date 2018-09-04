@@ -3,16 +3,23 @@ import {renderTemplate} from './module-mangment-dom.js';
 
 /** результаты игры
 * @param {Object} obj
-* @param {String} statsPictureStr
+* @param {String} statsAnswersStr
 * @return {String} html
 */
-const template = (obj, statsPictureStr) => {
+const template = (obj, statsAnswersStr) => {
   let slowPoint;
   if (obj.slowPoints) {
     slowPoint = obj.slowPoints.points === 0 ? 0 : `-` + obj.slowPoints.points;
   } else {
     slowPoint = ``;
   }
+  let normalPoints;
+  if (obj.normalPoints) {
+    normalPoints = obj.normalPoints.points !== undefined ? obj.normalPoints.points : ``;
+  } else {
+    normalPoints = ``;
+  }
+
 
   let html = ``;
   const htmlHeader = `<header class="header">
@@ -34,11 +41,11 @@ const template = (obj, statsPictureStr) => {
       <td class="result__number">1.</td>
       <td colspan="2">
         <ul class="stats">
-          ${statsPictureStr}
+          ${statsAnswersStr}
         </ul>
       </td>
       <td class="result__points">× 100</td>
-      <td class="result__total">900</td>
+      <td class="result__total">${normalPoints}</td>
     </tr>
     <tr>
       <td></td>
@@ -71,7 +78,7 @@ const template = (obj, statsPictureStr) => {
       <td class="result__number">2.</td>
       <td>
         <ul class="stats">
-          ${statsPictureStr}
+          ${statsAnswersStr}
         </ul>
       </td>
       <td class="result__total"></td>
@@ -93,11 +100,11 @@ const template = (obj, statsPictureStr) => {
 /** =========================================
  * экспорт
  * @param {Object} objUserStat
- * @param {String} statsPictureStr
+ * @param {String} statsAnswersStr
  * @return {HTMLElement} element
  */
-export default (objUserStat, statsPictureStr) => {
-  const element = renderTemplate(template(objUserStat, statsPictureStr));
+export default (objUserStat, statsAnswersStr) => {
+  const element = renderTemplate(template(objUserStat, statsAnswersStr));
 
   setEventForBtnBack(element);
 

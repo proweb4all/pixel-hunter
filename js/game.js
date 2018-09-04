@@ -2,9 +2,7 @@ import returnScreenGame from './module-game-screens';
 import header from './module-header.js';
 import {changeScreen} from './module-mangment-dom.js';
 import resultScreen from './module-result-screen.js';
-/** =========================================
-* обьявление переменных
-*/
+
 const INITIAL_GAME = Object.freeze({
   lives: 3,
   level: 0,
@@ -35,13 +33,17 @@ let userStat = {
 * возврашает функцию устанавливаюшую игровой экран или экран результатов
 * @param {Object} state
 * @param {Array} array
-* @param {String} statsPictureStr
+* @param {String} statsAnswersStr
 * @return {Function}
 */
-const setGame = (state, array, statsPictureStr) => {
+const setGame = (state, array, statsAnswersStr) => {
   let index = state.level;
+  const gameScreen = returnScreenGame(array[index].type);
+  const newState = Object.assign({}, state, {
+    level: state.level + 1
+  });
 
-  return returnScreenGame(array[index].type)(changeLevel(state), array[index].images, statsPictureStr);
+  return gameScreen(newState, array[index].images, statsAnswersStr);
 };
 /**
 * записываем ответ пользователя
@@ -49,34 +51,16 @@ const setGame = (state, array, statsPictureStr) => {
 * @param {Object} state
 * @return {Object}
 */
-const pushUserAnswer = function (value, state) {
+const recordUserAnswer = (value, state) => {
   if (value) {
     userStat.answers.push({answer: true, elapsedTime: timeText});
     return state;
   } else {
     userStat.answers.push({answer: false, elapsedTime: timeText});
-    return setLives(state);
+    return Object.assign({}, state, {
+      lives: state.lives - 1
+    });
   }
-};
-/** Управление жизнями игрока
-* @param {Object} startData
-* @return {Object}
-*/
-const setLives = (startData) => {
-  const tempObj = {
-    lives: startData.lives - 1
-  };
-  return Object.assign({}, startData, tempObj);
-};
-/** Переключение уровней
-* @param {Object} startData
-* @return {Object}
-*/
-const changeLevel = (startData) => {
-  const tempObj = {
-    level: startData.level + 1
-  };
-  return Object.assign({}, startData, tempObj);
 };
 // /** запись текста времени
 // * @param {HTMLElement} element
@@ -89,41 +73,36 @@ const changeLevel = (startData) => {
 //   element.innerHTML = text;
 // };
 /** создание графики ответов
-* @return {String} answersList
+* @return {String} answersListStr
 */
-const createStatsPicture = () => {
-  let answersList = new Array(10);
+const createResponseStatistics = () => {
+  let answersListStr = new Array(10);
 
-  let answersListTime = userStat.answers.map((item) => {
-    return item;
-  });
+  let answersListUser = userStat.answers.slice();
 
-  if (answersListTime.length === 0) {
-    answersListTime = new Array(10).fill(undefined);
-  }
-
-  for (let i = 0; i < answersList.length; i++) {
-    if (answersListTime[i] === undefined) {
-      answersList[i] = UNKNOWN_TEXT;
+  for (let i = 0; i < answersListStr.length; i++) {
+    if (answersListUser[i] === undefined) {
+      answersListStr[i] = UNKNOWN_TEXT;
     }
-    if (answersListTime[i]) {
-      if (answersListTime[i].elapsedTime < FAST_TIME) {
-        answersList[i] = FAST_TEXT;
+    if (answersListUser[i]) {
+      const elapsedTime = answersListUser[i].elapsedTime;
+      if (elapsedTime < FAST_TIME) {
+        answersListStr[i] = FAST_TEXT;
       }
-      if (answersListTime[i].elapsedTime > SLOW_TIME) {
-        answersList[i] = SLOW_TEXT;
+      if (elapsedTime > SLOW_TIME) {
+        answersListStr[i] = SLOW_TEXT;
       }
-      if (answersListTime[i].elapsedTime >= NORMAL_TIME_VALUE_ONE && answersListTime[i].elapsedTime <= NORMAL_TIME_VALUE_TWO || answersListTime[i].elapsedTime === undefined) {
-        answersList[i] = CORRECT_TEXT;
+      if (elapsedTime >= NORMAL_TIME_VALUE_ONE && elapsedTime <= NORMAL_TIME_VALUE_TWO || elapsedTime === undefined) {
+        answersListStr[i] = CORRECT_TEXT;
       }
-      if (answersListTime[i].answer === false) {
-        answersList[i] = WRONG_TEXT;
+      if (answersListUser[i].answer === false) {
+        answersListStr[i] = WRONG_TEXT;
       }
     }
   }
 
-  answersList = answersList.join(``);
-  return answersList;
+  answersListStr = answersListStr.join(``);
+  return answersListStr;
 };
 // /** Счетчик времени
 // * @param {HTMLElement} timerElement
@@ -145,68 +124,68 @@ const createStatsPicture = () => {
 * @param {Array} questions
 */
 const controlGameScreens = (state = Object.assign({}, INITIAL_GAME), questions) => {
-  let statsPictureStr = createStatsPicture();
   if (state.level === 0) {
-    userStat.answers.length = 0;
-    statsPictureStr = createStatsPicture();
+    userStat.answers = [];
   }
-  if (state.lives === 0 || state.level >= questions.length) {
-    const resulltUserStat = countingPoints(userStat.answers, state);
-    changeScreen(resultScreen(resulltUserStat, statsPictureStr));
+  let statsAnswersStr = createResponseStatistics();
+  if (state.lives === -1 || state.level >= questions.length) {
+    const resulltUserStat = calculatePoints(userStat.answers, state);
+    changeScreen(resultScreen(resulltUserStat, statsAnswersStr));
     return;
   }
 
-  changeScreen(header(state), setGame(state, questions, statsPictureStr));
+  changeScreen(header(state), setGame(state, questions, statsAnswersStr));
 };
 /** Подсчет очков при окончании игры
 * @param {Array} arrayUserAnswers
-* @param {Object} startData
+* @param {Object} dataAnswers
 * @return {Object} newData
 */
-const countingPoints = (arrayUserAnswers, startData) => {
-  const newData = Object.assign({}, startData);
-
-  if (arrayUserAnswers.length < MIN_ANSWER || newData.lives === 0) {
-    newData.points = -1;
-    return newData;
+const calculatePoints = (arrayUserAnswers, dataAnswers) => {
+  if (arrayUserAnswers.length < MIN_ANSWER) {
+    dataAnswers.points = -1;
+    return dataAnswers;
   }
-  newData.fastPoints = {
+
+  dataAnswers.fastPoints = {
     points: 0,
     items: 0
   };
-  newData.slowPoints = {
+  dataAnswers.slowPoints = {
     points: 0,
     items: 0
   };
-  newData.livesPoints = {
+  dataAnswers.normalPoints = {
+    points: 0,
+    items: 0
+  };
+  dataAnswers.livesPoints = {
     points: 0,
     items: 0
   };
 
   arrayUserAnswers.forEach((item) => {
     if (item.answer && item.elapsedTime < FAST_TIME) {
-      newData.fastPoints.points = newData.fastPoints.points + POINT_ADD + POINT_BONUS;
-      newData.fastPoints.items += 1;
-    } else if (item.answer && item.elapsedTime >= NORMAL_TIME_VALUE_ONE && item.elapsedTime <= NORMAL_TIME_VALUE_TWO) {
-      newData.points = newData.points + POINT_ADD;
+      dataAnswers.fastPoints.points = dataAnswers.fastPoints.points + POINT_ADD + POINT_BONUS;
+      dataAnswers.fastPoints.items += 1;
+    } else if ((item.answer && item.elapsedTime >= NORMAL_TIME_VALUE_ONE && item.elapsedTime <= NORMAL_TIME_VALUE_TWO) || (item.elapsedTime === undefined && item.answer === true)) {
+      dataAnswers.normalPoints.points = dataAnswers.normalPoints.points + POINT_ADD;
+      dataAnswers.normalPoints.items += 1;
     } else if (item.answer && item.elapsedTime > SLOW_TIME) {
-      newData.slowPoints.points = newData.slowPoints.points + POINT_ADD - POINT_FINE;
-      newData.slowPoints.items += 1;
+      dataAnswers.slowPoints.points = dataAnswers.slowPoints.points + POINT_ADD - POINT_FINE;
+      dataAnswers.slowPoints.items += 1;
     }
   });
 
-  newData.livesPoints.points = newData.livesPoints.points + startData.lives * POINT_BONUS_LIVES;
-  newData.livesPoints.items = startData.lives;
-  newData.points = newData.points + newData.fastPoints.points + newData.slowPoints.points + newData.livesPoints.points;
+  if (dataAnswers.lives >= 0) {
+    dataAnswers.livesPoints.points = dataAnswers.livesPoints.points + dataAnswers.lives * POINT_BONUS_LIVES;
+    dataAnswers.livesPoints.items = dataAnswers.lives;
+  }
+  dataAnswers.points = dataAnswers.points + dataAnswers.fastPoints.points + dataAnswers.slowPoints.points + dataAnswers.normalPoints.points + dataAnswers.livesPoints.points;
 
-  return newData;
+  return dataAnswers;
 };
 /** =========================================
 * экспорт
 */
-const managmentGame = {
-  controlGameScreens,
-  pushUserAnswer
-};
-
-export {managmentGame};
+export {controlGameScreens, recordUserAnswer};

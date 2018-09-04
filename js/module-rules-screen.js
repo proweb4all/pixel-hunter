@@ -1,6 +1,6 @@
 import {setEventForBtnBack} from './module-back-btn.js';
 import {renderTemplate} from './module-mangment-dom.js';
-import {managmentGame} from './game.js';
+import {controlGameScreens} from './game.js';
 import dataGame from './data-game.js';
 
 const RULES_SCREEN = `
@@ -49,10 +49,10 @@ const submitFormHandler = (evt, inputElem) => {
   evt.preventDefault();
   // как записать имя игрока?
   if (inputElem.value) {
-    // managmentGame.recordNameUserStat(inputElem.value);
+    // recordNameUserStat(inputElem.value);
   }
 
-  managmentGame.controlGameScreens(undefined, dataGame);
+  controlGameScreens(undefined, dataGame);
 };
 /** =========================================
 * экспорт

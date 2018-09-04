@@ -1,5 +1,5 @@
 import {renderTemplate} from './module-mangment-dom.js';
-import {managmentGame} from './game.js';
+import {controlGameScreens, recordUserAnswer} from './game.js';
 import dataGame from './data-game.js';
 
 const CORRECT_ANSWER = `paint`;
@@ -7,10 +7,10 @@ const CORRECT_ANSWER = `paint`;
 /** =========================================
  * возврашает шаблон с данными
  * @param {Array} arrImages
- * @param {String} statsPictureStr
+ * @param {String} statsAnswersStr
  * @return {String}
  */
-const template = (arrImages, statsPictureStr) => {
+const template = (arrImages, statsAnswersStr) => {
   let htmlImages = ``;
   arrImages.forEach((item, index) => {
     htmlImages += `<div class="game__option">
@@ -24,7 +24,7 @@ const template = (arrImages, statsPictureStr) => {
         ${htmlImages}
       </form>
       <ul class="stats">
-        ${statsPictureStr}
+        ${statsAnswersStr}
       </ul>
     </section>
   `;
@@ -37,18 +37,18 @@ const clickFormHandler = (evt, state) => {
   const target = evt.target;
   const selectUserAnswer = target.getAttribute(`data-type`);
 
-  const newState = managmentGame.pushUserAnswer(CORRECT_ANSWER === selectUserAnswer, state);
-  managmentGame.controlGameScreens(newState, dataGame);
+  const newState = recordUserAnswer(CORRECT_ANSWER === selectUserAnswer, state);
+  controlGameScreens(newState, dataGame);
 };
 /** =========================================
  * экспорт
  * @param {Object} state
  * @param {Array} arrImages
- * @param {String} statsPictureStr
+ * @param {String} statsAnswersStr
  * @return {HTMLElement} element
  */
-export default (state, arrImages, statsPictureStr) => {
-  const element = renderTemplate(template(arrImages, statsPictureStr));
+export default (state, arrImages, statsAnswersStr) => {
+  const element = renderTemplate(template(arrImages, statsAnswersStr));
   const imgs = element.querySelectorAll(`.game__content img`);
 
   imgs.forEach((item) => {
