@@ -16,22 +16,12 @@ class MainScreen extends AbstractView {
     `;
   }
 
-  // get element() {
-  //   if (this._element) {
-  //     return this._element;
-  //   }
-  //   this._element = this.render();
-  //   this.bind(this._element);
-  //   return this._element;
-  // }
-
   render() {
     return renderTemplate(this.template);
   }
 
   bind() {
-    const element = this.render();
-    const btnIntroAsterisk = element.querySelector(`.intro__asterisk`);
+    const btnIntroAsterisk = this.element.querySelector(`.intro__asterisk`);
 
     /**
      * изменение sсreen по клику
@@ -41,13 +31,11 @@ class MainScreen extends AbstractView {
     };
 
     btnIntroAsterisk.addEventListener(`click`, clickBtnHandler);
-
-    return element;
   }
 }
 
 export default () => {
-  return new MainScreen().bind();
+  return new MainScreen();
 };
 
 // const MAIN_SCREEN = `
