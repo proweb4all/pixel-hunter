@@ -1,6 +1,6 @@
-import {renderTemplate} from './module-mangment-dom.js';
-import {setEventForBtnBack} from './module-back-btn.js';
-import AbstractView from './clases/abstract-view.js';
+import {renderTemplate} from '../module-mangment-dom.js';
+import {setEventForBtnBack} from '../module-back-btn.js';
+import AbstractView from '../clases/abstract-view.js';
 
 class Header extends AbstractView {
   constructor(state) {
@@ -29,31 +29,19 @@ class Header extends AbstractView {
     `;
   }
 
-  // get element() {
-  //   if (this._element) {
-  //     return this._element;
-  //   }
-  //   this._element = this.render();
-  //   this.bind(this._element);
-  //   return this._element;
-  // }
-
   render() {
     return renderTemplate(this.template);
   }
 
   bind() {
-    const element = this.render();
-
     // const gameTimer = element.querySelector(`.game__timer`);
 
-    setEventForBtnBack(element);
+    setEventForBtnBack(this.element);
     // managmentGame.startTime(gameTimer);
-
-    return element;
   }
 }
 
 export default (state) => {
-  return new Header(state).bind();
+  const header = new Header(state);
+  return header.element;
 };

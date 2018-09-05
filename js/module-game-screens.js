@@ -1,6 +1,6 @@
-import gameOne from './screens/module-game-1-screen.js';
-import gameTwo from './screens/module-game-2-screen.js';
-import gameThree from './screens/module-game-3-screen.js';
+import gameOne from './views/screens/module-game-1-screen.js';
+import gameTwo from './views/screens/module-game-2-screen.js';
+import gameThree from './views/screens/module-game-3-screen.js';
 
 export default (valueScreen) => {
   let typeScreen = ``;

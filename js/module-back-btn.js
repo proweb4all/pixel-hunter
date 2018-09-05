@@ -1,5 +1,5 @@
 import {addModal} from './module-mangment-dom.js';
-import modalConfirm from './module-modal-confirm.js';
+import modalConfirm from './views/module-modal-confirm.js';
 
 /**
  * добавляет модальное окно с подтверждением
