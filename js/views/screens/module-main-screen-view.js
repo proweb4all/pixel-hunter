@@ -1,8 +1,6 @@
-import {renderTemplate, changeScreen} from '../../module-mangment-dom.js';
-import welcomeScreen from './module-welcome-screen.js';
 import AbstractView from '../../clases/abstract-view.js';
 
-class MainScreen extends AbstractView {
+export default class MainScreen extends AbstractView {
   constructor() {
     super();
   }
@@ -16,9 +14,7 @@ class MainScreen extends AbstractView {
     `;
   }
 
-  render() {
-    return renderTemplate(this.template);
-  }
+  nextScreen() {}
 
   bind() {
     const btnIntroAsterisk = this.element.querySelector(`.intro__asterisk`);
@@ -27,15 +23,9 @@ class MainScreen extends AbstractView {
      * изменение sсreen по клику
      */
     const clickBtnHandler = () => {
-      changeScreen(welcomeScreen());
+      this.nextScreen();
     };
 
     btnIntroAsterisk.addEventListener(`click`, clickBtnHandler);
   }
 }
-
-export default () => {
-  const mainScreen = new MainScreen();
-
-  return mainScreen.element;
-};

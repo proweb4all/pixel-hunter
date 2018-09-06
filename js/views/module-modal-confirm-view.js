@@ -1,8 +1,6 @@
-import {deleteElement, changeScreen, renderTemplate} from '../module-mangment-dom.js';
-import welcome from './screens/module-welcome-screen.js';
 import AbstractView from '../clases/abstract-view.js';
 
-class ModalConfirm extends AbstractView {
+export default class ModalConfirm extends AbstractView {
   constructor() {
     super();
     this._ESC_CODE = 27;
@@ -27,9 +25,9 @@ class ModalConfirm extends AbstractView {
     `;
   }
 
-  render() {
-    return renderTemplate(this.template);
-  }
+  nextScreen() {}
+  closeModal() {}
+  closeEscModal() {}
 
   bind() {
     const modal = this.element.querySelector(`.modal`);
@@ -42,50 +40,41 @@ class ModalConfirm extends AbstractView {
     * @param {Event} evt
     * @param {HTMLElement} elem
     */
-    const clickCloseHandler = (evt, elem) => {
+    const onCloseHandler = (evt, elem) => {
       evt.preventDefault();
-
-      deleteElement(elem);
+      this.closeModal(elem);
       document.removeEventListener(`keydown`, this._objectHandler);
     };
-
-    const clickCancelHandler = clickCloseHandler;
     /**
     * удаление "модального окна" по клавише ESC
     * @param {Event} evt
     * @param {HTMLElement} elem
     */
-    const escCloseHandler = (evt, elem) => {
-      if (evt.keyCode === this._ESC_CODE) {
-        clickCloseHandler(evt, elem);
-      }
+    const onEscCloseHandler = (evt, elem) => {
+      this.closeEscModal(evt, elem);
+      document.removeEventListener(`keydown`, this._objectHandler);
     };
     /**
     * смена screen после подтверждения
     * @param {Event} evt
     */
     const confirmHandler = () => {
-      changeScreen(welcome());
+      this.nextScreen();
     };
 
     modalBtnClose.addEventListener(`click`, (evt) => {
-      clickCloseHandler(evt, modal);
+      onCloseHandler(evt, modal);
     });
     modalBtnOk.addEventListener(`click`, confirmHandler);
     modalBtnCancel.addEventListener(`click`, (evt) => {
-      clickCancelHandler(evt, modal);
+      onCloseHandler(evt, modal);
     });
 
     this._objectHandler = {
       handleEvent(evt) {
-        escCloseHandler(evt, modal);
+        onEscCloseHandler(evt, modal);
       }
     };
     document.addEventListener(`keydown`, this._objectHandler);
   }
 }
-
-export default () => {
-  const modalConfirm = new ModalConfirm();
-  return modalConfirm.element;
-};

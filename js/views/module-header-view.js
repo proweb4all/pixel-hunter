@@ -1,8 +1,7 @@
-import {renderTemplate} from '../module-mangment-dom.js';
 import {setEventForBtnBack} from '../module-back-btn.js';
 import AbstractView from '../clases/abstract-view.js';
 
-class Header extends AbstractView {
+export default class Header extends AbstractView {
   constructor(state) {
     super();
     this._state = state;
@@ -29,19 +28,8 @@ class Header extends AbstractView {
     `;
   }
 
-  render() {
-    return renderTemplate(this.template);
-  }
-
   bind() {
-    // const gameTimer = element.querySelector(`.game__timer`);
-
     setEventForBtnBack(this.element);
-    // managmentGame.startTime(gameTimer);
   }
 }
 
-export default (state) => {
-  const header = new Header(state);
-  return header.element;
-};

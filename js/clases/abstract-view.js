@@ -1,3 +1,5 @@
+import {renderTemplate} from '../module-mangment-dom.js';
+
 export default class AbstractView {
   constructor() {
     if (new.target === AbstractView) {
@@ -19,6 +21,7 @@ export default class AbstractView {
   }
 
   render() {
+    return renderTemplate(this.template);
   }
 
   bind() {

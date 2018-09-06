@@ -1,8 +1,6 @@
-import {changeScreen, renderTemplate} from '../../module-mangment-dom.js';
-import rulesScreen from './module-rules-screen.js';
 import AbstractView from '../../clases/abstract-view.js';
 
-class WelcomeScreen extends AbstractView {
+export default class WelcomeScreen extends AbstractView {
   constructor() {
     super();
   }
@@ -32,9 +30,7 @@ class WelcomeScreen extends AbstractView {
     `;
   }
 
-  render() {
-    return renderTemplate(this.template);
-  }
+  nextScreen() { }
 
   bind() {
     const btnGreetingContinue = this.element.querySelector(`.greeting__continue`);
@@ -43,14 +39,9 @@ class WelcomeScreen extends AbstractView {
      * изменение sсreen по клику
      */
     const clickBtnHandler = () => {
-      changeScreen(rulesScreen());
+      this.nextScreen();
     };
 
     btnGreetingContinue.addEventListener(`click`, clickBtnHandler);
   }
 }
-
-export default () => {
-  const welcomeScreen = new WelcomeScreen();
-  return welcomeScreen.element;
-};

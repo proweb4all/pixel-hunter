@@ -1,9 +1,6 @@
-import {renderTemplate} from '../../module-mangment-dom.js';
-import {controlGameScreens, recordUserAnswer} from '../../game.js';
-import dataGame from '../../data-game.js';
 import AbstractView from '../../clases/abstract-view.js';
 
-class GameThreeScreen extends AbstractView {
+export default class GameThreeScreen extends AbstractView {
   constructor(state, arrImages, statsAnswersStr) {
     super();
     this._state = state;
@@ -11,6 +8,8 @@ class GameThreeScreen extends AbstractView {
     this._statsAnswersStr = statsAnswersStr;
     this._CORRECT_ANSWER = `paint`;
   }
+
+  nextScreen() { }
 
   /**
    * возврашает шаблон изображений для ответов
@@ -43,23 +42,15 @@ class GameThreeScreen extends AbstractView {
     `;
   }
 
-  render() {
-    return renderTemplate(this.template);
-  }
-
   bind() {
     const imgs = this.element.querySelectorAll(`.game__content img`);
 
     /** при выборе ответа в форме, переключение экрана
      * @param {Event} evt
-     * @param {Object} state
+     * @param {Object} stateGane
      */
-    const clickFormHandler = (evt, state) => {
-      const target = evt.target;
-      const selectUserAnswer = target.getAttribute(`data-type`);
-
-      const newState = recordUserAnswer(this._CORRECT_ANSWER === selectUserAnswer, state);
-      controlGameScreens(newState, dataGame);
+    const clickFormHandler = (evt, stateGane) => {
+      this.nextScreen(evt, stateGane);
     };
 
     imgs.forEach((item) => {
@@ -71,7 +62,3 @@ class GameThreeScreen extends AbstractView {
 
 }
 
-export default (state, arrImages, statsAnswersStr) => {
-  const gameThreeScreen = new GameThreeScreen(state, arrImages, statsAnswersStr);
-  return gameThreeScreen.element;
-};

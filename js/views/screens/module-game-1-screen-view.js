@@ -1,15 +1,14 @@
-import {renderTemplate} from '../../module-mangment-dom.js';
-import {controlGameScreens, recordUserAnswer} from '../../game.js';
-import dataGame from '../../data-game.js';
 import AbstractView from '../../clases/abstract-view.js';
 
-class GameTwoScreen extends AbstractView {
+export default class GameOneScreen extends AbstractView {
   constructor(state, arrImages, statsAnswersStr) {
     super();
     this._state = state;
     this._arrImages = arrImages;
     this._statsAnswersStr = statsAnswersStr;
   }
+
+  nextScreen() {}
 
   /**
    * возврашает шаблон изображений для ответов
@@ -39,9 +38,9 @@ class GameTwoScreen extends AbstractView {
   get template() {
     return `
       <section class="game">
-        <p class="game__task">Угадай, фото или рисунок?</p>
-        <form class="game__content  game__content--wide">
-          ${this.createTemplateImages(this._arrImages)}
+        <p class="game__task">Угадайте для каждого изображения фото или рисунок?</p>
+        <form class="game__content">
+        ${this.createTemplateImages(this._arrImages)}
         </form>
         <ul class="stats">
           ${this._statsAnswersStr}
@@ -50,25 +49,15 @@ class GameTwoScreen extends AbstractView {
     `;
   }
 
-  render() {
-    return renderTemplate(this.template);
-  }
-
   bind() {
     const form = this.element.querySelector(`.game__content`);
 
-    /** при выборе ответа в форме, переключение экрана
+    /** при выборе 2 ответов в форме, переключение экрана
      * @param {Event} evt
      * @param {Object} state
      */
     const changeFormHandler = (evt, state) => {
-      const targetInput = evt.target;
-      const currentTarget = evt.currentTarget;
-      const selectUserAnswer = targetInput.value;
-      const correctAnswer = currentTarget.querySelector(`img`).getAttribute(`data-type`);
-
-      const newState = recordUserAnswer(correctAnswer === selectUserAnswer, state);
-      controlGameScreens(newState, dataGame);
+      this.nextScreen(evt, state);
     };
 
     form.addEventListener(`change`, (evt) => {
@@ -76,8 +65,3 @@ class GameTwoScreen extends AbstractView {
     });
   }
 }
-
-export default (state, arrImages, statsAnswersStr) => {
-  const gameTwoScreen = new GameTwoScreen(state, arrImages, statsAnswersStr);
-  return gameTwoScreen.element;
-};

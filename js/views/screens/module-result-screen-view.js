@@ -1,8 +1,7 @@
 import {setEventForBtnBack} from '../../module-back-btn.js';
-import {renderTemplate} from '../../module-mangment-dom.js';
 import AbstractView from '../../clases/abstract-view.js';
 
-class ResultScreen extends AbstractView {
+export default class ResultScreen extends AbstractView {
   constructor(objUserStat, statsAnswersStr) {
     super();
     this._objUserStat = objUserStat;
@@ -104,16 +103,7 @@ class ResultScreen extends AbstractView {
     return this.createTemplate(this._objUserStat);
   }
 
-  render() {
-    return renderTemplate(this.template);
-  }
-
   bind() {
     setEventForBtnBack(this.element);
   }
 }
-
-export default (objUserStat, statsAnswersStr) => {
-  const resultScreen = new ResultScreen(objUserStat, statsAnswersStr);
-  return resultScreen.element;
-};

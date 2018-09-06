@@ -1,10 +1,7 @@
 import {setEventForBtnBack} from '../../module-back-btn.js';
-import {renderTemplate} from '../../module-mangment-dom.js';
-import {controlGameScreens} from '../../game.js';
-import dataGame from '../../data-game.js';
 import AbstractView from '../../clases/abstract-view.js';
 
-class RulesScreen extends AbstractView {
+export default class RulesScreen extends AbstractView {
   constructor() {
     super();
   }
@@ -41,49 +38,40 @@ class RulesScreen extends AbstractView {
     `;
   }
 
-  render() {
-    return renderTemplate(this.template);
-  }
+  recordNamePlay() {}
+  nextScreen() {}
+  checkedValue() {}
 
   bind() {
-    const name = this.element.querySelector(`.rules__input`);
+    const fieldName = this.element.querySelector(`.rules__input`);
     const rulesForm = this.element.querySelector(`.rules__form`);
     const btnRulesForm = this.element.querySelector(`.rules__button`);
 
     /** функция управляет состоянием disabled кнопки формы btnRulesForm в зависимости от значения инпута в форме
     * @param {Event} evt
-    * @param {HTMLElement} btnForm
+    * @param {HTMLElement} elem
     */
-    const changeNameHandler = (evt, btnForm) => {
-      const targetValue = evt.target.value;
-      btnForm.disabled = !targetValue;
+    const checkedValueHandler = (evt, elem) => {
+      this.checkedValue(evt, elem);
     };
     /** изменение sreen при отправке формы
     * @param {Event} evt
-    * @param {HTMLElement} inputElem
+    * @param {HTMLElement} elem
     */
-    const submitFormHandler = (evt, inputElem) => {
+    const submitFormHandler = (evt, elem) => {
       evt.preventDefault();
-      // как записать имя игрока?
-      if (inputElem.value) {
-        // recordNameUserStat(inputElem.value);
-      }
 
-      controlGameScreens(undefined, dataGame);
+      this.recordNamePlay(elem);
+      this.nextScreen();
     };
 
-    name.addEventListener(`input`, (evt) => {
-      changeNameHandler(evt, btnRulesForm);
+    fieldName.addEventListener(`input`, (evt) => {
+      checkedValueHandler(evt, btnRulesForm);
     });
     rulesForm.addEventListener(`submit`, (evt) => {
-      submitFormHandler(evt, name);
+      submitFormHandler(evt, fieldName);
     });
 
     setEventForBtnBack(this.element);
   }
 }
-
-export default () => {
-  const rulesScreen = new RulesScreen();
-  return rulesScreen.element;
-};
