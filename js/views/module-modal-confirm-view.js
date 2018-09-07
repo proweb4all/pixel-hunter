@@ -3,7 +3,7 @@ import AbstractView from '../clases/abstract-view.js';
 export default class ModalConfirm extends AbstractView {
   constructor() {
     super();
-    this._ESC_CODE = 27;
+    this.ESC_CODE = 27;
     this._objectHandler = {};
   }
 
