@@ -11,13 +11,13 @@ export default class ResultScreen extends AbstractView {
   createTemplate(obj) {
     let slowPoint;
     if (obj.slowPoints) {
-      slowPoint = obj.slowPoints.points === 0 ? 0 : `-` + obj.slowPoints.points;
+      slowPoint = obj.slowPoints.POINTS === 0 ? 0 : `-` + obj.slowPoints.POINTS;
     } else {
       slowPoint = ``;
     }
     let normalPoints;
     if (obj.normalPoints) {
-      normalPoints = obj.normalPoints.points !== undefined ? obj.normalPoints.points : ``;
+      normalPoints = obj.normalPoints.POINTS !== undefined ? obj.normalPoints.POINTS : ``;
     } else {
       normalPoints = ``;
     }
@@ -35,7 +35,7 @@ export default class ResultScreen extends AbstractView {
     </button>
   </header>
   <section class="result">
-    <h2 class="result__title">${obj.points > 0 ? `Победа!` : `Проиграл!`}</h2>`;
+    <h2 class="result__title">${obj.POINTS > 0 ? `Победа!` : `Проиграл!`}</h2>`;
 
     const HTML_TABLE_POINTS = `<table class="result__table">
     <tr>
@@ -53,14 +53,14 @@ export default class ResultScreen extends AbstractView {
       <td class="result__extra">Бонус за скорость:</td>
       <td class="result__extra">${obj.fastPoints ? obj.fastPoints.items : ``}<span class="stats__result stats__result--fast"></span></td>
       <td class="result__points">× 150</td>
-      <td class="result__total">${obj.fastPoints ? obj.fastPoints.points : ``}</td>
+      <td class="result__total">${obj.fastPoints ? obj.fastPoints.POINTS : ``}</td>
     </tr>
     <tr>
       <td></td>
       <td class="result__extra">Бонус за жизни:</td>
       <td class="result__extra">${obj.livesPoints ? obj.livesPoints.items : ``}<span class="stats__result stats__result--alive"></span></td>
       <td class="result__points">× 50</td>
-      <td class="result__total">${obj.livesPoints ? obj.livesPoints.points : ``}</td>
+      <td class="result__total">${obj.livesPoints ? obj.livesPoints.POINTS : ``}</td>
     </tr>
     <tr>
       <td></td>
@@ -70,7 +70,7 @@ export default class ResultScreen extends AbstractView {
       <td class="result__total">${slowPoint}</td>
     </tr>
     <tr>
-      <td colspan="5" class="result__total  result__total--final">${obj.points}</td>
+      <td colspan="5" class="result__total  result__total--final">${obj.POINTS}</td>
     </tr>
   </table>`;
 
@@ -87,10 +87,10 @@ export default class ResultScreen extends AbstractView {
     </tr>
   </table>`;
 
-    if (obj.points === -1) {
+    if (obj.POINTS === -1) {
       html = htmlHeader + HTML_TABLE_FAIL;
     }
-    if (obj.points > 0) {
+    if (obj.POINTS > 0) {
       html = htmlHeader + HTML_TABLE_POINTS;
     }
 
