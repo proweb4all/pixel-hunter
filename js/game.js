@@ -1,13 +1,13 @@
 import returnScreenGame from './module-game-screens';
 import header from './module-header.js';
 import {changeScreen} from './module-mangment-dom.js';
-import resultScreen from './module-result-screen.js';
+import resultScreen from './screens/module-result-screen';
 
 const INITIAL_GAME = Object.freeze({
-  lives: 3,
-  level: 0,
-  time: 0,
-  points: 0
+  LIVES: 3,
+  LEVEL: 0,
+  TIME: 0,
+  POINTS: 0
 });
 const MIN_ANSWER = 10;
 const FAST_TIME = 10;
@@ -24,9 +24,9 @@ const POINT_BONUS = 50;
 const POINT_FINE = 50;
 const POINT_BONUS_LIVES = 50;
 let timeText;
-let userStat = {
-  name: ``,
-  answers: []
+let UserStat = {
+  NAME: ``,
+  ANSWERS: []
 };
 
 /**
@@ -37,10 +37,10 @@ let userStat = {
 * @return {Function}
 */
 const setGame = (state, array, statsAnswersStr) => {
-  let index = state.level;
+  let index = state.LEVEL;
   const gameScreen = returnScreenGame(array[index].type);
   const newState = Object.assign({}, state, {
-    level: state.level + 1
+    LEVEL: state.LEVEL + 1
   });
 
   return gameScreen(newState, array[index].images, statsAnswersStr);
@@ -53,12 +53,12 @@ const setGame = (state, array, statsAnswersStr) => {
 */
 const recordUserAnswer = (value, state) => {
   if (value) {
-    userStat.answers.push({answer: true, elapsedTime: timeText});
+    UserStat.ANSWERS.push({answer: true, elapsedTime: timeText});
     return state;
   } else {
-    userStat.answers.push({answer: false, elapsedTime: timeText});
+    UserStat.ANSWERS.push({answer: false, elapsedTime: timeText});
     return Object.assign({}, state, {
-      lives: state.lives - 1
+      LIVES: state.LIVES - 1
     });
   }
 };
@@ -78,7 +78,7 @@ const recordUserAnswer = (value, state) => {
 const createResponseStatistics = () => {
   let answersListStr = new Array(10);
 
-  let answersListUser = userStat.answers.slice();
+  let answersListUser = UserStat.ANSWERS.slice();
 
   for (let i = 0; i < answersListStr.length; i++) {
     if (answersListUser[i] === undefined) {
@@ -124,12 +124,12 @@ const createResponseStatistics = () => {
 * @param {Array} questions
 */
 const controlGameScreens = (state = Object.assign({}, INITIAL_GAME), questions) => {
-  if (state.level === 0) {
-    userStat.answers = [];
+  if (state.LEVEL === 0) {
+    UserStat.ANSWERS = [];
   }
   let statsAnswersStr = createResponseStatistics();
-  if (state.lives === -1 || state.level >= questions.length) {
-    const resulltUserStat = calculatePoints(userStat.answers, state);
+  if (state.LIVES === -1 || state.LEVEL >= questions.length) {
+    const resulltUserStat = calculatePoints(UserStat.ANSWERS, state);
     changeScreen(resultScreen(resulltUserStat, statsAnswersStr));
     return;
   }
@@ -143,45 +143,45 @@ const controlGameScreens = (state = Object.assign({}, INITIAL_GAME), questions) 
 */
 const calculatePoints = (arrayUserAnswers, dataAnswers) => {
   if (arrayUserAnswers.length < MIN_ANSWER) {
-    dataAnswers.points = -1;
+    dataAnswers.POINTS = -1;
     return dataAnswers;
   }
 
   dataAnswers.fastPoints = {
-    points: 0,
-    items: 0
+    POINTS: 0,
+    ITEMS: 0
   };
   dataAnswers.slowPoints = {
-    points: 0,
-    items: 0
+    POINTS: 0,
+    ITEMS: 0
   };
   dataAnswers.normalPoints = {
-    points: 0,
-    items: 0
+    POINTS: 0,
+    ITEMS: 0
   };
   dataAnswers.livesPoints = {
-    points: 0,
-    items: 0
+    POINTS: 0,
+    ITEMS: 0
   };
 
   arrayUserAnswers.forEach((item) => {
     if (item.answer && item.elapsedTime < FAST_TIME) {
-      dataAnswers.fastPoints.points = dataAnswers.fastPoints.points + POINT_ADD + POINT_BONUS;
-      dataAnswers.fastPoints.items += 1;
+      dataAnswers.fastPoints.POINTS = dataAnswers.fastPoints.POINTS + POINT_ADD + POINT_BONUS;
+      dataAnswers.fastPoints.ITEMS += 1;
     } else if ((item.answer && item.elapsedTime >= NORMAL_TIME_VALUE_ONE && item.elapsedTime <= NORMAL_TIME_VALUE_TWO) || (item.elapsedTime === undefined && item.answer === true)) {
-      dataAnswers.normalPoints.points = dataAnswers.normalPoints.points + POINT_ADD;
-      dataAnswers.normalPoints.items += 1;
+      dataAnswers.normalPoints.POINTS = dataAnswers.normalPoints.POINTS + POINT_ADD;
+      dataAnswers.normalPoints.ITEMS += 1;
     } else if (item.answer && item.elapsedTime > SLOW_TIME) {
-      dataAnswers.slowPoints.points = dataAnswers.slowPoints.points + POINT_ADD - POINT_FINE;
-      dataAnswers.slowPoints.items += 1;
+      dataAnswers.slowPoints.POINTS = dataAnswers.slowPoints.POINTS + POINT_ADD - POINT_FINE;
+      dataAnswers.slowPoints.ITEMS += 1;
     }
   });
 
-  if (dataAnswers.lives >= 0) {
-    dataAnswers.livesPoints.points = dataAnswers.livesPoints.points + dataAnswers.lives * POINT_BONUS_LIVES;
-    dataAnswers.livesPoints.items = dataAnswers.lives;
+  if (dataAnswers.LIVES >= 0) {
+    dataAnswers.livesPoints.POINTS = dataAnswers.livesPoints.POINTS + dataAnswers.LIVES * POINT_BONUS_LIVES;
+    dataAnswers.livesPoints.ITEMS = dataAnswers.LIVES;
   }
-  dataAnswers.points = dataAnswers.points + dataAnswers.fastPoints.points + dataAnswers.slowPoints.points + dataAnswers.normalPoints.points + dataAnswers.livesPoints.points;
+  dataAnswers.POINTS = dataAnswers.POINTS + dataAnswers.fastPoints.POINTS + dataAnswers.slowPoints.POINTS + dataAnswers.normalPoints.POINTS + dataAnswers.livesPoints.POINTS;
 
   return dataAnswers;
 };
